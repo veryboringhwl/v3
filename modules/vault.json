@@ -1,0 +1,36 @@
+{
+  "modules": {
+    "adblock": {
+      "v": {
+        "0.1.0": {
+          "artifacts": [],
+          "providers": []
+        }
+      }
+    },
+    "palette-manager": {
+      "v": {
+        "0.1.0": {
+          "artifacts": [],
+          "providers": []
+        }
+      }
+    },
+    "stdlib": {
+      "v": {
+        "0.1.0": {
+          "artifacts": [],
+          "providers": []
+        }
+      }
+    },
+    "test": {
+      "v": {
+        "0.1.0": {
+          "artifacts": [],
+          "providers": []
+        }
+      }
+    }
+  }
+}

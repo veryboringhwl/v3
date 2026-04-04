@@ -1,0 +1,99 @@
+import pkg from "../deno.json" with { type: "json" };
+
+import path from "node:path";
+
+import { Builder, type Metadata } from "./build.ts";
+import { type Mapping, Transpiler } from "./transpile.ts";
+
+// @deno-types="npm:@types/yargs@17.0.35"
+import yargs from "npm:yargs@18.0.0";
+import { build, genClassMapDts, readJSON, watch } from "./util.ts";
+
+const version = (pkg as { version?: string }).version ?? "local";
+
+const argv = await yargs(Deno.args)
+  .version(version)
+  .usage("tailor is to bespoke as chef is to gourmet")
+  .option("c", {
+    alias: "classmap",
+    type: "string",
+    desc: "path to classmap",
+  })
+  .option("i", {
+    alias: "input",
+    type: "string",
+    default: ".",
+    desc: "input folder",
+  })
+  .option("o", {
+    alias: "output",
+    type: "string",
+    default: ".",
+    desc: "output folder",
+  })
+  .option("copy", {
+    type: "boolean",
+    default: false,
+    desc: "copy unsupported files",
+  })
+  .option("d", {
+    alias: "declaration",
+    type: "boolean",
+    default: false,
+    desc: "emit classmap declaration file",
+  })
+  .option("b", {
+    alias: "build",
+    type: "boolean",
+    default: false,
+    desc: "build and apply classmap",
+  })
+  .option("w", {
+    alias: "watch",
+    type: "boolean",
+    default: false,
+    desc: "watch for file changes",
+  })
+  .option("debounce", {
+    type: "number",
+    default: Number.NEGATIVE_INFINITY,
+    desc: "debounce time for reloading spotify (default is disabled)",
+  })
+  .option("module", {
+    type: "string",
+    desc: "module identifier",
+    demandOption: true,
+  })
+  .option("dev", {
+    type: "boolean",
+    default: false,
+  })
+  .parse();
+
+let classmap: Mapping = {};
+if (argv.c) {
+  console.log("Loading classmap...");
+  classmap = await readJSON<Mapping>(argv.c);
+}
+const metadata = await readJSON<Metadata>(path.join(argv.i, "metadata.json"));
+
+const transpiler = new Transpiler(classmap, argv.dev);
+const builder = new Builder(transpiler, {
+  metadata,
+  identifier: argv.module,
+  inputDir: argv.i,
+  outputDir: argv.o,
+});
+
+if (argv.d) {
+  const dts = genClassMapDts(classmap);
+  console.log("Writing classmap declaration...");
+  await Deno.writeTextFile(builder.getInputPath("classmap.d.ts"), dts);
+}
+
+if (argv.b) {
+  await build(builder, { js: true, css: true, unknown: argv.copy });
+}
+if (argv.w) {
+  await watch(builder, argv.debounce);
+}

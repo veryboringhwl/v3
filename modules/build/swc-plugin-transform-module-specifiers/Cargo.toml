@@ -1,0 +1,18 @@
+[package]
+name = "swc-plugin-transform-module-specifiers"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+lto = true
+
+[dependencies]
+transform  = { path = "transform" }
+serde_json = "1.0.145"
+swc_core   = { version = "62.0.0", features = ["ecma_plugin_transform"] }
+
+# .cargo/config defines few alias to build plugin.
+# cargo build-wasi generates wasm-wasi32 binary
+# cargo build-wasm32 generates wasm32-unknown-unknown binary.

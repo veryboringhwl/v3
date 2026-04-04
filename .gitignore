@@ -1,0 +1,4 @@
+cli/target/
+hooks/node_modules/
+modules/build/swc-plugin-remapper/target/
+modules/build/swc-plugin-transform-module-specifiers/target/
