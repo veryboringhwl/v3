@@ -74,7 +74,6 @@ export default async function (transformer: Transformer) {
 	// 1.2.86
 	// transformer(
 	// 	(emit) => (str) => {
-	// 		emit();
 
 	// 		// JS: make the chunk loader async
 	// 		str = str.replace(
@@ -99,6 +98,8 @@ export default async function (transformer: Transformer) {
 	// 			/(?<=\.miniCssF\([^)]+\),[\w$]+=)([\w$.]+\+[\w$]+)/,
 	// 			"await __applyTransforms($1)",
 	// 		);
+	//
+	// 		emit();
 	// 		return str;
 	// 	},
 	// 	{
@@ -108,8 +109,6 @@ export default async function (transformer: Transformer) {
 
 	transformer(
 		(emit) => (str) => {
-			emit();
-
 			str = str.replace(
 				/(([a-zA-Z_$][\w$]*)=([a-zA-Z_$][\w$]*)\.p\+\3\.u\([a-zA-Z_$][\w$]*\))/,
 				"$1,$2=await __applyTransforms($2)",
@@ -132,6 +131,7 @@ export default async function (transformer: Transformer) {
 				"$1async$2,$5=await __applyTransforms($5)",
 			);
 
+			emit();
 			return str;
 		},
 		{
@@ -160,9 +160,8 @@ export default async function (transformer: Transformer) {
 	// sentry works if spotif ver is <30 days so make it never
 	transformer(
 		(emit) => (str) => {
-			emit();
-
 			str = str.replace("/864e5<30", "<0");
+			emit();
 
 			return str;
 		},

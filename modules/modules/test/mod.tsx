@@ -4,6 +4,6 @@ import { registerStdlibDiagnostics } from "./src/diagnostics/registerHarness.tsx
 export let module: ModuleInstance;
 
 export default function (mod: ModuleInstance) {
-  module = mod;
-  registerStdlibDiagnostics(mod);
+	module = mod;
+	registerStdlibDiagnostics(mod);
 }

@@ -1,4 +1,3 @@
-
 import type { MixinLoader } from "./module.ts";
 
 // @deno-types="./util/fetch.ts"
@@ -28,7 +27,10 @@ export class SourceFile {
 			return this.path;
 		}
 		const content = await fetchText(this.path);
-		const modifiedContent = trs.reduce((p, [, transform]) => transform(p, this.path), content!);
+		const modifiedContent = trs.reduce(
+			(p, [, transform]) => transform(p, this.path),
+			content!,
+		);
 		const ext = this.path.slice(this.path.lastIndexOf("."));
 		// @ts-ignore
 		const type: string | undefined = MimeTypes[ext];
@@ -70,4 +72,6 @@ export const createTransformer =
 		return promise;
 	};
 
-export const transforms = new Array<[RegExp, (input: string, path: string) => string]>();
+export const transforms = new Array<
+	[RegExp, (input: string, path: string) => string]
+>();

@@ -1,9 +1,7 @@
 import { React } from "/modules/stdlib/src/expose/React.ts";
 import {
 	ContextMenu,
-	Dialog,
 	FilterBox,
-	GenericModal,
 	Menu,
 	MenuItem,
 	MenuItemSubMenu,
@@ -15,7 +13,6 @@ import {
 	Routes,
 	ScrollableContainer,
 	ScrollableText,
-	Settings,
 	Toggle,
 	Tooltip,
 } from "/modules/stdlib/src/webpack/ReactComponents.ts";
@@ -24,35 +21,6 @@ const NOOP = () => {};
 const LONG_TEXT =
 	"The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.";
 
-type ProbeState = "rendered" | "failed";
-
-class ProbeBoundary extends React.Component<{
-	onError: (message: string) => void;
-	children?: React.ReactNode;
-}> {
-	override componentDidCatch(error: Error) {
-		this.props.onError(error?.message ?? String(error));
-	}
-
-	override render() {
-		return this.props.children;
-	}
-}
-
-const ProbeRendered = ({
-	onRendered,
-	children,
-}: {
-	onRendered: () => void;
-	children?: React.ReactNode;
-}) => {
-	React.useEffect(() => {
-		onRendered();
-	}, [onRendered]);
-
-	return <>{children}</>;
-};
-
 const ProbeCard = ({
 	title,
 	render,
@@ -60,25 +28,6 @@ const ProbeCard = ({
 	title: string;
 	render?: () => React.ReactNode;
 }) => {
-	const [state, setState] = React.useState<ProbeState>("rendered");
-	const [error, setError] = React.useState("");
-
-	React.useEffect(() => {
-		setState("rendered");
-		setError("");
-	}, [title]);
-
-	const onRendered = React.useCallback(() => {
-		setState((value) => (value === "failed" ? value : "rendered"));
-	}, []);
-
-	const onError = React.useCallback((message: string) => {
-		setState("failed");
-		setError(message);
-	}, []);
-
-	const color = state === "rendered" ? "#8dff9d" : "#ff9898";
-
 	return (
 		<div
 			style={{
@@ -89,16 +38,7 @@ const ProbeCard = ({
 				padding: "10px",
 			}}
 		>
-			<div
-				style={{
-					display: "flex",
-					justifyContent: "space-between",
-					gap: "12px",
-				}}
-			>
-				<strong>{title}</strong>
-				<span style={{ color }}>{state}</span>
-			</div>
+			<strong>{title}</strong>
 
 			<div
 				style={{
@@ -108,18 +48,8 @@ const ProbeCard = ({
 					minHeight: "48px",
 				}}
 			>
-				<ProbeBoundary onError={onError}>
-					<ProbeRendered onRendered={onRendered}>{render?.()}</ProbeRendered>
-				</ProbeBoundary>
+				{render?.()}
 			</div>
-
-			{error && (
-				<div
-					style={{ color: "#ff9898", fontSize: "12px", whiteSpace: "pre-wrap" }}
-				>
-					{error}
-				</div>
-			)}
 		</div>
 	);
 };
@@ -142,13 +72,6 @@ export const TestPage = () => {
 		<div
 			style={{ padding: "24px", color: "white", display: "grid", gap: "16px" }}
 		>
-			<h2 style={{ margin: 0 }}>Stdlib Manual Component Playground</h2>
-
-			<p style={{ margin: 0, opacity: 0.9 }}>
-				Every section below is manually written, and each block mounts one
-				specific component to verify it works inside Spotify.
-			</p>
-
 			<div
 				style={{
 					display: "grid",
@@ -206,7 +129,7 @@ export const TestPage = () => {
 					/>
 				</Section>
 
-				<Section title="FilterBox">
+				{/* <Section title="FilterBox">
 					<ProbeCard
 						title="<FilterBox />"
 						render={() =>
@@ -230,9 +153,9 @@ export const TestPage = () => {
 							})
 						}
 					/>
-				</Section>
+				</Section> */}
 
-				<Section title="ScrollableContainer">
+				{/* <Section title="ScrollableContainer">
 					<ProbeCard
 						title="<ScrollableContainer />"
 						render={() => (
@@ -246,13 +169,13 @@ export const TestPage = () => {
 						)}
 					/>
 				</Section>
-
-				<Section title="ScrollableText">
+ */}
+				{/* <Section title="ScrollableText">
 					<ProbeCard
 						title="<ScrollableText />"
 						render={() => <ScrollableText>{LONG_TEXT}</ScrollableText>}
 					/>
-				</Section>
+				</Section> */}
 
 				<Section title="Routes and Route">
 					<ProbeCard
@@ -278,7 +201,7 @@ export const TestPage = () => {
 					/>
 				</Section>
 
-				<Section title="Panel Components">
+				{/* <Section title="Panel Components">
 					<ProbeCard
 						title="PanelContainer + PanelHeader + PanelContent"
 						render={() =>
@@ -296,7 +219,7 @@ export const TestPage = () => {
 							)
 						}
 					/>
-				</Section>
+				</Section> */}
 			</div>
 		</div>
 	);
