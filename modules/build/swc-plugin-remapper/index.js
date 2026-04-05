@@ -16,7 +16,9 @@ export default function () {
     resolveIfExists("./target/wasm32-wasi/release/swc_remapper.wasm");
 
   if (!resolved) {
-    throw new Error("Local swc-plugin-remapper wasm not found. Run cargo build-wasi in modules/build/swc-plugin-remapper.");
+    throw new Error(
+      "Local swc-plugin-remapper wasm not found. Run cargo build-wasi in modules/build/swc-plugin-remapper.",
+    );
   }
 
   return resolved;

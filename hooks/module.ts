@@ -692,6 +692,18 @@ export class ModuleInstance
 		resolve();
 	}
 
+	private async awaitMixinsRecur() {
+		await Promise.all(
+			Object.keys(this.metadata!.dependencies).map((dependency) => {
+				const module =
+					RootModule.INSTANCE.getDescendant(dependency)!.getEnabledInstance()!;
+				return module.awaitMixinsRecur();
+			}),
+		);
+
+		await Promise.all(this.awaitedMixins);
+	}
+
 	private async loadRecur() {
 		if (this.loaded) {
 			return this.transition.block();
@@ -847,6 +859,7 @@ export class ModuleInstance
 		}
 		try {
 			if (this.canLoadJsRecur()) {
+				await this.awaitMixinsRecur();
 				await this.#preloadJs();
 				await this.loadRecur();
 				return true;
@@ -1062,10 +1075,10 @@ export async function loadLocalModules() {
 export async function loadRemoteModules() {
 	const remoteModules = [
 		await fetchJson<_Vault>(
-			"https://raw.githubusercontent.com/spicetify/modules/main/vault.json",
+			"https://raw.githubusercontent.com/veryboringhwl/modules/main/vault.json",
 		),
 		await fetchJson<_Vault>(
-			"https://raw.githubusercontent.com/spicetify/pkgs/main/vault.json",
+			"https://raw.githubusercontent.com/veryboringhwl/pkgs/main/vault.json",
 		),
 	]
 		.filter(Boolean)
@@ -1090,6 +1103,13 @@ const getLoadableChildrenInstances = () =>
 export const enableAllLoadableMixins = () =>
 	Promise.all(
 		getLoadableChildrenInstances().map((instance) => instance._loadMixins()),
+	);
+
+export const awaitAllLoadableMixins = () =>
+	Promise.all(
+		getLoadableChildrenInstances().map((instance) =>
+			Promise.all(instance.awaitedMixins),
+		),
 	);
 
 export const enableAllLoadable = () =>
@@ -1119,7 +1139,7 @@ export type LoadContext = { module: ModuleInstance };
 export type MixinContext = { module: ModuleInstance; transformer: Transformer };
 export type ContextWithPromise<C extends {}> = C & {
 	promise: ContextPromise;
-	signal: AbortSignal; // Added signal property here
+	signal: AbortSignal;
 };
 
 declare global {
@@ -1141,7 +1161,6 @@ export const hotwire = <C extends {}>(
 ) => {
 	const nurl = normalizeUrl(url, meta.url, raw);
 
-	// Abort previous instances natively before starting the new one
 	globalThis["__HOTWIRED_ABORT__"][nurl]?.abort("outdated hotwire");
 
 	const controller = new AbortController();

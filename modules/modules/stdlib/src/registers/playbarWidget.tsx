@@ -17,10 +17,7 @@ transformer(
   (emit) => (str) => {
     emit();
 
-    str = str.replace(
-      /(desktop-npb-extra\.queueButton[\s\S]*?children:\s*\[)/,
-      "$1...__renderNowPlayingBarWidgets(),",
-    );
+    str = str.replace(/("hitRemoveLike".+?})\)\]/, "$1),...__renderNowPlayingBarWidgets()]");
 
     return str;
   },

@@ -54,9 +54,10 @@ CHUNKS["/xpui-snapshot.js"] ??= Promise.withResolvers();
 
 Object.assign(CHUNKS, {
   xpui: {
-    promise: CHUNKS["/xpui-modules.js"].promise.then(
-      () => CHUNKS["/xpui-snapshot.js"].promise,
-    ) as any,
+    promise: Promise.all([
+      CHUNKS["/xpui-modules.js"].promise,
+      CHUNKS["/xpui-snapshot.js"].promise,
+    ]) as any,
   },
 });
 

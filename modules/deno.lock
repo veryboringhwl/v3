@@ -1036,6 +1036,7 @@
     }
   },
   "redirects": {
+    "https://deno.land/": "https://deno.com/",
     "https://esm.sh/@types/lodash@~4.17.20/get.d.ts": "https://esm.sh/@types/lodash@4.17.24/get.d.ts",
     "https://esm.sh/@types/lodash@~4.17.20/range.d.ts": "https://esm.sh/@types/lodash@4.17.24/range.d.ts",
     "https://esm.sh/@types/lodash@~4.17.20/startCase.d.ts": "https://esm.sh/@types/lodash@4.17.24/startCase.d.ts",

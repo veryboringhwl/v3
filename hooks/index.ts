@@ -2,6 +2,7 @@
 import mixin, { applyTransforms } from "./mixins.js";
 // @deno-types="./module.ts"
 import {
+	awaitAllLoadableMixins,
 	enableAllLoadable,
 	enableAllLoadableMixins,
 	INTERNAL_MIXIN_LOADER,
@@ -17,16 +18,20 @@ console.timeEnd("onSpotifyPreInit");
 
 console.time("onSpotifyInit");
 
-const modulesPath = await applyTransforms("/xpui-modules.js");
-await import(modulesPath);
+const [modulesPath, snapshotPath] = await Promise.all([
+	applyTransforms("/xpui-modules.js"),
+	applyTransforms("/xpui-snapshot.js"),
+]);
 
-const snapshotPath = await applyTransforms("/xpui-snapshot.js");
+// must load modules before snapshot
+await import(modulesPath);
 await import(snapshotPath);
 
 console.timeEnd("onSpotifyInit");
 console.time("onSpotifyPostInit");
 
 await Promise.all(INTERNAL_MIXIN_LOADER.awaitedMixins);
+await awaitAllLoadableMixins();
 await enableAllLoadable();
 
 console.timeEnd("onSpotifyPostInit");

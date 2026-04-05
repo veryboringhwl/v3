@@ -1,4 +1,3 @@
-
 import { UI } from "../src/webpack/ComponentLibrary.ts";
 
 export const createIconComponent = ({

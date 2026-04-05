@@ -18,7 +18,11 @@ transformer(
   (emit) => (str) => {
     emit();
 
-    str = str.replace(/("hitRemoveLike".+?})\)\]/, "$1),...__renderNowPlayingBarButtons()]");
+    str = str.replace(
+      /(children\s*:\s*\[\s*)(?=(?:(?!children\s*:\s*\[)[\s\S])*?djJumpButtonFactory)/,
+      "$1...__renderNowPlayingBarButtons(),",
+    );
+
     return str;
   },
   {

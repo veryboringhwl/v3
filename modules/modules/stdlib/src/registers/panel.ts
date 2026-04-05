@@ -1,5 +1,4 @@
 import { transformer } from "../../mixin.ts";
-import type { React } from "../expose/React.ts";
 
 import type { createMachine as createMachineT } from "npm:xstate";
 import { Registry } from "./registry.ts";
@@ -96,12 +95,13 @@ const ACTIONS: Record<string, any> = {};
 
 transformer(
   (emit) => (str) => {
-    emit();
-
     str = str.replace(
       /(=\(0,[a-zA-Z_$][\w$]*\.[a-zA-Z_$][\w$]*\)\(\{id:"RightPanelState)/,
       "=__Machine$1",
     );
+
+    emit();
+
     Object.defineProperty(globalThis, "__Machine", {
       set: ($: StateMachine) => {
         Machine = $;
@@ -136,16 +136,15 @@ transformer(
           }
 
           Object.setPrototypeOf(Machine.config.states!, STATES);
-
+          //@ts-expect-error
           Machine._options.actions = ACTIONS;
         });
       },
       get: () => Machine,
     });
 
-    // ! HACKY ALERT
     str = str.replace(
-      /(case\s+[\w$]+\.[\w$]+\.Disabled:\s*return\s*!0;\s*case\s+[\w$]+\.[\w$]+\.Euterpe:[\s\S]*?default:)/,
+      /((?=(?:(?!default:)[\s\S])*?\.Queue:)(?=(?:(?!default:)[\s\S])*?\.DevicePicker:)(?=(?:(?!default:)[\s\S])*?\.Disabled:)(?:case\s+[\w$]+\.[\w$]+\.\w+:\s*)+return\s*!0;\s*default:\s*)/,
       "$1return true;",
     );
 
@@ -158,12 +157,11 @@ transformer(
 
 transformer(
   (emit) => (str) => {
-    emit();
-
     str = str.replace(
-      /(\(([a-zA-Z_$][\w$]*),"PanelSection".+?children:\[?)/,
+      /("PanelSection"[\s\S]*?pageId[\s\S]*?children\s*:\s*\[\s*)(?=(?:(?!in:)[\s\S])*?in:\s*([a-zA-Z_$][\w$]*)\s*===)/,
       "$1__renderPanel($2),",
     );
+    emit();
 
     return str;
   },

@@ -87,7 +87,7 @@ The two plugin packages are:
 - `swc-plugin-remapper`
 - `swc-plugin-transform-module-specifiers`
 
-### 6. Build the player wrapper
+### 6. Build the modules
 
 Go back to the modules folder
 Run the following Deno tasks in order:
@@ -115,12 +115,6 @@ spicetify apply
 
 If you see this error, reload Spotify and try again. It usually fixes after a reload.
 
-You can then run:
-
-```sh
-spicetify
-```
-
-to open the TUI.
+Run `spicetify` in terminal to open the TUI.
 
 If developing modules just run `pw:build` and the close and reopen Spotify

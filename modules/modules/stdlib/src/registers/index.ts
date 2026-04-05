@@ -7,6 +7,7 @@ import type { ModuleInstance } from "/hooks/module.ts";
 
 import menu from "./menu.ts";
 import navlink from "./navlink.tsx";
+import panel from "./panel.ts";
 import playbarButton from "./playbarButton.tsx";
 import playbarWidget from "./playbarWidget.tsx";
 import type { Registry } from "./registry.ts";
@@ -17,54 +18,47 @@ import topbarLeftButton from "./topbarLeftButton.tsx";
 import topbarRightButton from "./topbarRightButton.tsx";
 const [rootChild, rootProvider] = root;
 const registers = {
-	menu,
-	navlink,
-	// panel,
-	playbarButton,
-	playbarWidget,
-	rootChild,
-	rootProvider,
-	route,
-	settingsSection,
-	topbarLeftButton,
-	topbarRightButton,
+  menu,
+  navlink,
+  panel,
+  playbarButton,
+  playbarWidget,
+  rootChild,
+  rootProvider,
+  route,
+  settingsSection,
+  topbarLeftButton,
+  topbarRightButton,
 } satisfies Record<string, Registry<any>>;
 type Registers = typeof registers;
 
 export class Registrar {
-	constructor(public id: string) {}
+  constructor(public id: string) {}
 
-	private ledger = new Map<any, keyof Registers>();
+  private ledger = new Map<any, keyof Registers>();
 
-	register<R extends keyof Registers>(
-		type: R,
-		...args: Parameters<Registers[R]["add"]>
-	) {
-		this.ledger.set(args[0], type);
-		// @ts-expect-error
-		registers[type].add(...args);
-	}
+  register<R extends keyof Registers>(type: R, ...args: Parameters<Registers[R]["add"]>) {
+    this.ledger.set(args[0], type);
+    // @ts-expect-error
+    registers[type].add(...args);
+  }
 
-	unregister<R extends keyof Registers>(
-		type: R,
-		...args: Parameters<Registers[R]["delete"]>
-	) {
-		this.ledger.delete(args[0]);
-		// @ts-expect-error
-		registers[type].delete(...args);
-	}
+  unregister<R extends keyof Registers>(type: R, ...args: Parameters<Registers[R]["delete"]>) {
+    this.ledger.delete(args[0]);
+    // @ts-expect-error
+    registers[type].delete(...args);
+  }
 
-	dispose() {
-		for (const [item, type] of this.ledger.entries())
-			this.unregister(type, item);
-		this.ledger.clear();
-	}
+  dispose() {
+    for (const [item, type] of this.ledger.entries()) this.unregister(type, item);
+    this.ledger.clear();
+  }
 }
 
 export const createRegistrar = (mod: ModuleInstance) => {
-	const registrar = new Registrar(mod.getModuleIdentifier());
-	mod._jsIndex?.disposableStack.defer(() => {
-		registrar.dispose();
-	});
-	return registrar;
+  const registrar = new Registrar(mod.getModuleIdentifier());
+  mod._jsIndex?.disposableStack.defer(() => {
+    registrar.dispose();
+  });
+  return registrar;
 };

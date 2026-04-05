@@ -28,6 +28,22 @@ const newEventBus = () => {
 const EventBus = newEventBus();
 export type EventBus = typeof EventBus;
 
+type PlayerState = {
+  item?: { uri?: string };
+  isPaused?: boolean;
+  isBuffering?: boolean;
+};
+
+type HistoryLocation = {
+  hash: string;
+  key: string;
+  pathname: string;
+  search: string;
+  state: {
+    navigationalRoot: string;
+  };
+};
+
 export const createEventBus = (mod: ModuleInstance) => {
   const eventBus = newEventBus();
 
@@ -48,8 +64,8 @@ export const createEventBus = (mod: ModuleInstance) => {
   return eventBus;
 };
 
-let cachedState = {};
-const playerListener = ({ data: state }) => {
+let cachedState: PlayerState = {};
+const playerListener = ({ data: state }: { data: PlayerState }) => {
   EventBus.Player.state_updated.next(state);
   if (state?.item?.uri !== cachedState?.item?.uri) EventBus.Player.song_changed.next(state);
   if (
@@ -61,7 +77,7 @@ const playerListener = ({ data: state }) => {
   cachedState = state;
 };
 
-const historyListener = (location) => EventBus.History.updated.next(location);
+const historyListener = (location: HistoryLocation) => EventBus.History.updated.next(location);
 
 const updateTitlebarListener = (height: number) =>
   EventBus.ControlMessage.titlebar_updated.next(height);

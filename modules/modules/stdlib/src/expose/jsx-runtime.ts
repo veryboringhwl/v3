@@ -7,20 +7,20 @@ export const ReactJSXRuntime = _ReactJSXRuntime;
 export const { Fragment, jsx, jsxs } = _ReactJSXRuntime;
 
 postWebpackRequireHooks.push(($) => {
-	matchWebpackModule(
-		(_id, module) => {
-			const moduleStr = module.toString();
-			return (
-				moduleStr.includes('"__self"') &&
-				moduleStr.includes('"__source"') &&
-				moduleStr.includes('Symbol.for("react.element")') &&
-				moduleStr.includes('Symbol.for("react.fragment")')
-			);
-		},
-		(id) => {
-			$.m[id] = function () {
-				Object.assign(this, _ReactJSXRuntime);
-			};
-		},
-	);
+  matchWebpackModule(
+    (_id, module) => {
+      const moduleStr = module.toString();
+      return (
+        moduleStr.includes('"__self"') &&
+        moduleStr.includes('"__source"') &&
+        moduleStr.includes('Symbol.for("react.element")') &&
+        moduleStr.includes('Symbol.for("react.fragment")')
+      );
+    },
+    (id) => {
+      $.m[id] = function () {
+        Object.assign(this, _ReactJSXRuntime);
+      };
+    },
+  );
 });

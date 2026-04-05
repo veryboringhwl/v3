@@ -11,7 +11,7 @@ transformer<Snackbar>(
       /var ([a-zA-Z_$][\w$]*);return\(\1=([^;]*?)\)\.enqueueSnackbar=/,
       "var $1;return($1=__Snackbar=$2).enqueueSnackbar=",
     );
-    let __Snackbar: Snackbar | undefined ;
+    let __Snackbar: Snackbar | undefined;
     Object.defineProperty(globalThis, "__Snackbar", {
       set: (value) => {
         emit(value);
