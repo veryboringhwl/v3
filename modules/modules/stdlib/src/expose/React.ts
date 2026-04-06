@@ -23,7 +23,7 @@ postWebpackRequireHooks.push(($) => {
     },
     (id) => {
       $.m[id] = function () {
-        Object.assign(this, React);
+        Object.assign(this, _React);
       };
     },
   );

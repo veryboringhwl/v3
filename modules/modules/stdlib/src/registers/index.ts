@@ -7,7 +7,6 @@ import type { ModuleInstance } from "/hooks/module.ts";
 
 import menu from "./menu.ts";
 import navlink from "./navlink.tsx";
-import panel from "./panel.ts";
 import playbarButton from "./playbarButton.tsx";
 import playbarWidget from "./playbarWidget.tsx";
 import type { Registry } from "./registry.ts";
@@ -20,7 +19,8 @@ const [rootChild, rootProvider] = root;
 const registers = {
   menu,
   navlink,
-  panel,
+  // panel doesnt work as for some reason __Machine is undefined
+  // panel,
   playbarButton,
   playbarWidget,
   rootChild,

@@ -35,10 +35,7 @@ transformer(
       contextMenuBlock.match(/\{menu:([\w_$]+),[^}]*trigger:([\w_$]+),[^}]*triggerRef:([\w_$]+)/) ??
       [];
 
-    let value = `{props:e.menu?.props,trigger:e.trigger,target:e.triggerRef}`;
-    if (menu && trigger && target) {
-      value = `{props:${menu}?.props,trigger:${trigger},target:${target}}`;
-    }
+    const value = `{props:${menu}?.props,trigger:${trigger},target:${target}}`;
 
     const react = contextMenuBlock.match(/([\w_$]+)\.useRef/)?.[1] ?? "React";
 

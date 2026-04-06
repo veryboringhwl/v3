@@ -71,66 +71,33 @@ globalThis.__onScriptLoaded = (path: string) => {
 };
 
 export default async function (transformer: Transformer) {
-	// 1.2.86
-	// transformer(
-	// 	(emit) => (str) => {
-
-	// 		// JS: make the chunk loader async
-	// 		str = str.replace(
-	// 			/(=)(function\([\w$,]+\)\{)(?=(?:(?!function\()[\s\S])*?[\w$]+=Error\(\))/,
-	// 			"$1async $2",
-	// 		);
-
-	// 		// JS: wrap URL — only place a concat expr sits beside Error()
-	// 		str = str.replace(
-	// 			/(?<=[\w$]+=)([\w$.]+\+[\w$.]+\([^)]+\))(?=,[\w$]+=Error\(\))/,
-	// 			"await __applyTransforms($1)",
-	// 		);
-
-	// 		// CSS: make the Promise executor async
-	// 		str = str.replace(
-	// 			/new Promise\(function(\([\w$,]+\)\{var [\w$]+=[\w$]+\.miniCssF\()/,
-	// 			"new Promise(async function$1",
-	// 		);
-
-	// 		// CSS: wrap URL — was missing . in character class so u.p wouldn't match
-	// 		str = str.replace(
-	// 			/(?<=\.miniCssF\([^)]+\),[\w$]+=)([\w$.]+\+[\w$]+)/,
-	// 			"await __applyTransforms($1)",
-	// 		);
-	//
-	// 		emit();
-	// 		return str;
-	// 	},
-	// 	{
-	// 		glob: /^\/xpui-snapshot\.js/,
-	// 	},
-	// );
-
 	transformer(
 		(emit) => (str) => {
+
+			// JS: make the chunk loader async
 			str = str.replace(
-				/(([a-zA-Z_$][\w$]*)=([a-zA-Z_$][\w$]*)\.p\+\3\.u\([a-zA-Z_$][\w$]*\))/,
-				"$1,$2=await __applyTransforms($2)",
+				/(=)(function\([\w$,]+\)\{)(?=(?:(?!function\()[\s\S])*?[\w$]+=Error\(\))/,
+				"$1async $2",
 			);
 
-			const i = str.search('"Loading chunk "');
-			if (i !== -1) {
-				const head = str.slice(0, i);
-				const matches = [...head.matchAll(/=\(([a-zA-Z_$][\w$]*,?)*\)=>\{/g)];
-				if (matches.length > 0) {
-					const lastMatch = matches[matches.length - 1];
-					const index = lastMatch.index;
-					// index + 1 places "async" right after the "=" (e.g., o.f.j=async(t,n)=>{)
-					str = `${str.slice(0, index + 1)}async${str.slice(index + 1)}`;
-				}
-			}
-
+			// JS: wrap URL — only place a concat expr sits beside Error()
 			str = str.replace(
-				/(new Promise\()(\((?:[a-zA-Z_$][\w$]*,?)*\)=>\{(?:var )?([a-zA-Z_$][\w$]*)=([a-zA-Z_$][\w$]*)\.miniCssF\([a-zA-Z_$][\w$]*\),([a-zA-Z_$][\w$]*)=\4\.p\+\3)/,
-				"$1async$2,$5=await __applyTransforms($5)",
+				/(?<=[\w$]+=)([\w$.]+\+[\w$.]+\([^)]+\))(?=,[\w$]+=Error\(\))/,
+				"await __applyTransforms($1)",
 			);
 
+			// CSS: make the Promise executor async
+			str = str.replace(
+				/new Promise\(function(\([\w$,]+\)\{var [\w$]+=[\w$]+\.miniCssF\()/,
+				"new Promise(async function$1",
+			);
+
+			// CSS: wrap URL — was missing . in character class so u.p wouldn't match
+			str = str.replace(
+				/(?<=\.miniCssF\([^)]+\),[\w$]+=)([\w$.]+\+[\w$]+)/,
+				"await __applyTransforms($1)",
+			);
+	
 			emit();
 			return str;
 		},
@@ -139,23 +106,25 @@ export default async function (transformer: Transformer) {
 		},
 	);
 
+
+
 	//  Fixes some components' displayNames not being available as they're forwarded by the React profiler.
 	//  This patch assigns the displayName to the exported function, while still allowing the React profiler to function properly.
-	// transformer(
-	// 	(emit) => (str) => {
-	// 		emit();
+	transformer(
+		(emit) => (str) => {
+			emit();
 
-	// 		str = str.replace(
-	// 			/return (\w+)\.displayName=`profiler\(/,
-	// 			"$1.toString=arguments[0].toString.bind(arguments[0]);$&",
-	// 		);
+			str = str.replace(
+				/return (\w+)\.displayName=`profiler\(/,
+				"$1.toString=arguments[0].toString.bind(arguments[0]);$&",
+			);
 
-	// 		return str;
-	// 	},
-	// 	{
-	// 		glob: /^\/xpui-modules\.js/,
-	// 	},
-	// );
+			return str;
+		},
+		{
+			glob: /^\/xpui-modules\.js/,
+		},
+	);
 
 	// sentry works if spotif ver is <30 days so make it never
 	transformer(

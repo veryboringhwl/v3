@@ -16,12 +16,12 @@ declare global {
 globalThis.__renderNowPlayingBarButtons = () => registry.all().reverse();
 transformer(
   (emit) => (str) => {
-    emit();
-
     str = str.replace(
-      /(children\s*:\s*\[\s*)(?=(?:(?!children\s*:\s*\[)[\s\S])*?djJumpButtonFactory)/,
-      "$1...__renderNowPlayingBarButtons(),",
+      /(desktop-npb-extra\.queueButton[\s\S]*?children:\s*\[)/,
+      "$1...__renderNowPlayingBarWidgets(),",
     );
+
+    emit();
 
     return str;
   },

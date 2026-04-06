@@ -1,18 +1,144 @@
 import { React } from "/modules/stdlib/src/expose/React.ts";
 import {
+  Cards,
   ContextMenu,
+  InstrumentedRedirect,
   Menu,
   MenuItem,
   MenuItemSubMenu,
+  Menus,
+  Nav,
   NavTo,
+  RemoteConfigProvider,
+  RemoteConfigProviderComponent,
+  RightClickMenu,
   Route,
   Routes,
+  Router,
+  ScrollableContainer,
+  Settings,
+  Snackbar,
+  SnackbarProvider,
+  StoreProvider,
+  Tracklist,
+  TracklistColumnsContextProvider,
+  TracklistRow,
+  Toggle,
   Tooltip,
 } from "/modules/stdlib/src/webpack/ReactComponents.ts";
 
 const NOOP = () => {};
 const _LONG_TEXT =
   "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.";
+
+const renderProbe = (
+  Component?: unknown,
+  props: Record<string, unknown> = {},
+  children?: React.ReactNode,
+) => {
+  if (!Component || (typeof Component !== "function" && typeof Component !== "string")) {
+    return <span>Loading...</span>;
+  }
+
+  return React.createElement(
+    Component as React.ElementType,
+    props as React.Attributes & Record<string, unknown>,
+    children,
+  );
+};
+
+const _additionalProbes: Array<{
+  title: string;
+  render: () => React.ReactNode;
+}> = [
+  { title: "<Settings />", render: () => renderProbe(Settings) },
+  { title: "<Menus />", render: () => renderProbe(Menus) },
+  {
+    title: "<Cards />",
+    render: () => renderProbe(Cards, {}, <div>Card body</div>),
+  },
+  {
+    title: "<RemoteConfigProviderComponent />",
+    render: () => renderProbe(RemoteConfigProviderComponent, {}, <div>Remote config</div>),
+  },
+  {
+    title: "<Nav />",
+    render: () => (Nav ? renderProbe(Nav, { to: "/home" }, "Navigate") : <span>Loading...</span>),
+  },
+  {
+    title: "<InstrumentedRedirect />",
+    render: () =>
+      typeof InstrumentedRedirect === "function" ? <span>Loaded</span> : <span>Loading...</span>,
+  },
+  {
+    title: "<SnackbarProvider />",
+    render: () => renderProbe(SnackbarProvider, {}, <button type="button">Snackbar child</button>),
+  },
+  {
+    title: "<RightClickMenu />",
+    render: () => {
+      if (!RightClickMenu || !Menu || !MenuItem) return <span>Loading...</span>;
+      return renderProbe(
+        RightClickMenu,
+        {
+          trigger: "right-click",
+          placement: "top",
+          offset: [0, 8],
+          menu: React.createElement(
+            Menu as React.ElementType,
+            null,
+            React.createElement(
+              MenuItem as React.ElementType,
+              { onClick: NOOP },
+              "Right-click action",
+            ),
+          ),
+        },
+        React.createElement("button", { type: "button" }, "Right click me"),
+      );
+    },
+  },
+  {
+    title: "<RemoteConfigProvider />",
+    render: () => renderProbe(RemoteConfigProvider),
+  },
+  {
+    title: "<Snackbar />",
+    render: () => renderProbe(Snackbar, {}, "Snackbar content"),
+  },
+  {
+    title: "<Router />",
+    render: () => {
+      if (!Router || !Routes || !Route) return <span>Loading...</span>;
+      return renderProbe(
+        Router,
+        {},
+        React.createElement(
+          Routes as React.ElementType,
+          null,
+          React.createElement(Route as React.ElementType, {
+            path: "/",
+            element: React.createElement("div", null, "Router route"),
+          }),
+        ),
+      );
+    },
+  },
+  {
+    title: "<StoreProvider />",
+    render: () => renderProbe(StoreProvider, {}, <div>Store wrapper</div>),
+  },
+  { title: "<Tracklist />", render: () => renderProbe(Tracklist) },
+  {
+    title: "<TracklistColumnsContextProvider />",
+    render: () => renderProbe(TracklistColumnsContextProvider, {}, <div>Columns context</div>),
+  },
+  {
+    title: "<TracklistRow />",
+    render: () =>
+      typeof TracklistRow === "function" ? <span>Loaded</span> : <span>Loading...</span>,
+  },
+];
 
 const ProbeCard = ({ title, render }: { title: string; render?: () => React.ReactNode }) => {
   return (
@@ -104,7 +230,7 @@ export const TestPage = () => {
           />
         </Section>
 
-        {/* <Section title="FilterBox">
+        {/*<Section title="FilterBox">
 					<ProbeCard
 						title="<FilterBox />"
 						render={() =>
@@ -115,49 +241,62 @@ export const TestPage = () => {
 							})
 						}
 					/>
-				</Section>
+				</Section>*/}
 
-				<Section title="Toggle">
-					<ProbeCard
-						title="<Toggle />"
-						render={() =>
-							React.createElement(Toggle as React.ElementType, {
-								id: "toggle-probe",
-								value: false,
-								onSelected: NOOP,
-							})
-						}
-					/>
-				</Section> */}
+        <Section title="Toggle">
+          <ProbeCard
+            title="<Toggle />"
+            render={() => {
+              const [isChecked, setIsChecked] = React.useState(false);
 
-        {/* <Section title="ScrollableContainer">
-					<ProbeCard
-						title="<ScrollableContainer />"
-						render={() => (
-							<ScrollableContainer>
-								<div style={{ display: "flex", gap: "8px", minWidth: "420px" }}>
-									<button type="button">Item A</button>
-									<button type="button">Item B</button>
-									<button type="button">Item C</button>
-								</div>
-							</ScrollableContainer>
-						)}
-					/>
-				</Section>
- */}
-        {/* <Section title="ScrollableText">
+              return (
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <Toggle
+                    id="toggle-probe"
+                    value={isChecked}
+                    onSelected={(newValue) => {
+                      setIsChecked(newValue);
+                    }}
+                  />
+                  <span>State: {isChecked ? "ON" : "OFF"}</span>
+                </div>
+              );
+            }}
+          />
+        </Section>
+
+        <Section title="ScrollableContainer">
+          <ProbeCard
+            title="<ScrollableContainer />"
+            render={() => (
+              <div style={{ display: "flex", gap: "8px", maxWidth: "200px" }}>
+                <ScrollableContainer>
+                  <button type="button">Item A</button>
+                  <button type="button">Item B</button>
+                  <button type="button">Item C</button>
+                  <button type="button">Item D</button>
+                  <button type="button">Item E</button>
+                  <button type="button">Item F</button>
+                </ScrollableContainer>{" "}
+              </div>
+            )}
+          />
+        </Section>
+
+        {/*<Section title="ScrollableText">
 					<ProbeCard
 						title="<ScrollableText />"
-						render={() => <ScrollableText>{LONG_TEXT}</ScrollableText>}
+						render={() => <ScrollableText>{_LONG_TEXT}</ScrollableText>}
 					/>
-				</Section> */}
+				</Section>*/}
 
         <Section title="Routes and Route">
           <ProbeCard
             title="<Routes /><Route />"
             render={() => (
               <Routes>
-                <Route path="/" element={<div>Route element rendered</div>} />
+                <Route path="/ho" element={<div>shows when /home</div>} />
+                <Route path="/test" element={<div>shows when /test</div>} />
               </Routes>
             )}
           />
@@ -175,26 +314,6 @@ export const TestPage = () => {
             }
           />
         </Section>
-
-        {/* <Section title="Panel Components">
-					<ProbeCard
-						title="PanelContainer + PanelHeader + PanelContent"
-						render={() =>
-							React.createElement(
-								PanelContainer as React.ElementType,
-								null,
-								React.createElement(PanelHeader as React.ElementType, {
-									title: "Panel header",
-								}),
-								React.createElement(
-									PanelContent as React.ElementType,
-									null,
-									React.createElement("div", null, "Panel content body"),
-								),
-							)
-						}
-					/>
-				</Section> */}
       </div>
     </div>
   );

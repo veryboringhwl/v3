@@ -1,5 +1,6 @@
 import { webpackRequire } from "../wpunpk.mix.ts";
 import { matchWebpackModule } from "../wpunpk.ts";
+import { fnStr } from "/hooks/util.ts";
 
 export * from "./ReactComponents.gen.ts";
 
@@ -18,8 +19,8 @@ export let TracklistRow: React.FC<any>;
 
 matchWebpackModule(
   (_id, module) => {
-    const moduleStr = module.toString();
-    return moduleStr.includes('"JWYoNAyrIIdW30u4PSGE"');
+    const moduleStr = fnStr(module);
+    return moduleStr.includes('"_nD_jYvjV80Rf8sX"');
   },
   (id, _$) => {
     const module = webpackRequire(id);
@@ -29,7 +30,7 @@ matchWebpackModule(
 
 matchWebpackModule(
   (_id, module) => {
-    const moduleStr = module.toString();
+    const moduleStr = fnStr(module);
     return moduleStr.includes('"data-testid":"track-icon"');
   },
   async (id, _$) => {

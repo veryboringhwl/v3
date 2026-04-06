@@ -17,7 +17,6 @@ await enableAllLoadableMixins();
 console.timeEnd("onSpotifyPreInit");
 
 console.time("onSpotifyInit");
-
 const [modulesPath, snapshotPath] = await Promise.all([
 	applyTransforms("/xpui-modules.js"),
 	applyTransforms("/xpui-snapshot.js"),
@@ -26,13 +25,11 @@ const [modulesPath, snapshotPath] = await Promise.all([
 // must load modules before snapshot
 await import(modulesPath);
 await import(snapshotPath);
-
 console.timeEnd("onSpotifyInit");
-console.time("onSpotifyPostInit");
 
+console.time("onSpotifyPostInit");
 await Promise.all(INTERNAL_MIXIN_LOADER.awaitedMixins);
 await awaitAllLoadableMixins();
 await enableAllLoadable();
-
 console.timeEnd("onSpotifyPostInit");
 requestIdleCallback(loadRemoteModules);

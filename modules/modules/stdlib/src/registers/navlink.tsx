@@ -103,17 +103,15 @@ interface NavLinkFactoryProps {
 
 const _NavLink: React.FC<NavLinkFactoryProps> = (props) => {
   return (
-    <div className="inline-flex">
-      <Tooltip label={props.localizedApp}>
-        <UI.ButtonTertiary
-          iconOnly={props.createIcon}
-          className={classnames("DoxYADBBjYMvoYwl7QPg YEAFPNm87XbzS4sF5dDe rC9xwL4gaksmshIjHbNn", {
-            Ufz621LN174DTRDis7EY: props.isActive,
-          })}
-          aria-label={props.localizedApp}
-          onClick={() => Platform.getHistory().push(props.appRoutePath)}
-        />
-      </Tooltip>
-    </div>
+    <Tooltip label={props.localizedApp}>
+      <UI.ButtonTertiary
+        iconOnly={props.createIcon}
+        className={classnames("_Bg_zSvFrEutyacG kUHE42xvQVzWqabl uBpmNFia37U4nzmX", {
+          kxv3By32Og8yDEXy: props.isActive,
+        })}
+        aria-label={props.localizedApp}
+        onClick={() => Platform.getHistory().push(props.appRoutePath)}
+      />
+    </Tooltip>
   );
 };

@@ -32,7 +32,6 @@ export let RemoteConfigProvider: typeof ReactComponents_xpui_ts.RemoteConfigProv
 export let Snackbar: typeof ReactComponents_xpui_ts.Snackbar;
 export let FilterBox: typeof ReactComponents_xpui_ts.FilterBox;
 export let ScrollableContainer: typeof ReactComponents_xpui_ts.ScrollableContainer;
-export let ScrollableText: typeof ReactComponents_xpui_ts.ScrollableText;
 export let Router: typeof ReactComponents_xpui_ts.Router;
 export let Routes: typeof ReactComponents_xpui_ts.Routes;
 export let Route: typeof ReactComponents_xpui_ts.Route;
@@ -59,7 +58,6 @@ import("./ReactComponents.xpui.ts").then((m) => {
   Snackbar = m.Snackbar;
   FilterBox = m.FilterBox;
   ScrollableContainer = m.ScrollableContainer;
-  ScrollableText = m.ScrollableText;
   Router = m.Router;
   Routes = m.Routes;
   Route = m.Route;

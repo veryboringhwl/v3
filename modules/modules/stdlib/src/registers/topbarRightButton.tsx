@@ -67,8 +67,6 @@ export const TopbarRightButton: React.FC<TopbarRightButtonProps> = (props) => (
       {props.icon &&
         createIconComponent({
           icon: props.icon,
-          iconSize: 16,
-          realIconSize: 24,
         })}
     </UI.ButtonTertiary>
   </Tooltip>

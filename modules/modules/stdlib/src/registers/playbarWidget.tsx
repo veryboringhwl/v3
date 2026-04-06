@@ -15,9 +15,9 @@ declare global {
 globalThis.__renderNowPlayingBarWidgets = () => registry.all();
 transformer(
   (emit) => (str) => {
-    emit();
-
     str = str.replace(/("hitRemoveLike".+?})\)\]/, "$1),...__renderNowPlayingBarWidgets()]");
+
+    emit();
 
     return str;
   },
