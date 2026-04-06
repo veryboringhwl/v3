@@ -1,7 +1,10 @@
 import { React } from "/modules/stdlib/src/expose/React.ts";
 import {
   Cards,
+  ConfirmDialog,
   ContextMenu,
+  Dialog,
+  GenericModal,
   InstrumentedRedirect,
   Menu,
   MenuItem,
@@ -265,6 +268,101 @@ export const TestPage = () => {
           />
         </Section>
 
+        <Section title="ConfirmDialog">
+          <ProbeCard
+            title="<ConfirmDialog />"
+            render={() => {
+              const [isOpen, setIsOpen] = React.useState(false);
+
+              return (
+                <>
+                  <ConfirmDialog
+                    titleText="Title Text"
+                    descriptionText="Description Text."
+                    confirmText="Confirm"
+                    cancelText="Cancel"
+                    isOpen={isOpen}
+                    onConfirm={() => {
+                      console.log("Confirmed!");
+                      setIsOpen(false);
+                    }}
+                    onClose={() => setIsOpen(false)}
+                    onOutside={() => setIsOpen(false)}
+                  />
+
+                  <button onClick={() => setIsOpen(true)}>Open Confirm Dialog</button>
+                </>
+              );
+            }}
+          />
+        </Section>
+        <Section title="Dialog">
+          <ProbeCard
+            title="<Dialog />"
+            render={() => {
+              const [isOpen, setIsOpen] = React.useState(false);
+
+              return (
+                <>
+                  <Dialog
+                    isOpen={isOpen}
+                    onClose={() => setIsOpen(false)}
+                    shouldCloseOnBackdropClick={true}
+                    animated={true}
+                  >
+                    <div
+                      style={{
+                        padding: "24px",
+                        background: "var(--background-base)",
+                        color: "white",
+                      }}
+                    >
+                      <h1>Custom Dialog Content</h1>
+                      <p>This is a dialog component.</p>
+                      <button onClick={() => setIsOpen(false)}>Close Me</button>
+                    </div>
+                  </Dialog>
+
+                  <button onClick={() => setIsOpen(true)}>Open Dialog</button>
+                </>
+              );
+            }}
+          />
+        </Section>
+        <Section title="GenericModal">
+          <ProbeCard
+            title="<GenericModal />"
+            render={() => {
+              const [isOpen, setIsOpen] = React.useState(false);
+
+              return (
+                <>
+                  <GenericModal
+                    isOpen={isOpen}
+                    onClose={() => setIsOpen(false)}
+                    shouldCloseOnBackdropClick={true}
+                    animated={true}
+                  >
+                    <div
+                      style={{
+                        padding: "24px",
+                        background: "var(--background-base)",
+                        color: "white",
+                      }}
+                    >
+                      <h1>Custom GenericModal Content</h1>
+                      <p>This is a GenericModal component.</p>
+                      <button onClick={() => setIsOpen(false)}>Close Me</button>
+                    </div>
+                  </GenericModal>
+
+                  <button onClick={() => setIsOpen(true)}>Open GenericModal</button>
+                </>
+              );
+            }}
+          />
+        </Section>
+
         <Section title="ScrollableContainer">
           <ProbeCard
             title="<ScrollableContainer />"
@@ -283,12 +381,51 @@ export const TestPage = () => {
           />
         </Section>
 
-        {/*<Section title="ScrollableText">
-					<ProbeCard
-						title="<ScrollableText />"
-						render={() => <ScrollableText>{_LONG_TEXT}</ScrollableText>}
-					/>
-				</Section>*/}
+        <Section title="Cards">
+          <ProbeCard
+            title="<Cards />"
+            render={() => (
+              <>
+                <Cards.Generic
+                  uri="spotify:album:12345"
+                  headerText="Default Generic Card"
+                  variant="default"
+                  renderCardImage={() => (
+                    <img
+                      src="https://lineup-images.scdn.co/your-image-url"
+                      style={{
+                        width: "100%",
+                        aspectRatio: "1/1",
+                        objectFit: "cover",
+                      }}
+                    />
+                  )}
+                  renderSubHeaderContent={() => "Artist Name"}
+                  onClick={(uri) => console.log("Clicked card:", uri)}
+                  isPlayable={true}
+                  showTitle={true}
+                  titleLineClamp={2}
+                />
+                <Cards.HeroGeneric
+                  uri="spotify:playlist:37i9dQZF1DXcBWIGoYBM3M"
+                  headerText="Todays Top Hits"
+                  renderCardImage={() => (
+                    <img
+                      src="https://i.scdn.co/image/ab67706f00000002fe24d7051005da37e2448378"
+                      style={{ width: "100%", borderRadius: "8px" }}
+                    />
+                  )}
+                  renderSubHeaderContent={() => "The hottest tracks right now."}
+                  isPlayable={true}
+                  // Unique Hero Props
+                  getSignifierContent={() => (
+                    <span style={{ color: "#1db954" }}>Featured Playlist</span>
+                  )}
+                />
+              </>
+            )}
+          />
+        </Section>
 
         <Section title="Routes and Route">
           <ProbeCard

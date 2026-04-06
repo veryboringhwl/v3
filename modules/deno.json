@@ -35,5 +35,11 @@
     "jsxImportSource": "custom-react",
     "noImplicitOverride": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"]
+  },
+  "lint": {
+    "exclude": ["**/*"]
+  },
+  "format": {
+    "exclude": ["**/*"]
   }
 }

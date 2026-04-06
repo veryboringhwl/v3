@@ -17,6 +17,7 @@ import("./ReactComponents.panel.ts").then((m) => {
 import type * as ReactComponents_xpui_ts from "./ReactComponents.xpui.ts";
 export let Menus: typeof ReactComponents_xpui_ts.Menus;
 export let Cards: typeof ReactComponents_xpui_ts.Cards;
+export let ConfirmDialog: typeof ReactComponents_xpui_ts.ConfirmDialog;
 export let RemoteConfigProviderComponent: typeof ReactComponents_xpui_ts.RemoteConfigProviderComponent;
 export let Nav: typeof ReactComponents_xpui_ts.Nav;
 export let NavTo: typeof ReactComponents_xpui_ts.NavTo;
@@ -43,6 +44,7 @@ export let TracklistColumnsContextProvider: typeof ReactComponents_xpui_ts.Track
 import("./ReactComponents.xpui.ts").then((m) => {
   Menus = m.Menus;
   Cards = m.Cards;
+  ConfirmDialog = m.ConfirmDialog;
   RemoteConfigProviderComponent = m.RemoteConfigProviderComponent;
   Nav = m.Nav;
   NavTo = m.NavTo;

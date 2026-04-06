@@ -44,11 +44,7 @@ export const Cards: any = Object.assign(
         fnStr(f).match(/^[^;]*featureIdentifier/) &&
         fnStr(f).match(/^[^;]*renderCardImage/),
     ),
-    HeroGeneric: findBy(
-      "cardPlayButtonFactory",
-      "featureIdentifier",
-      "getSignifierContent",
-    )(exportedFunctions),
+    HeroGeneric: findBy("herocard-click-handler")(exportedFunctions),
     CardImage: findBy('"card-image"')(exportedFunctions),
   },
   Object.fromEntries(
@@ -110,11 +106,6 @@ export const RightClickMenu: React.FC<any> = findBy(
   "right-click",
 )(exportedFunctions);
 
-// export const ConfirmDialog: React.FC<any> = findBy(
-// 	"isOpen",
-// 	"shouldCloseOnEsc",
-// 	"onClose",
-// )(exportedFunctions);
 export const Tooltip: React.FC<any> = findBy("hover-or-focus", "tooltip")(exportedFunctions);
 
 export const Menu: React.FC<any> = findBy("getInitialFocusElement", "children")(exportedFunctions);
@@ -135,14 +126,23 @@ export const Snackbar = {
 export const FilterBox: React.NamedExoticComponent = exportedMemos.find((f) =>
   fnStr(f.type).includes("filterBoxApiRef"),
 )!;
-export const ScrollableContainer: React.FC<any> = findBy(
-  "scrollLeft",
-  "showButtons",
-)(exportedFunctions);
-export const ScrollableText: React.FC<any> = findBy(
-  "scrollLeft",
-  "pauseAtEndEdgeDurationMs",
-)(exportedFunctions);
+
+const [ScrollableContainerModule] = modules.find(
+  ([_, v]) => fnStr(v).includes("scrollLeft") && fnStr(v).includes("showButtons"),
+);
+const ScrollableContainerExports = Object.values(webpackRequire(ScrollableContainerModule));
+export const ScrollableContainer: React.FC<any> = ScrollableContainerExports.find(
+  (m) => m && typeof m === "object" && Object.hasOwn(m, "$$typeof"),
+);
+
+const [ConfirmDialogModule] = modules.find(([_, v]) =>
+  fnStr(v).includes("confirm-dialog-description"),
+);
+const ConfirmDialogExports = Object.values(webpackRequire(ConfirmDialogModule));
+export const ConfirmDialog: React.FC<any> = ConfirmDialogExports.find(
+  (m) => m && typeof m === "object" && Object.hasOwn(m, "$$typeof"),
+);
+
 export const Router: React.FC<any> = findBy("navigationType", "static")(exportedFunctions);
 export const Routes: React.FC<any> = findBy(
   /\([a-zA-Z_$][\w$]*\)\{let\{children:[a-zA-Z_$][\w$]*,location:[a-zA-Z_$][\w$]*\}=[a-zA-Z_$][\w$]*/,
