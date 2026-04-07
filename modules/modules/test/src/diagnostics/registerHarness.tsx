@@ -11,10 +11,10 @@ import { PlaybarWidget } from "/modules/stdlib/src/registers/playbarWidget.tsx";
 import { TopbarLeftButton } from "/modules/stdlib/src/registers/topbarLeftButton.tsx";
 import { TopbarRightButton } from "/modules/stdlib/src/registers/topbarRightButton.tsx";
 import { MenuItem, MenuItemSubMenu } from "/modules/stdlib/src/webpack/ReactComponents.ts";
-import { DiagnosticsModal } from "./DiagnosticsModal.tsx";
 import { usePanelAPI } from "/modules/stdlib/src/webpack/ReactHooks.ts";
 import { hash } from "../../mod.tsx";
 import { ACTIVE_ICON, ICON } from "../static.ts";
+import { DiagnosticsModal } from "./DiagnosticsModal.tsx";
 
 type SettingsSectionWithChildren = React.FC<{
   filterMatchQuery: string;
@@ -62,16 +62,16 @@ export const PlaybarButtonProbe = () => {
   };
   return (
     <PlaybarButton
-      label="test-button"
       icon={ICON_PATH}
-      onClick={handleButtonClick}
       isActive={isActive}
+      label="test-button"
+      onClick={handleButtonClick}
     />
   );
 };
 
 export const TestLink = () => (
-  <NavLink localizedApp="Stdlib Test" appRoutePath="/test" icon={ICON} activeIcon={ACTIVE_ICON} />
+  <NavLink activeIcon={ACTIVE_ICON} appRoutePath="/test" icon={ICON} localizedApp="Stdlib Test" />
 );
 
 export const SettingsSectionProbe = () => {

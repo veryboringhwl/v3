@@ -1,10 +1,10 @@
-import { React } from "../expose/React.ts";
 import { createIconComponent } from "../../lib/createIconComponent.tsx";
 import { transformer } from "../../mixin.ts";
 import { Platform } from "../expose/Platform.ts";
+import { React } from "../expose/React.ts";
 import { classnames } from "../webpack/ClassNames.ts";
-import { Tooltip } from "../webpack/ReactComponents.ts";
 import { UI } from "../webpack/ComponentLibrary.ts";
+import { ScrollableContainer, Tooltip } from "../webpack/ReactComponents.ts";
 import { Registry } from "./registry.ts";
 
 const registry = new (class extends Registry<React.ReactNode> {
@@ -31,26 +31,20 @@ globalThis.__renderNavLinks = () =>
     [, refresh] = React.useReducer((n) => n + 1, 0);
 
     return (
-      <>
+      <ScrollableContainer className="navlinks-scrollable_container" onlyHorizontalWheel>
         {registry.all()}
-        {/*<ScrollableContainer
-          className="custom-navlinks-scrollable_container"
-          onlyHorizontalWheel
-        >
-          {registry.all()}
-        </ScrollableContainer>*/}
-      </>
+      </ScrollableContainer>
     );
   });
+
 transformer(
   (emit) => (str) => {
-    emit();
-
     str = str.replace(
-      /("data-testid":\s*"global-nav-bar"[\s\S]*?children:\s*\[\s*)(\(\s*0,\s*[a-zA-Z_$][\w$]*\.jsx\)\s*\(\s*[^,]+,\s*\{\s*className:\s*[^}]+\}\s*\)\s*,)/,
-      "$1__renderNavLinks(), $2",
+      /("spotify:app:home"[\s\S]*?,[a-zA-Z_$][\w$]*=\(\{children:([a-zA-Z_$][\w$]*)\}\)=>[^}]*?,children:)\2/,
+      "$1[$2,__renderNavLinks()]",
     );
 
+    emit();
     return str;
   },
   {
@@ -59,10 +53,9 @@ transformer(
 );
 transformer(
   (emit) => (str) => {
-    emit();
-
     str = str.replace('["","/","/home/",', '["","/","/home/","/bespoke/*",');
 
+    emit();
     return str;
   },
   {
@@ -76,6 +69,7 @@ export type NavLinkProps = {
   icon: string;
   activeIcon: string;
 };
+
 export const NavLink: React.FC<NavLinkProps> = (props) => {
   const isActive = Platform.getHistory().location.pathname?.startsWith(props.appRoutePath);
   const createIcon = () =>
@@ -86,10 +80,10 @@ export const NavLink: React.FC<NavLinkProps> = (props) => {
 
   return (
     <_NavLink
-      localizedApp={props.localizedApp}
       appRoutePath={props.appRoutePath}
       createIcon={createIcon}
       isActive={isActive}
+      localizedApp={props.localizedApp}
     />
   );
 };
@@ -105,12 +99,14 @@ const _NavLink: React.FC<NavLinkFactoryProps> = (props) => {
   return (
     <Tooltip label={props.localizedApp}>
       <UI.ButtonTertiary
-        iconOnly={props.createIcon}
+        aria-label={props.localizedApp}
         className={classnames("_Bg_zSvFrEutyacG kUHE42xvQVzWqabl uBpmNFia37U4nzmX", {
           kxv3By32Og8yDEXy: props.isActive,
         })}
-        aria-label={props.localizedApp}
-        onClick={() => Platform.getHistory().push(props.appRoutePath)}
+        iconOnly={props.createIcon}
+        onClick={() => {
+          Platform.getHistory().push(props.appRoutePath);
+        }}
       />
     </Tooltip>
   );

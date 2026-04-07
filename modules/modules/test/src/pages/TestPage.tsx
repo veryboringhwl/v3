@@ -13,21 +13,20 @@ import {
   Nav,
   NavTo,
   RemoteConfigProvider,
-  RemoteConfigProviderComponent,
   RightClickMenu,
   Route,
-  Routes,
   Router,
+  Routes,
   ScrollableContainer,
   Settings,
   Snackbar,
   SnackbarProvider,
   StoreProvider,
+  Toggle,
+  Tooltip,
   Tracklist,
   TracklistColumnsContextProvider,
   TracklistRow,
-  Toggle,
-  Tooltip,
 } from "/modules/stdlib/src/webpack/ReactComponents.ts";
 
 const NOOP = () => {};
@@ -190,7 +189,6 @@ export const TestPage = () => {
       >
         <Section title="Menu">
           <ProbeCard
-            title="<Menu />"
             render={() => (
               <Menu>
                 <MenuItem onClick={NOOP}>Menu item</MenuItem>
@@ -199,37 +197,38 @@ export const TestPage = () => {
                 </MenuItemSubMenu>
               </Menu>
             )}
+            title="<Menu />"
           />
         </Section>
 
         <Section title="Context Menu">
           <ProbeCard
-            title="<ContextMenu />"
             render={() => (
               <ContextMenu
-                trigger="right-click"
-                placement="top"
-                offset={[0, 8]}
                 menu={
                   <Menu>
                     <MenuItem onClick={NOOP}>Context action</MenuItem>
                   </Menu>
                 }
+                offset={[0, 8]}
+                placement="top"
+                trigger="right-click"
               >
                 <button type="button">Right click this target</button>
               </ContextMenu>
             )}
+            title="<ContextMenu />"
           />
         </Section>
 
         <Section title="Tooltip">
           <ProbeCard
-            title="<Tooltip />"
             render={() => (
               <Tooltip label="Tooltip probe">
                 <button type="button">Hover for tooltip</button>
               </Tooltip>
             )}
+            title="<Tooltip />"
           />
         </Section>
 
@@ -248,7 +247,6 @@ export const TestPage = () => {
 
         <Section title="Toggle">
           <ProbeCard
-            title="<Toggle />"
             render={() => {
               const [isChecked, setIsChecked] = React.useState(false);
 
@@ -256,10 +254,26 @@ export const TestPage = () => {
                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                   <Toggle
                     id="toggle-probe"
-                    value={isChecked}
                     onSelected={(newValue) => {
                       setIsChecked(newValue);
                     }}
+                    value={isChecked}
+                  />
+                  <span>State: {isChecked ? "ON" : "OFF"}</span>
+                </div>
+              );
+            }}
+            render={() => {
+              const [isChecked, setIsChecked] = React.useState(false);
+
+              return (
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <Toggle
+                    id="toggle-probe"
+                    onSelected={(newValue) => {
+                      setIsChecked(newValue);
+                    }}
+                    value={isChecked}
                   />
                   <span>State: {isChecked ? "ON" : "OFF"}</span>
                 </div>
@@ -270,24 +284,46 @@ export const TestPage = () => {
 
         <Section title="ConfirmDialog">
           <ProbeCard
-            title="<ConfirmDialog />"
             render={() => {
               const [isOpen, setIsOpen] = React.useState(false);
 
               return (
                 <>
                   <ConfirmDialog
-                    titleText="Title Text"
-                    descriptionText="Description Text."
-                    confirmText="Confirm"
                     cancelText="Cancel"
+                    confirmText="Confirm"
+                    descriptionText="Description Text."
                     isOpen={isOpen}
+                    onClose={() => setIsOpen(false)}
                     onConfirm={() => {
                       console.log("Confirmed!");
                       setIsOpen(false);
                     }}
-                    onClose={() => setIsOpen(false)}
                     onOutside={() => setIsOpen(false)}
+                    titleText="Title Text"
+                  />
+
+                  <button onClick={() => setIsOpen(true)}>Open Confirm Dialog</button>
+                </>
+              );
+            }}
+            render={() => {
+              const [isOpen, setIsOpen] = React.useState(false);
+
+              return (
+                <>
+                  <ConfirmDialog
+                    cancelText="Cancel"
+                    confirmText="Confirm"
+                    descriptionText="Description Text."
+                    isOpen={isOpen}
+                    onClose={() => setIsOpen(false)}
+                    onConfirm={() => {
+                      console.log("Confirmed!");
+                      setIsOpen(false);
+                    }}
+                    onOutside={() => setIsOpen(false)}
+                    titleText="Title Text"
                   />
 
                   <button onClick={() => setIsOpen(true)}>Open Confirm Dialog</button>
@@ -298,17 +334,16 @@ export const TestPage = () => {
         </Section>
         <Section title="Dialog">
           <ProbeCard
-            title="<Dialog />"
             render={() => {
               const [isOpen, setIsOpen] = React.useState(false);
 
               return (
                 <>
                   <Dialog
+                    animated={true}
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
                     shouldCloseOnBackdropClick={true}
-                    animated={true}
                   >
                     <div
                       style={{
@@ -327,21 +362,21 @@ export const TestPage = () => {
                 </>
               );
             }}
+            title="<Dialog />"
           />
         </Section>
         <Section title="GenericModal">
           <ProbeCard
-            title="<GenericModal />"
             render={() => {
               const [isOpen, setIsOpen] = React.useState(false);
 
               return (
                 <>
                   <GenericModal
+                    animated={true}
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
                     shouldCloseOnBackdropClick={true}
-                    animated={true}
                   >
                     <div
                       style={{
@@ -360,12 +395,12 @@ export const TestPage = () => {
                 </>
               );
             }}
+            title="<GenericModal />"
           />
         </Section>
 
         <Section title="ScrollableContainer">
           <ProbeCard
-            title="<ScrollableContainer />"
             render={() => (
               <div style={{ display: "flex", gap: "8px", maxWidth: "200px" }}>
                 <ScrollableContainer>
@@ -378,18 +413,18 @@ export const TestPage = () => {
                 </ScrollableContainer>{" "}
               </div>
             )}
+            title="<ScrollableContainer />"
           />
         </Section>
 
         <Section title="Cards">
           <ProbeCard
-            title="<Cards />"
             render={() => (
               <>
                 <Cards.Generic
-                  uri="spotify:album:12345"
                   headerText="Default Generic Card"
-                  variant="default"
+                  isPlayable={true}
+                  onClick={(uri) => console.log("Clicked card:", uri)}
                   renderCardImage={() => (
                     <img
                       src="https://lineup-images.scdn.co/your-image-url"
@@ -401,14 +436,18 @@ export const TestPage = () => {
                     />
                   )}
                   renderSubHeaderContent={() => "Artist Name"}
-                  onClick={(uri) => console.log("Clicked card:", uri)}
-                  isPlayable={true}
                   showTitle={true}
                   titleLineClamp={2}
+                  uri="spotify:album:12345"
+                  variant="default"
                 />
                 <Cards.HeroGeneric
-                  uri="spotify:playlist:37i9dQZF1DXcBWIGoYBM3M"
+                  // Unique Hero Props
+                  getSignifierContent={() => (
+                    <span style={{ color: "#1db954" }}>Featured Playlist</span>
+                  )}
                   headerText="Todays Top Hits"
+                  isPlayable={true}
                   renderCardImage={() => (
                     <img
                       src="https://i.scdn.co/image/ab67706f00000002fe24d7051005da37e2448378"
@@ -416,11 +455,47 @@ export const TestPage = () => {
                     />
                   )}
                   renderSubHeaderContent={() => "The hottest tracks right now."}
+                  uri="spotify:playlist:37i9dQZF1DXcBWIGoYBM3M"
+                />
+              </>
+            )}
+            render={() => (
+              <>
+                <Cards.Generic
+                  headerText="Default Generic Card"
                   isPlayable={true}
+                  onClick={(uri) => console.log("Clicked card:", uri)}
+                  renderCardImage={() => (
+                    <img
+                      src="https://lineup-images.scdn.co/your-image-url"
+                      style={{
+                        width: "100%",
+                        aspectRatio: "1/1",
+                        objectFit: "cover",
+                      }}
+                    />
+                  )}
+                  renderSubHeaderContent={() => "Artist Name"}
+                  showTitle={true}
+                  titleLineClamp={2}
+                  uri="spotify:album:12345"
+                  variant="default"
+                />
+                <Cards.HeroGeneric
                   // Unique Hero Props
                   getSignifierContent={() => (
                     <span style={{ color: "#1db954" }}>Featured Playlist</span>
                   )}
+                  headerText="Todays Top Hits"
+                  isPlayable={true}
+                  renderCardImage={() => (
+                    <img
+                      src="https://i.scdn.co/image/ab67706f00000002fe24d7051005da37e2448378"
+                      style={{ width: "100%", borderRadius: "8px" }}
+                    />
+                  )}
+                  renderSubHeaderContent={() => "The hottest tracks right now."}
+                  uri="spotify:playlist:37i9dQZF1DXcBWIGoYBM3M"
                 />
               </>
             )}
@@ -429,19 +504,18 @@ export const TestPage = () => {
 
         <Section title="Routes and Route">
           <ProbeCard
-            title="<Routes /><Route />"
             render={() => (
               <Routes>
-                <Route path="/ho" element={<div>shows when /home</div>} />
-                <Route path="/test" element={<div>shows when /test</div>} />
+                <Route element={<div>shows when /home</div>} path="/ho" />
+                <Route element={<div>shows when /test</div>} path="/test" />
               </Routes>
             )}
+            title="<Routes /><Route />"
           />
         </Section>
 
         <Section title="NavTo">
           <ProbeCard
-            title="<NavTo />"
             render={() =>
               React.createElement(
                 NavTo as React.ElementType,
@@ -449,6 +523,7 @@ export const TestPage = () => {
                 "Go to /home",
               )
             }
+            title="<NavTo />"
           />
         </Section>
       </div>

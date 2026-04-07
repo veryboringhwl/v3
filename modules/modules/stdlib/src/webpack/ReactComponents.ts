@@ -1,6 +1,6 @@
+import { fnStr } from "/hooks/util.ts";
 import { webpackRequire } from "../wpunpk.mix.ts";
 import { matchWebpackModule } from "../wpunpk.ts";
-import { fnStr } from "/hooks/util.ts";
 
 export * from "./ReactComponents.gen.ts";
 

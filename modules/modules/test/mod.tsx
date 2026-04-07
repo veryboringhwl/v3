@@ -1,17 +1,15 @@
 import type { ModuleInstance } from "/hooks/module.ts";
 import { createRegistrar } from "/modules/stdlib/mod.ts";
-import {
-  TopbarLeftProbe,
-  TopbarRightProbe,
-  PlaybarButtonProbe,
-  PlaybarWidgetProbe,
-} from "./src/diagnostics/registerHarness.tsx";
 import { Route } from "/modules/stdlib/src/webpack/ReactComponents.ts";
 import {
   AppLazy,
-  TestLink,
+  PlaybarButtonProbe,
+  PlaybarWidgetProbe,
   RegisteredMenu,
   SettingsSectionProbe,
+  TestLink,
+  TopbarLeftProbe,
+  TopbarRightProbe,
 } from "./src/diagnostics/registerHarness.tsx";
 
 export let module: ModuleInstance;
@@ -24,7 +22,7 @@ export default function (mod: ModuleInstance) {
   registrar.register("topbarRightButton", <TopbarRightProbe />);
   registrar.register("playbarButton", <PlaybarButtonProbe />);
   registrar.register("playbarWidget", <PlaybarWidgetProbe />);
-  registrar.register("route", <Route path="/test/*" element={<AppLazy />} />);
+  registrar.register("route", <Route element={<AppLazy />} path="/test/*" />);
   registrar.register("navlink", <TestLink />);
   registrar.register("menu", <RegisteredMenu />);
   registrar.register("settingsSection", <SettingsSectionProbe />);

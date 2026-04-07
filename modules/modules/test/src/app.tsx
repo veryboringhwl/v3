@@ -1,11 +1,11 @@
-import { TestPage } from "./pages/TestPage.tsx";
 import { Route, Routes } from "/modules/stdlib/src/webpack/ReactComponents.ts";
+import { TestPage } from "./pages/TestPage.tsx";
 
 export default function App() {
   return (
     <div id="TestPageID">
       <Routes>
-        <Route path="/" element={<TestPage />} />
+        <Route element={<TestPage />} path="/" />
       </Routes>
     </div>
   );

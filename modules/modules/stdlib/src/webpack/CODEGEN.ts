@@ -5,9 +5,10 @@
 import swc from "npm:@swc/core";
 
 async function* getFileExports(path: string) {
+  const isTsx = path.endsWith(".tsx");
   const module = await swc.parseFile(path, {
     syntax: "typescript",
-    tsx: false,
+    tsx: isTsx,
     decorators: true,
     comments: false,
     script: false,
@@ -67,7 +68,7 @@ async function main() {
     }
 
     const [name, type, ext] = sibling.name.split(".");
-    if (ext !== "ts" || type === "gen") {
+    if ((ext !== "ts" && ext !== "tsx") || type === "gen") {
       continue;
     }
 

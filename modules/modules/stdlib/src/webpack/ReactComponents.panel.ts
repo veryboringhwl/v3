@@ -1,16 +1,42 @@
 import { fnStr } from "/hooks/util.ts";
-
-import { exportedForwardRefs, exportedFunctions } from "./index.js";
+import { webpackRequire } from "../wpunpk.mix.ts";
+import { matchWebpackModule } from "../wpunpk.ts";
 
 await (CHUNKS["/dwp-panel-section.js"] ??= Promise.withResolvers()).promise;
-export const PanelContainer: React.FC<any> = exportedFunctions.find((f) =>
-  fnStr(f).includes('"Desktop_PanelContainer_Id"'),
+
+export let PanelContainer: React.FC<any>;
+export let PanelContent: React.FC<any>;
+export let PanelHeader: React.FC<any>;
+
+matchWebpackModule(
+  (_id, module) => {
+    const moduleStr = fnStr(module);
+    return moduleStr.includes("Desktop_PanelContainer_Id");
+  },
+  (id, _$) => {
+    const module = Object.values(webpackRequire(id));
+    PanelContainer = module.find((m) => typeof m === "function");
+  },
 );
 
-export const PanelContent: React.FC<any> = exportedForwardRefs.find((f) =>
-  fnStr(f.render).includes("fixedHeader"),
+matchWebpackModule(
+  (_id, module) => {
+    const moduleStr = fnStr(module);
+    return moduleStr.includes("fixedHeader");
+  },
+  (id, _$) => {
+    const module = webpackRequire(id);
+    PanelContent = Object.values(module)[0];
+  },
 );
 
-export const PanelHeader: React.FC<any> = exportedFunctions.find((m) =>
-  fnStr(m).includes("PanelHeader_CloseButton"),
-)!;
+matchWebpackModule(
+  (_id, module) => {
+    const moduleStr = fnStr(module);
+    return moduleStr.includes("PanelHeader_CloseButton");
+  },
+  (id, _$) => {
+    const module = webpackRequire(id);
+    PanelHeader = Object.values(module)[0];
+  },
+);

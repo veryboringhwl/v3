@@ -1,10 +1,9 @@
-import type { SnackbarProvider as SnackbarProviderT } from "npm:notistack";
 import { toPascalCase } from "/hooks/std/text.ts";
 import { findBy, fnStr } from "/hooks/util.ts";
-import { Platform } from "../expose/Platform.ts";
-import { React } from "../expose/React.ts";
 import { webpackRequire } from "../wpunpk.mix.ts";
-import { exportedFunctions, exportedMemos, modules } from "./index.ts";
+import { matchWebpackModule } from "../wpunpk.ts";
+
+import { exportedFunctions, exportedMemoForwardRefs, exportedMemos, modules } from "./index.ts";
 
 await CHUNKS.xpui.promise;
 
@@ -23,14 +22,12 @@ export const Menus: any = Object.fromEntries(
   }),
 );
 
-const [ContextMenuModuleID] = modules.find(([_, v]) => fnStr(v).includes("toggleContextMenu"))!;
 const [playlistMenuModuleID] = modules.find(
   ([, v]) =>
     fnStr(v).includes("isRootlistable") &&
     fnStr(v).includes("canAdministratePermissions") &&
     fnStr(v).includes("isPublished"),
 )!;
-
 Menus.Playlist = Object.values(webpackRequire(playlistMenuModuleID)).find(
   (m) => typeof m === "function" || typeof m === "object",
 );
@@ -75,30 +72,33 @@ export const Cards: any = Object.assign(
   ),
 );
 
-export const RemoteConfigProviderComponent: React.FC<any> = findBy(
-  "resolveSuspense",
-  "configuration",
-)(exportedFunctions);
-
-const exportedMemoFRefs = exportedMemos.filter(
-  (m) => (m as any).type.$$typeof === Symbol.for("react.forward_ref"),
+const [NavigationModule] = modules.find(
+  ([_, v]) => fnStr(v).includes("navigationalRoot") && fnStr(v).includes("noLink"),
 );
-export const Nav: React.NamedExoticComponent = exportedMemoFRefs.find((m) =>
-  fnStr(m.type.render).includes("navigationalRoot"),
-)!;
-export const NavTo: React.NamedExoticComponent = exportedMemoFRefs.find((m) =>
+export const Nav = Object.values(webpackRequire(NavigationModule))[0];
+
+export const NavTo: React.NamedExoticComponent = exportedMemoForwardRefs.find((m) =>
   fnStr(m.type.render).includes("pageId"),
 )!;
 
-export const InstrumentedRedirect: React.FC<any> = exportedFunctions.find(
-  (f) => fnStr(f).includes("getInteractionId") && /\bto:/.test(f),
+// 1. Set a default category (e.g., /tracks) when the user hits the root path.
+// 2. Prevent a "back button loop" by replacing the history entry instead of adding a new one.
+// 3. Attach a unique InteractionID to the redirect for internal analytics and tracking.
+export let InstrumentedRedirect: React.FC<any>;
+matchWebpackModule(
+  (_id, module) => {
+    const moduleStr = fnStr(module);
+    return moduleStr.includes("interactionId??t.getInteractionId");
+  },
+  (id, _$) => {
+    const module = webpackRequire(id);
+    InstrumentedRedirect = Object.values(module)[0];
+  },
 );
 
-export const SnackbarProvider: SnackbarProviderT = findBy(
-  "enqueueSnackbar called with invalid argument",
-)(exportedFunctions) as unknown as SnackbarProvider;
-
+const [ContextMenuModuleID] = modules.find(([_, v]) => fnStr(v).includes("toggleContextMenu"))!;
 export const ContextMenu: any = Object.values(webpackRequire(ContextMenuModuleID))[0];
+
 export const RightClickMenu: React.FC<any> = findBy(
   "action",
   "open",
@@ -109,13 +109,11 @@ export const RightClickMenu: React.FC<any> = findBy(
 export const Tooltip: React.FC<any> = findBy("hover-or-focus", "tooltip")(exportedFunctions);
 
 export const Menu: React.FC<any> = findBy("getInitialFocusElement", "children")(exportedFunctions);
+
 export const MenuItem: React.FC<any> = findBy("handleMouseEnter", "onClick")(exportedFunctions);
+
 export const MenuItemSubMenu: React.FC<any> = findBy("subMenuIcon")(exportedFunctions);
 
-export const RemoteConfigProvider = ({
-  configuration = Platform.getRemoteConfiguration(),
-  children = undefined as React.ReactNode,
-}) => React.createElement(RemoteConfigProviderComponent, { configuration }, children);
 export const Snackbar = {
   wrapper: findBy("encore-light-theme", "elevated")(exportedFunctions),
   simpleLayout: findBy("leading", "center", "trailing")(exportedFunctions),
@@ -144,15 +142,13 @@ export const ConfirmDialog: React.FC<any> = ConfirmDialogExports.find(
 );
 
 export const Router: React.FC<any> = findBy("navigationType", "static")(exportedFunctions);
+
 export const Routes: React.FC<any> = findBy(
   /\([a-zA-Z_$][\w$]*\)\{let\{children:[a-zA-Z_$][\w$]*,location:[a-zA-Z_$][\w$]*\}=[a-zA-Z_$][\w$]*/,
 )(exportedFunctions);
+
 export const Route: React.FC<any> = findBy(
   /^function [a-zA-Z_$][\w$]*\([a-zA-Z_$][\w$]*\)\{\(0,[a-zA-Z_$][\w$]*\.[a-zA-Z_$][\w$]*\)\(!1\)\}$/,
-)(exportedFunctions);
-export const StoreProvider: React.FC<any> = findBy(
-  "notifyNestedSubs",
-  "serverState",
 )(exportedFunctions);
 
 export const GenericModal: React.FC<any> = findBy(
@@ -160,13 +156,9 @@ export const GenericModal: React.FC<any> = findBy(
   "contentLabel",
   "animated",
 )(exportedFunctions);
+
 export const Dialog: React.FC<any> = findBy("isOpen", "unmountWhenClose")(exportedFunctions);
 
 export const Tracklist: React.FC<any> = exportedMemos.find((f) =>
   fnStr(f.type).includes("nrValidItems"),
 )!;
-export const TracklistColumnsContextProvider: React.FC<any> = findBy(
-  "columns",
-  "visibleColumns",
-  "toggleVisible",
-)(exportedFunctions);

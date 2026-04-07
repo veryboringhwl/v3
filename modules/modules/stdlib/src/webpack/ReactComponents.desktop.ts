@@ -1,5 +1,5 @@
-import { analyzeWebpackRequire } from "./index.ts";
 import { webpackRequire } from "../wpunpk.mix.ts";
+import { analyzeWebpackRequire } from "./index.ts";
 
 await (CHUNKS["/xpui-desktop-routes-settings.js"] ??= Promise.withResolvers()).promise;
 

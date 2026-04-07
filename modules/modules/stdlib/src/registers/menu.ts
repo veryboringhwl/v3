@@ -1,6 +1,5 @@
-import { React } from "../expose/React.ts";
-
 import { transformer } from "../../mixin.ts";
+import { React } from "../expose/React.ts";
 import { Registry } from "./registry.ts";
 
 type __MenuContext = React.Context<MenuContext>;
