@@ -1,9 +1,7 @@
-import { findBy } from "/hooks/util.ts";
-import { exportedFunctions, modules } from "./index.ts";
-import { fnStr } from "/hooks/util.ts";
-
 import type { useLocation as useLocationT, useMatch as useMatchT } from "npm:react-router";
+import { findBy, fnStr } from "/hooks/util.ts";
 import { webpackRequire } from "../wpunpk.mix.ts";
+import { exportedFunctions, modules } from "./index.ts";
 
 await CHUNKS.xpui.promise;
 

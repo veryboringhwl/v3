@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { Palette, PaletteManager } from "./palette.ts";
 import type { ModuleInstance } from "/hooks/module.ts";
+import { Palette, PaletteManager } from "./palette.ts";
 
 class Schemer {
   constructor(private mod: ModuleInstance) {

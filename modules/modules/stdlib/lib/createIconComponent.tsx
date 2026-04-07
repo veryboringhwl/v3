@@ -14,9 +14,9 @@ export const createIconComponent = ({
   return (
     <UI.Icon
       autoMirror={false}
+      dangerouslySetInnerHTML={{ __html: icon }}
       iconSize={realIconSize}
       viewBox={`0 0 ${iconSize} ${iconSize}`}
-      dangerouslySetInnerHTML={{ __html: icon }}
       {...props}
     />
   );

@@ -2,15 +2,15 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { useSearchBar } from "/modules/stdlib/lib/components/index.tsx";
-import { Palette, PaletteManager } from "./palette.ts";
-import { createIconComponent } from "/modules/stdlib/lib/createIconComponent.tsx";
-import { startCase } from "/modules/stdlib/deps.ts";
-import { React } from "/modules/stdlib/src/expose/React.ts";
-import { MenuItem } from "/modules/stdlib/src/webpack/ReactComponents.ts";
-import { Platform } from "/modules/stdlib/src/expose/Platform.ts";
 import type { ChangeEvent } from "npm:@types/react";
+import { startCase } from "/modules/stdlib/deps.ts";
+import { useSearchBar } from "/modules/stdlib/lib/components/index.tsx";
+import { createIconComponent } from "/modules/stdlib/lib/createIconComponent.tsx";
+import { Platform } from "/modules/stdlib/src/expose/Platform.ts";
+import { React } from "/modules/stdlib/src/expose/React.ts";
 import { Color } from "/modules/stdlib/src/webpack/misc.ts";
+import { MenuItem } from "/modules/stdlib/src/webpack/ReactComponents.ts";
+import { Palette, PaletteManager } from "./palette.ts";
 
 export default function () {
   const setCurrentPalette = (_: Palette, palette: Palette) =>
@@ -49,10 +49,10 @@ export default function () {
         <ul>
           {searchbar}
           <MenuItem
+            divider="after"
             leadingIcon={createIconComponent({
               icon: '<path d="M14 7H9V2H7v5H2v2h5v5h2V9h5z"/><path fill="none" d="M0 0h16v16H0z"/>',
             })}
-            divider="after"
             onClick={createPalette}
           >
             Create New Palette
@@ -61,13 +61,13 @@ export default function () {
             {filteredPalettes.map((palette) => (
               <MenuItem
                 key={palette.id}
+                onClick={() => selectPalette(palette)}
                 trailingIcon={
                   palette === selectedPalette &&
                   createIconComponent({
                     icon: '<path d="M15.53 2.47a.75.75 0 0 1 0 1.06L4.907 14.153.47 9.716a.75.75 0 0 1 1.06-1.06l3.377 3.376L14.47 2.47a.75.75 0 0 1 1.06 0z"/>',
                   })
                 }
-                onClick={() => selectPalette(palette)}
               >
                 {palette.name}
               </MenuItem>
@@ -90,7 +90,7 @@ const PaletteFields = (props: PaletteFieldsProps) => {
       <LocalInfo palette={props.palette} updatePalettes={props.updatePalettes} />
       <div className="palette-fields">
         {Object.entries(props.palette.colors).map(([name, value]) => (
-          <PaletteField key={name} name={name} value={value} palette={props.palette} />
+          <PaletteField key={name} name={name} palette={props.palette} value={value} />
         ))}
       </div>
     </div>
@@ -136,8 +136,8 @@ const PaletteField = (props: PaletteFieldProps) => {
   return (
     <div className="input-row">
       <label>{startCase(props.name)}</label>
-      <input className="color-input" type="color" value={value} onChange={onChange} />
-      <input className="text-input" type="text" value={value} onChange={onChange} />
+      <input className="color-input" onChange={onChange} type="color" value={value} />
+      <input className="text-input" onChange={onChange} type="text" value={value} />
     </div>
   );
 };
@@ -165,25 +165,25 @@ const LocalInfo = (props: LocalInfoProps) => {
     <div className="palette-info">
       <input
         className="palette-name"
-        readOnly={props.palette.isStatic}
-        placeholder="Custom Palette"
-        value={props.palette.isStatic ? `${name} (static)` : name}
         onChange={(e) => setName(e.target.value)}
+        placeholder="Custom Palette"
+        readOnly={props.palette.isStatic}
+        value={props.palette.isStatic ? `${name} (static)` : name}
       />
       {!props.palette.isStatic && [
-        <button type="button" key="delete" onClick={() => deletePalette(props.palette)}>
+        <button key="delete" onClick={() => deletePalette(props.palette)} type="button">
           Delete
         </button>,
-        <button type="button" key="rename" onClick={() => renamePalette(props.palette, name)}>
+        <button key="rename" onClick={() => renamePalette(props.palette, name)} type="button">
           Rename
         </button>,
       ]}
       <button
-        type="button"
         onClick={() => {
           const css = JSON.stringify(props.palette);
           Platform.getClipboardAPI().copy(css);
         }}
+        type="button"
       >
         Copy Object
       </button>

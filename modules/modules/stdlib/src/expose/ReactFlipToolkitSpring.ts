@@ -1,6 +1,5 @@
-import { transformer } from "../../mixin.ts";
-
 import type { spring } from "npm:react-flip-toolkit";
+import { transformer } from "../../mixin.ts";
 
 export type ReactFlipToolkitSpring = typeof spring;
 export let ReactFlipToolkitSpring: ReactFlipToolkitSpring;

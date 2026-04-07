@@ -1,12 +1,9 @@
-import pkg from "../deno.json" with { type: "json" };
-
 import path from "node:path";
-
-import { Builder, type Metadata } from "./build.ts";
-import { type Mapping, Transpiler } from "./transpile.ts";
-
 // @deno-types="npm:@types/yargs@17.0.35"
 import yargs from "npm:yargs@18.0.0";
+import pkg from "../deno.json" with { type: "json" };
+import { Builder, type Metadata } from "./build.ts";
+import { type Mapping, Transpiler } from "./transpile.ts";
 import { build, genClassMapDts, readJSON, watch } from "./util.ts";
 
 const version = (pkg as { version?: string }).version ?? "local";

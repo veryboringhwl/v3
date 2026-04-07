@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { createStorage } from "/modules/stdlib/mod.ts";
 import type { ModuleInstance } from "/hooks/index.ts";
+import { createStorage } from "/modules/stdlib/mod.ts";
 import { Color } from "/modules/stdlib/src/webpack/misc.xpui.ts";
 
 let storage: Storage;

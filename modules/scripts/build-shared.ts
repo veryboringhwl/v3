@@ -1,6 +1,5 @@
-import path from "node:path";
-
 import { ensureDir } from "jsr:@std/fs/ensure-dir";
+import path from "node:path";
 
 import { Builder, readJSON, Transpiler } from "../build/lib.ts";
 

@@ -1,6 +1,5 @@
-import { exports } from "./index.ts";
-
 import type MousetrapT from "npm:@types/mousetrap";
+import { exports } from "./index.ts";
 
 await CHUNKS.xpui.promise;
 

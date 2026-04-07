@@ -1,6 +1,5 @@
-import { transformer } from "../../mixin.ts";
-
 import type { createMachine as createMachineT } from "npm:xstate";
+import { transformer } from "../../mixin.ts";
 import { Registry } from "./registry.ts";
 
 export type StateMachine = ReturnType<typeof createMachineT>;
@@ -95,12 +94,12 @@ const ACTIONS: Record<string, any> = {};
 
 transformer(
   (emit) => (str) => {
+    emit();
+
     str = str.replace(
       /(=\(0,[a-zA-Z_$][\w$]*\.[a-zA-Z_$][\w$]*\)\(\{id:"RightPanelState)/,
       "=__Machine$1",
     );
-
-    emit();
 
     Object.defineProperty(globalThis, "__Machine", {
       set: ($: StateMachine) => {

@@ -1,11 +1,11 @@
+import type { ModuleInstance } from "/hooks/module.ts";
+import { createLogger } from "/modules/stdlib/mod.ts";
 import { Platform } from "/modules/stdlib/src/expose/Platform.ts";
 import { exportedFunctions } from "/modules/stdlib/src/webpack/index.js";
-import { getSettingsClient, getSlotsClient, getTestingClient } from "./src/utils/clients.ts";
+import { configureExpFeatures } from "./src/expFeatures.ts";
 import type { SettingsClient, SlotsClient, TestingClient } from "./src/interfaces/webpack.ts";
 import { configureAdManagers } from "./src/slot.ts";
-import { createLogger } from "/modules/stdlib/mod.ts";
-import type { ModuleInstance } from "/hooks/module.ts";
-import { configureExpFeatures } from "./src/expFeatures.ts";
+import { getSettingsClient, getSlotsClient, getTestingClient } from "./src/utils/clients.ts";
 
 const { getAdManagers, getLocalStorageAPI, getEsperantoTransport } = Platform;
 

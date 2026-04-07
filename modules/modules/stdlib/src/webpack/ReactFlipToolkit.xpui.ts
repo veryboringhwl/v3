@@ -1,6 +1,5 @@
-import { exportedFunctions } from "./index.ts";
-
 import type { Flipped as FlippedT, Flipper as FlipperT } from "npm:react-flip-toolkit";
+import { exportedFunctions } from "./index.ts";
 
 await CHUNKS.xpui.promise;
 

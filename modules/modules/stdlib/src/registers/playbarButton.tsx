@@ -1,9 +1,9 @@
-import type { React } from "../expose/React.ts";
 import { createIconComponent } from "../../lib/createIconComponent.tsx";
 import { transformer } from "../../mixin.ts";
-import { Tooltip } from "../webpack/ReactComponents.ts";
-import { UI } from "../webpack/ComponentLibrary.ts";
+import type { React } from "../expose/React.ts";
 import { classnames } from "../webpack/ClassNames.ts";
+import { UI } from "../webpack/ComponentLibrary.ts";
+import { Tooltip } from "../webpack/ReactComponents.ts";
 import { Registry } from "./registry.ts";
 
 const registry = new Registry<React.ReactNode>();
@@ -22,7 +22,6 @@ transformer(
     );
 
     emit();
-
     return str;
   },
   {
@@ -49,16 +48,16 @@ export const PlaybarButton = ({
   <Tooltip label={label}>
     <UI.ButtonTertiary
       aria-label={label}
-      size="small"
+      aria-pressed={isActive}
       className={classnames(MAP.main.playbar.buttons.button.wrapper, {
         [MAP.main.playbar.buttons.button.wrapper__indicator]: isActive,
         [MAP.main.playbar.buttons.button.wrapper__active]: isActive || isActiveNoIndicator,
       })}
+      data-active={isActive.toString()}
       disabled={disabled}
       iconOnly={icon && (() => createIconComponent({ icon }))}
       onClick={onClick}
-      data-active={isActive.toString()}
-      aria-pressed={isActive}
+      size="small"
     />
   </Tooltip>
 );

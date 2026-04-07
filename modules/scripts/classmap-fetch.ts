@@ -1,5 +1,5 @@
-import { genClassMapDts } from "../build/lib.ts";
 import path from "node:path";
+import { genClassMapDts } from "../build/lib.ts";
 
 import { GH_RAW_CLASSMAP_URL } from "./classmap-info.ts";
 

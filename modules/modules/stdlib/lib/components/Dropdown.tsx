@@ -18,9 +18,9 @@
  */
 
 import type { React } from "../../src/expose/React.ts";
-import { createIconComponent } from "../createIconComponent.tsx";
-import { ContextMenu, Menu, MenuItem } from "../../src/webpack/ReactComponents.ts";
 import { UI } from "../../src/webpack/ComponentLibrary.ts";
+import { ContextMenu, Menu, MenuItem } from "../../src/webpack/ReactComponents.ts";
+import { createIconComponent } from "../createIconComponent.tsx";
 
 const CheckIcon = () =>
   createIconComponent({
@@ -46,11 +46,11 @@ const DropdownMenuItem = <O extends string>({
 
   return (
     <MenuItem
-      trigger="click"
-      onClick={() => onSwitch(option)}
       data-checked={isActive}
-      trailingIcon={isActive ? <CheckIcon /> : undefined}
+      onClick={() => onSwitch(option)}
       style={isActive ? activeStyle : undefined}
+      trailingIcon={isActive ? <CheckIcon /> : undefined}
+      trigger="click"
     >
       {children}
     </MenuItem>
@@ -77,12 +77,12 @@ export default function <O extends DropdownOptions>({
   if (Object.keys(options).length === 1) {
     return (
       <button
-        className={MAP.sort_box.list.button}
-        type="button"
-        role="combobox"
         aria-expanded="false"
+        className={MAP.sort_box.list.button}
+        role="combobox"
+        type="button"
       >
-        <UI.Type variant="mesto" semanticColor="textSubdued">
+        <UI.Type semanticColor="textSubdued" variant="mesto">
           <SelectedOption preview />
         </UI.Type>
       </button>
@@ -94,9 +94,9 @@ export default function <O extends DropdownOptions>({
       <Menu {...props}>
         {Object.entries(options).map(([option, Children]) => (
           <DropdownMenuItem
-            option={option as Extract<NoInfer<keyof O>, string>}
             isActive={option === activeOption}
             onSwitch={onSwitch}
+            option={option as Extract<NoInfer<keyof O>, string>}
           >
             <Children />
           </DropdownMenuItem>
@@ -108,12 +108,12 @@ export default function <O extends DropdownOptions>({
   return (
     <ContextMenu menu={<DropdownMenu />} trigger="click">
       <button
-        className={MAP.sort_box.list.button}
-        type="button"
-        role="combobox"
         aria-expanded="false"
+        className={MAP.sort_box.list.button}
+        role="combobox"
+        type="button"
       >
-        <UI.Type variant="mesto" semanticColor="textSubdued">
+        <UI.Type semanticColor="textSubdued" variant="mesto">
           <SelectedOption preview />
         </UI.Type>
         {createIconComponent({ icon: `<path d="m14 6-6 6-6-6h12z" />` })}

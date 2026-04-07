@@ -1,8 +1,8 @@
 import { toPascalCase } from "/hooks/std/text.ts";
-import { modules } from "./index.ts";
-import { webpackRequire } from "../wpunpk.mix.ts";
-import type { IsThisURIType, ParsableAsURI, URIClass, URITypes } from "./URI.ts";
 import { fnStr } from "/hooks/util.ts";
+import { webpackRequire } from "../wpunpk.mix.ts";
+import { modules } from "./index.ts";
+import type { IsThisURIType, ParsableAsURI, URIClass, URITypes } from "./URI.ts";
 
 type Is = {
   Ad: IsThisURIType<any>;

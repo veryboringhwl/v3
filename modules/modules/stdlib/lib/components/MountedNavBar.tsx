@@ -11,11 +11,11 @@ interface NavToChipProps {
 
 const NavToChip: React.FC<NavToChipProps> = (props) => (
   <NavTo
-    replace={true}
-    to={props.to}
-    tabIndex={-1}
-    onClick={props.onClick}
     className={MAP.search_chips.chip}
+    onClick={props.onClick}
+    replace={true}
+    tabIndex={-1}
+    to={props.to}
   >
     <UI.Chip selected={props.selected} selectedColorSet="invertedLight" tabIndex={-1}>
       {props.title}
@@ -46,9 +46,9 @@ const NavBar = ({ namespace, categories, selectedCategory }: NavBarProps) => (
         {categories.map((category) => (
           <NavToChip
             key={category}
-            to={`spotify:app:bespoke:${namespace}:${category}`}
-            title={category}
             selected={category === selectedCategory}
+            title={category}
+            to={`spotify:app:bespoke:${namespace}:${category}`}
           />
         ))}
       </div>

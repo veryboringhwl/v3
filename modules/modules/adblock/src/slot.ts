@@ -1,10 +1,10 @@
 import {
   adManagers,
-  productState,
-  slotsClient,
-  settingsClient,
-  testingClient,
   logger,
+  productState,
+  settingsClient,
+  slotsClient,
+  testingClient,
 } from "../mod.ts";
 import { retryCounter } from "./utils/counter.ts";
 

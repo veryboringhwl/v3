@@ -10,6 +10,9 @@ export let exportedReactObjects: Partial<Record<any, any[]>>;
 export let exportedContexts: Array<React.Context<any>>;
 export let exportedForwardRefs: Array<React.ForwardRefExoticComponent<any>>;
 export let exportedMemos: React.NamedExoticComponent[];
+export let exportedMemoForwardRefs: Array<
+  React.NamedExoticComponent & { type: React.ForwardRefExoticComponent<any> }
+>;
 
 export const analyzeWebpackRequire = (webpackRequire: WebpackRequire) => {
   const modules = Object.entries(webpackRequire.m) as Array<[keyof any, WebpackModule]>;
@@ -36,6 +39,9 @@ export const analyzeWebpackRequire = (webpackRequire: WebpackRequire) => {
   const exportedMemos = exportedReactObjects[
     Symbol.for("react.memo") as any
   ]! as React.NamedExoticComponent[];
+  const exportedMemoForwardRefs = exportedMemos.filter(
+    (m) => m.type?.$$typeof === Symbol.for("react.forward_ref"),
+  ) as Array<React.NamedExoticComponent & { type: React.ForwardRefExoticComponent<any> }>;
 
   return {
     modules,
@@ -46,6 +52,7 @@ export const analyzeWebpackRequire = (webpackRequire: WebpackRequire) => {
     exportedContexts,
     exportedForwardRefs,
     exportedMemos,
+    exportedMemoForwardRefs,
   };
 };
 
@@ -71,4 +78,5 @@ CHUNKS.xpui.promise.then(() => {
   exportedContexts = analysis.exportedContexts;
   exportedForwardRefs = analysis.exportedForwardRefs;
   exportedMemos = analysis.exportedMemos;
+  exportedMemoForwardRefs = analysis.exportedMemoForwardRefs;
 });

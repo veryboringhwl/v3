@@ -24,8 +24,8 @@ export function display({
   RootChildrenRegistry.add(
     (ref = (
       <PopupModal
-        contentLabel={title}
         children={content}
+        contentLabel={title}
         isEmbedWidgetGeneratorOrTrackCreditsModal={isLarge}
       />
     )),
@@ -79,8 +79,8 @@ const PopupModal = (props: PopupModalProps) => {
             {props.contentLabel}
           </UI.Text>
           <button
-            className={MAP.modal.track_credits.header.close}
             aria-label={Locale.get("close")}
+            className={MAP.modal.track_credits.header.close}
             onClick={hide}
           >
             {createIconComponent({

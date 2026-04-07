@@ -1,6 +1,6 @@
 import { transformer } from "../../mixin.ts";
-import { Registry } from "./registry.ts";
 import { React } from "../expose/React.ts";
+import { Registry } from "./registry.ts";
 
 type Refresh = PromiseWithResolvers<() => void> & {
   value: (() => void) | undefined;

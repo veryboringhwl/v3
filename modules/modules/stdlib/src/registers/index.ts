@@ -1,12 +1,7 @@
-/*
- * Copyright (C) 2024 Delusoire
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
-
 import type { ModuleInstance } from "/hooks/module.ts";
-
 import menu from "./menu.ts";
 import navlink from "./navlink.tsx";
+import panel from "./panel.ts";
 import playbarButton from "./playbarButton.tsx";
 import playbarWidget from "./playbarWidget.tsx";
 import type { Registry } from "./registry.ts";
@@ -15,12 +10,13 @@ import route from "./route.ts";
 import settingsSection from "./settingsSection.ts";
 import topbarLeftButton from "./topbarLeftButton.tsx";
 import topbarRightButton from "./topbarRightButton.tsx";
+
 const [rootChild, rootProvider] = root;
 const registers = {
   menu,
   navlink,
   // panel doesnt work as for some reason __Machine is undefined
-  // panel,
+  panel,
   playbarButton,
   playbarWidget,
   rootChild,

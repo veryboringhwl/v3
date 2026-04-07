@@ -1,6 +1,5 @@
-import { postWebpackRequireHooks } from "./wpunpk.mix.ts";
-
 import { BehaviorSubject, Subject } from "../deps.ts";
+import { postWebpackRequireHooks } from "./wpunpk.mix.ts";
 
 function createGlobalThisShadow() {
   const globalThisShadow = {} as typeof globalThis;

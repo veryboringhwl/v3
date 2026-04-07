@@ -1,11 +1,10 @@
-import { exportedFunctions } from "./index.ts";
-import { findBy } from "/hooks/util.ts";
-
 import type {
   EnqueueSnackbar as EnqueueSnackbarT,
   OptionsObject as OptionsObjectT,
   useSnackbar as useSnackbarT,
 } from "npm:notistack";
+import { findBy } from "/hooks/util.ts";
+import { exportedFunctions } from "./index.ts";
 
 await CHUNKS.xpui.Promise;
 

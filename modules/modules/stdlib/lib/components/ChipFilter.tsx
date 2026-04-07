@@ -32,14 +32,14 @@ export const ChipFilter = React.memo(
   ({ availableFilters, selectedFilters, toggleFilter, className }: ChipFilterProps) => {
     const createChip = (isSelected: boolean) => (filter: RFilterOpt, index: number) => (
       <UI.Chip
-        onClick={() => toggleFilter(filter)}
-        selectedColorSet="invertedLight"
-        selected={isSelected}
-        secondary={isSelected && index > 0}
-        style={{ marginBlockEnd: 0, willChange: "transform, opacity" }}
-        tabIndex={-1}
         index={index}
         key={filter.key}
+        onClick={() => toggleFilter(filter)}
+        secondary={isSelected && index > 0}
+        selected={isSelected}
+        selectedColorSet="invertedLight"
+        style={{ marginBlockEnd: 0, willChange: "transform, opacity" }}
+        tabIndex={-1}
       >
         {filter.filter[TreeNodeVal]}
       </UI.Chip>
@@ -47,7 +47,7 @@ export const ChipFilter = React.memo(
 
     return (
       selectedFilters.length + availableFilters.length > 0 && (
-        <ScrollableContainer className={className} ariaLabel={"Filter options"}>
+        <ScrollableContainer ariaLabel={"Filter options"} className={className}>
           {selectedFilters.map(createChip(true))}
           {availableFilters.map(createChip(false))}
         </ScrollableContainer>

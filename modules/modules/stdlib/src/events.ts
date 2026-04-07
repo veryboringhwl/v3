@@ -1,9 +1,7 @@
 import type { ModuleInstance } from "/hooks/module.ts";
-
-import { Platform } from "./expose/Platform.ts";
-
 import { BehaviorSubject, Subscription } from "../deps.ts";
 import { UpdateTitlebarSubject } from "./events.mix.ts";
+import { Platform } from "./expose/Platform.ts";
 
 const newEventBus = () => {
   const PlayerAPI = Platform.getPlayerAPI();

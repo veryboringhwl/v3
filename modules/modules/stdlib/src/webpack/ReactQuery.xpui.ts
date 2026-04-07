@@ -1,18 +1,16 @@
-import { exported, exportedFunctions, modules } from "./index.ts";
-import { fnStr } from "/hooks/util.ts";
-
 import type {
   notifyManager as notifyManagerT,
-  QueryClient as QueryClientT,
   QueryClientProvider as QueryClientProviderT,
+  QueryClient as QueryClientT,
   useInfiniteQuery as useInfiniteQueryT,
   useMutation as useMutationT,
-  useQuery as useQueryT,
   useQueryClient as useQueryClientT,
+  useQuery as useQueryT,
   useSuspenseQuery as useSuspenseQueryT,
 } from "npm:@tanstack/react-query";
-import { findBy } from "/hooks/util.ts";
+import { findBy, fnStr } from "/hooks/util.ts";
 import { webpackRequire } from "../wpunpk.mix.ts";
+import { exported, exportedFunctions, modules } from "./index.ts";
 
 await CHUNKS.xpui.promise;
 

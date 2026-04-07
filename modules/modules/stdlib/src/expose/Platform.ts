@@ -1,6 +1,5 @@
-import { transformer } from "../../mixin.ts";
-
 import type { PlatformAutoGen } from "/hooks/PlatformAutoGen.d.ts";
+import { transformer } from "../../mixin.ts";
 
 export type Platform = PlatformAutoGen;
 export let Platform: Platform;

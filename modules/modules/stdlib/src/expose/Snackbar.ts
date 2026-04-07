@@ -1,6 +1,5 @@
-import { transformer } from "../../mixin.ts";
-
 import type SnackbarT from "npm:notistack";
+import { transformer } from "../../mixin.ts";
 
 export type Snackbar = typeof SnackbarT;
 export let Snackbar: Snackbar;

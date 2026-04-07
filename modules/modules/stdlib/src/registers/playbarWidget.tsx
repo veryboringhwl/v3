@@ -1,8 +1,8 @@
-import type { React } from "../expose/React.ts";
 import { createIconComponent } from "../../lib/createIconComponent.tsx";
 import { transformer } from "../../mixin.ts";
-import { Tooltip } from "../webpack/ReactComponents.ts";
+import type { React } from "../expose/React.ts";
 import { UI } from "../webpack/ComponentLibrary.ts";
+import { Tooltip } from "../webpack/ReactComponents.ts";
 import { Registry } from "./registry.ts";
 
 const registry = new Registry<React.ReactNode>();
@@ -18,7 +18,6 @@ transformer(
     str = str.replace(/("hitRemoveLike".+?})\)\]/, "$1),...__renderNowPlayingBarWidgets()]");
 
     emit();
-
     return str;
   },
   {
@@ -34,12 +33,12 @@ export type PlaybarWidgetProps = {
 export const PlaybarWidget = ({ label, icon, onClick }: PlaybarWidgetProps) => (
   <Tooltip label={label}>
     <UI.ButtonTertiary
-      size="small"
-      className={undefined}
       aria-label={label}
+      className={undefined}
       condensed={false}
       iconOnly={icon && (() => createIconComponent({ icon }))}
       onClick={onClick}
+      size="small"
     />
   </Tooltip>
 );

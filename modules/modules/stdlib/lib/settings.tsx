@@ -1,10 +1,10 @@
+import type { ModuleInstance } from "/hooks/module.ts";
 import { React } from "../src/expose/React.ts";
 import { future, SettingsSection, SettingsSectionTitle } from "../src/expose/SettingsSection.ts";
 import SettingsSectionRegistry from "../src/registers/settingsSection.ts";
 import { UI } from "../src/webpack/ComponentLibrary.ts";
 import { Settings as S, Toggle } from "../src/webpack/ReactComponents.ts";
 import SettingsButton from "./components/SettingsButton.tsx";
-import type { ModuleInstance } from "/hooks/module.ts";
 
 type Task<A> = (() => Awaited<A>) | (() => Promise<Awaited<A>>);
 
@@ -185,10 +185,10 @@ export class Settings<A = {}> {
   ButtonField = (field: ButtonField) => (
     <this.SettingField field={field}>
       <UI.ButtonSecondary
-        id={field.id}
         buttonSize="sm"
-        onClick={field.onClick}
         className={MAP.settings.button.wrapper}
+        id={field.id}
+        onClick={field.onClick}
       >
         {field.text}
       </UI.ButtonSecondary>
@@ -202,11 +202,11 @@ export class Settings<A = {}> {
       <this.SettingField field={field}>
         <Toggle
           id={field.id}
-          value={Settings.getFieldValue(id)}
           onSelected={(checked: boolean) => {
             setValue(checked);
             field.onSelected?.(checked);
           }}
+          value={Settings.getFieldValue(id)}
         />
       </this.SettingField>
     );
@@ -219,15 +219,15 @@ export class Settings<A = {}> {
       <this.SettingField field={field}>
         <input
           className={MAP.settings.text_input}
-          id={field.id}
           dir="ltr"
-          value={Settings.getFieldValue(id)}
-          type={field.inputType}
+          id={field.id}
           onChange={(e) => {
             const value = e.currentTarget.value;
             setValue(value);
             field.onChange?.(value);
           }}
+          type={field.inputType}
+          value={Settings.getFieldValue(id)}
         />
       </this.SettingField>
     );

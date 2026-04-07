@@ -1,8 +1,8 @@
-import { React } from "../expose/React.ts";
 import { createIconComponent } from "../../lib/createIconComponent.tsx";
 import { transformer } from "../../mixin.ts";
-import { Tooltip } from "../webpack/ReactComponents.ts";
+import { React } from "../expose/React.ts";
 import { UI } from "../webpack/ComponentLibrary.ts";
+import { Tooltip } from "../webpack/ReactComponents.ts";
 import { Registry } from "./registry.ts";
 
 const registry = new (class extends Registry<React.ReactNode> {
@@ -51,7 +51,10 @@ type TopbarLeftButtonProps = {
 export const TopbarLeftButton = (props: TopbarLeftButtonProps) => (
   <Tooltip label={props.label}>
     <UI.ButtonTertiary
-      size="medium"
+      aria-label={props.label}
+      className={MAP.main.topbar.left.button.wrapper}
+      condensed
+      disabled={props.disabled}
       iconOnly={() =>
         props.icon &&
         createIconComponent({
@@ -60,11 +63,8 @@ export const TopbarLeftButton = (props: TopbarLeftButtonProps) => (
           realIconSize: 24,
         })
       }
-      condensed
-      aria-label={props.label}
-      disabled={props.disabled}
       onClick={props.onClick}
-      className={MAP.main.topbar.left.button.wrapper}
+      size="medium"
     />
   </Tooltip>
 );

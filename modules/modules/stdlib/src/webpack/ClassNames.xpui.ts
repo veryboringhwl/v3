@@ -1,9 +1,7 @@
-import { fnStr } from "/hooks/util.ts";
-
-import { modules } from "./index.ts";
-import { webpackRequire } from "../wpunpk.mix.ts";
-
 import type classNames from "npm:@types/classnames";
+import { fnStr } from "/hooks/util.ts";
+import { webpackRequire } from "../wpunpk.mix.ts";
+import { modules } from "./index.ts";
 
 await globalThis.CHUNKS.xpui.promise;
 

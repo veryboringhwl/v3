@@ -17,12 +17,12 @@
  * along with bespoke/modules/stdlib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { React } from "../../src/expose/React.ts";
-import Dropdown, { type DropdownOptions } from "./Dropdown.tsx";
 import { get } from "../../deps.ts";
-import { ChipFilter } from "./ChipFilter.tsx";
+import { React } from "../../src/expose/React.ts";
 import { FilterContext } from "../../src/webpack/FilterContext.xpui.ts";
 import { FilterBox } from "../../src/webpack/ReactComponents.xpui.ts";
+import { ChipFilter } from "./ChipFilter.tsx";
+import Dropdown, { type DropdownOptions } from "./Dropdown.tsx";
 
 // * Who doesn't love some Fixed Point (Functional) Programming?
 const Bluebird =
@@ -91,9 +91,9 @@ export const useDropdown = <O extends DropdownOptions>({
 
   const dropdown = (
     <Dropdown
-      options={options}
       activeOption={activeOption}
       onSwitch={(o) => setActiveOption(() => o)}
+      options={options}
     />
   );
 
@@ -178,8 +178,8 @@ export const useChipFilter = (filters: Tree<React.ReactNode>) => {
 
   const chipFilter = (
     <ChipFilter
-      selectedFilters={selectedFilters.filter(treeNodeHasVal)}
       availableFilters={availableFilters.filter(treeNodeHasVal)}
+      selectedFilters={selectedFilters.filter(treeNodeHasVal)}
       toggleFilter={toggleFilter}
     />
   );

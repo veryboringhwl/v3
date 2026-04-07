@@ -1,8 +1,7 @@
-import path from "node:path";
-
 import { ensureFile } from "jsr:@std/fs@1.0.20/ensure-file";
 import { expandGlobSync } from "jsr:@std/fs@1.0.20/expand-glob";
 import { walk } from "jsr:@std/fs@1.0.20/walk";
+import path from "node:path";
 
 import type { Transpiler } from "./transpile.ts";
 

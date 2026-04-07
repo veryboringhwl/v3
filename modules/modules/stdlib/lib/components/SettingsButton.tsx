@@ -17,12 +17,12 @@
  * along with bespoke/modules/stdlib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { React } from "../../src/expose/React.ts";
-import { REACT_FIBER, waitForElement } from "../dom.ts";
-import { createIconComponent } from "../createIconComponent.tsx";
 import { Platform } from "../../src/expose/Platform.ts";
-import { Tooltip } from "../../src/webpack/ReactComponents.xpui.ts";
+import type { React } from "../../src/expose/React.ts";
 import { UI } from "../../src/webpack/ComponentLibrary.xpui.ts";
+import { Tooltip } from "../../src/webpack/ReactComponents.xpui.ts";
+import { createIconComponent } from "../createIconComponent.tsx";
+import { REACT_FIBER, waitForElement } from "../dom.ts";
 
 const SettingsIcon = () =>
   createIconComponent({
@@ -38,9 +38,11 @@ interface SettingsButtonProps {
 
 export default function ({ section }: SettingsButtonProps): React.ReactElement<HTMLButtonElement> {
   return (
-    <Tooltip label="Settings" renderInline={true} placement="top">
+    <Tooltip label="Settings" placement="top" renderInline={true}>
       <UI.ButtonTertiary
+        aria-label="Settings"
         buttonSize="sm"
+        iconOnly={SettingsIcon}
         onClick={async () => {
           History.push("/preferences");
           const searchButton = await waitForElement(
@@ -62,8 +64,6 @@ export default function ({ section }: SettingsButtonProps): React.ReactElement<H
           const { setFilter } = filterContext.pendingProps.value;
           setFilter(section);
         }}
-        aria-label="Settings"
-        iconOnly={SettingsIcon}
       />
     </Tooltip>
   );

@@ -1,19 +1,20 @@
 import { fnStr } from "/hooks/util.ts";
-import { exportedFunctions, exportedForwardRefs, exportedMemos } from "./index.ts";
+import {
+  exportedForwardRefs,
+  exportedFunctions,
+  exportedMemoForwardRefs,
+  exportedMemos,
+} from "./index.ts";
 
 await CHUNKS.xpui.promise;
 
-const encoreIdRegex = /"data-encore-id"\s*:\s*(?:[a-zA-Z_$][\w$]*\.)*([A-Z][\w]*)\b/;
+const encoreIdRegex = /["]data-encore-id["]\s*:\s*(?:[\w$]+\s*\.\s*)*([\w$]+)/;
 
 const componentPairs = [
   exportedFunctions.map((f) => [f, f]),
   exportedForwardRefs.map((f) => [(f as any).render, f]),
-  exportedMemos.map((f) => {
-    const type = (f as any).type;
-    // memo(forwardRef(fn)) - go one level deeper
-    const inner = type?.$$typeof === Symbol.for("react.forward_ref") ? type.render : type;
-    return [inner, f];
-  }),
+  exportedMemos.map((f) => [(f as any).type, f]),
+  exportedMemoForwardRefs.map((f) => [(f as any).type?.render ?? (f as any).render, f]),
 ]
   .flat()
   .map(([s, f]) => {
