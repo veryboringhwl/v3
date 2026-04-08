@@ -4,7 +4,7 @@ import { matchWebpackModule } from "../wpunpk.ts";
 
 export * from "./ReactComponents.gen.ts";
 
-// export let Slider: React.FC<any>;
+export let Slider: React.FC<any>;
 export let Toggle: React.FC<any>;
 export let TracklistRow: React.FC<any>;
 
@@ -25,6 +25,17 @@ matchWebpackModule(
   (id, _$) => {
     const module = webpackRequire(id);
     Toggle = Object.values(module)[0];
+  },
+);
+
+matchWebpackModule(
+  (_id, module) => {
+    const moduleStr = fnStr(module);
+    return moduleStr.includes("progressBarRef");
+  },
+  (id, _$) => {
+    const module = webpackRequire(id);
+    Slider = Object.values(module)[0];
   },
 );
 

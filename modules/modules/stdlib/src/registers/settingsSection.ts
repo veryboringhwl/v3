@@ -14,7 +14,7 @@ transformer(
     emit();
 
     str = str.replace(
-      /(\(0,[a-zA-Z_$][\w$]*\.jsx\)\([a-zA-Z_$][\w$]*,{settings:[a-zA-Z_$][\w$]*,setValue:[a-zA-Z_$][\w$]*}\))]/,
+      /(\(0,l\.jsx\)\([a-zA-Z_$][\w$]*,{restartContainer:[^}]+}\),\s*\(0,l\.jsx\)\([a-zA-Z_$][\w$]*,{}\))\]/,
       "$1,...__renderSettingSections()]",
     );
 

@@ -17,14 +17,12 @@ import("./ReactComponents.panel.ts").then((m) => {
 import type * as ReactComponents_providers_tsx from "./ReactComponents.providers.tsx";
 export let RemoteConfigProviderComponent: typeof ReactComponents_providers_tsx.RemoteConfigProviderComponent;
 export let RemoteConfigProvider: typeof ReactComponents_providers_tsx.RemoteConfigProvider;
-export let PlatformProvider: typeof ReactComponents_providers_tsx.PlatformProvider;
 export let SnackbarProvider: typeof ReactComponents_providers_tsx.SnackbarProvider;
 export let StoreProvider: typeof ReactComponents_providers_tsx.StoreProvider;
 export let TracklistColumnsContextProvider: typeof ReactComponents_providers_tsx.TracklistColumnsContextProvider;
 import("./ReactComponents.providers.tsx").then((m) => {
   RemoteConfigProviderComponent = m.RemoteConfigProviderComponent;
   RemoteConfigProvider = m.RemoteConfigProvider;
-  PlatformProvider = m.PlatformProvider;
   SnackbarProvider = m.SnackbarProvider;
   StoreProvider = m.StoreProvider;
   TracklistColumnsContextProvider = m.TracklistColumnsContextProvider;

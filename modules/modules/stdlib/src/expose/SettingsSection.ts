@@ -1,9 +1,5 @@
 import { transformer } from "../../mixin.ts";
 
-export type SettingsSectionProps = { filterMatchQuery: string };
-export type SettingsSection = React.FC<SettingsSectionProps>;
-export let SettingsSection: SettingsSection;
-
 export const future = {
   push: () => {},
   pull(fn: () => void) {
@@ -14,10 +10,33 @@ export const future = {
     };
   },
 };
+export type SettingsSectionProps = {
+  /**
+   * The string used by the search functionality to filter and find this section.
+   */
+  filterMatchQuery?: string;
+  children?: React.ReactNode;
+};
+export type SettingsSection = React.FC<SettingsSectionProps>;
+export let SettingsSection: SettingsSection;
 
-export type SettingsSectionTitleProps = {};
-export type SettingsSectionTitle = React.FC<SettingsSectionTitleProps>;
-export let SettingsSectionTitle: SettingsSectionTitle;
+export type SettingsSectionRowProps = {
+  /**
+   * The string used by the search functionality to filter and find this section.
+   */
+  filterMatchQuery?: string;
+  children?: React.ReactNode;
+};
+export type SettingsSectionRow = React.FC<SettingsSectionRowProps>;
+export let SettingsSectionRow: SettingsSectionRow;
+
+export type SettingsSectionLabelProps = { children?: React.ReactNode };
+export type SettingsSectionLabel = React.FC<SettingsSectionLabelProps>;
+export let SettingsSectionLabel: SettingsSectionLabel;
+
+export type SettingsSectionControlProps = { children?: React.ReactNode };
+export type SettingsSectionControl = React.FC<SettingsSectionControlProps>;
+export let SettingsSectionControl: SettingsSectionControl;
 
 transformer<SettingsSection>(
   (emit) => (str) => {
@@ -37,13 +56,15 @@ transformer<SettingsSection>(
   future.push();
 });
 
-transformer<SettingsSectionTitle>(
+transformer<SettingsSectionRow>(
   (emit) => (str) => {
     str = str.replace(
-      /("desktop.settings.compatibility"[^=]*?\.jsx\)\()([a-zA-Z_$][\w$]*)/,
-      "$1(__SettingsSectionTitle=$2)",
+      /(\.jsxs\)\()([a-zA-Z_$][\w$]*)([^=]*"desktop.settings.enableHardwareAcceleration")/,
+      "$1(__SettingsSectionRow=$2)$3",
     );
-    Object.defineProperty(globalThis, "__SettingsSectionTitle", { set: emit });
+    Object.defineProperty(globalThis, "__SettingsSectionRow", {
+      set: emit,
+    });
     return str;
   },
   {
@@ -51,5 +72,41 @@ transformer<SettingsSectionTitle>(
     wait: false,
   },
 ).then(($) => {
-  SettingsSectionTitle = $;
+  SettingsSectionRow = $;
+});
+
+transformer<SettingsSectionLabel>(
+  (emit) => (str) => {
+    str = str.replace(
+      /(\(\d+,\s*[a-zA-Z_$][\w$]*\.jsx\)\()([a-zA-Z_$][\w$]*)(\s*,\s*\{\s*children:\s*\(\d+,\s*[a-zA-Z_$][\w$]*\.jsx\)\([a-zA-Z_$][\w$.]*\s*,\s*\{\s*htmlFor:\s*"desktop\.settings\.enableHardwareAcceleration")/,
+      "$1(__SettingsSectionLabel=$2)$3",
+    );
+    Object.defineProperty(globalThis, "__SettingsSectionLabel", { set: emit });
+    return str;
+  },
+  {
+    glob: /^\/xpui-routes-desktop-settings\.js/,
+    wait: false,
+  },
+).then(($) => {
+  SettingsSectionLabel = $;
+});
+
+transformer<SettingsSectionControl>(
+  (emit) => (str) => {
+    str = str.replace(
+      /(\(\d+,\s*[a-zA-Z_$][\w$]*\.jsx\)\()([a-zA-Z_$][\w$]*)(\s*,\s*\{\s*children:\s*\(\d+,\s*[a-zA-Z_$][\w$]*\.jsx\)\([a-zA-Z_$][\w$.]*\s*,\s*\{\s*id:\s*"desktop\.settings\.enableHardwareAcceleration")/,
+      "$1(__SettingsSectionControl=$2)$3",
+    );
+    Object.defineProperty(globalThis, "__SettingsSectionControl", {
+      set: emit,
+    });
+    return str;
+  },
+  {
+    glob: /^\/xpui-routes-desktop-settings\.js/,
+    wait: false,
+  },
+).then(($) => {
+  SettingsSectionControl = $;
 });
