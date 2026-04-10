@@ -1,4 +1,3 @@
-
 ## Dev
 
 For a list of all available tasks, refer to the [deno config file](deno.json).

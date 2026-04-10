@@ -27,6 +27,6 @@
     "noUnusedLocals": true,
     "exactOptionalPropertyTypes": true,
     "noImplicitOverride": true,
-    "skipLibCheck": true,
-  },
+    "skipLibCheck": true
+  }
 }

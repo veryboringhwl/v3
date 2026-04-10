@@ -2,13 +2,13 @@
 import mixin, { applyTransforms } from "./mixins.js";
 // @deno-types="./module.ts"
 import {
-	awaitAllLoadableMixins,
-	enableAllLoadable,
-	enableAllLoadableMixins,
-	INTERNAL_MIXIN_LOADER,
-	INTERNAL_TRANSFORMER,
-	loadLocalModules,
-	loadRemoteModules,
+  awaitAllLoadableMixins,
+  enableAllLoadable,
+  enableAllLoadableMixins,
+  INTERNAL_MIXIN_LOADER,
+  INTERNAL_TRANSFORMER,
+  loadLocalModules,
+  loadRemoteModules,
 } from "./module.js";
 
 await Promise.all([mixin(INTERNAL_TRANSFORMER), loadLocalModules()]);
@@ -18,8 +18,8 @@ console.timeEnd("onSpotifyPreInit");
 
 console.time("onSpotifyInit");
 const [modulesPath, snapshotPath] = await Promise.all([
-	applyTransforms("/xpui-modules.js"),
-	applyTransforms("/xpui-snapshot.js"),
+  applyTransforms("/xpui-modules.js"),
+  applyTransforms("/xpui-snapshot.js"),
 ]);
 
 // must load modules before snapshot
