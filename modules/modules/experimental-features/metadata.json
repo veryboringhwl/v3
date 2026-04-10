@@ -1,0 +1,15 @@
+{
+  "name": "test",
+  "tags": ["test"],
+  "preview": "./assets/PREVIEW.png",
+  "version": "0.1.0",
+  "authors": ["veryboringhwl"],
+  "description": "test",
+  "readme": "./assets/README.md",
+  "entries": {
+    "js": "index.js"
+  },
+  "dependencies": {
+    "stdlib": "0.1.0"
+  }
+}

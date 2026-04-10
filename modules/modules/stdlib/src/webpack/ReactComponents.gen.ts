@@ -50,6 +50,7 @@ export let Route: typeof ReactComponents_xpui_ts.Route;
 export let GenericModal: typeof ReactComponents_xpui_ts.GenericModal;
 export let Dialog: typeof ReactComponents_xpui_ts.Dialog;
 export let Tracklist: typeof ReactComponents_xpui_ts.Tracklist;
+export let IconWrapper: typeof ReactComponents_xpui_ts.IconWrapper;
 import("./ReactComponents.xpui.ts").then((m) => {
   Menus = m.Menus;
   Cards = m.Cards;
@@ -72,4 +73,5 @@ import("./ReactComponents.xpui.ts").then((m) => {
   GenericModal = m.GenericModal;
   Dialog = m.Dialog;
   Tracklist = m.Tracklist;
+  IconWrapper = m.IconWrapper;
 });

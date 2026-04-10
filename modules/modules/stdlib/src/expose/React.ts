@@ -12,70 +12,48 @@ export const ReactDOM = _ReactDOM;
 export const ReactDOMServer = _ReactDOMServer;
 
 postWebpackRequireHooks.push(($) => {
-  matchWebpackModule(
-    (_id, module) => {
-      const moduleStr = module.toString();
+	matchWebpackModule(
+		(_id, module) => {
+			const moduleStr = module.toString();
 
-      return moduleStr.includes(
-        '"setState(...): takes an object of state variables to update or a function which returns an object of state variables."',
-      );
-    },
-    (id) => {
-      $.m[id] = function () {
-        Object.assign(this, _React);
-      };
-    },
-  );
+			return moduleStr.includes(
+				'"setState(...): takes an object of state variables to update or a function which returns an object of state variables."',
+			);
+		},
+		(id) => {
+			$.m[id] = function () {
+				Object.assign(this, _React);
+			};
+		},
+	);
 
-  matchWebpackModule(
-    (_id, module) => {
-      const moduleStr = module.toString();
+	matchWebpackModule(
+		(_id, module) => {
+			const moduleStr = module.toString();
 
-      return moduleStr.includes(',rendererPackageName:"react-dom"');
-    },
-    (id) => {
-      $.m[id] = function () {
-        Object.assign(this, _ReactDOM);
-      };
-    },
-  );
+			return moduleStr.includes(',rendererPackageName:"react-dom"');
+		},
+		(id) => {
+			$.m[id] = function () {
+				Object.assign(this, _ReactDOM);
+			};
+		},
+	);
 
-  matchWebpackModule(
-    (_id, module) => {
-      const moduleStr = module.toString();
+	matchWebpackModule(
+		(_id, module) => {
+			const moduleStr = module.toString();
 
-      return (
-        moduleStr.search(
-          /,([a-zA-Z_$][\w$]*)\.renderToString=([a-zA-Z_$][\w$]*)\.renderToString,/,
-        ) !== -1
-      );
-    },
-    (id) => {
-      $.m[id] = function () {
-        Object.assign(this, _ReactDOMServer);
-      };
-    },
-  );
+			return (
+				moduleStr.search(
+					/,([a-zA-Z_$][\w$]*)\.renderToString=([a-zA-Z_$][\w$]*)\.renderToString,/,
+				) !== -1
+			);
+		},
+		(id) => {
+			$.m[id] = function () {
+				Object.assign(this, _ReactDOMServer);
+			};
+		},
+	);
 });
-
-// import { transformer } from "../../mixin.ts";
-
-// import type ReactT from "npm:@types/react";
-
-// export type React = typeof ReactT;
-// export let React: React;
-
-// transformer<React>(
-// 	(emit) => (str) => {
-// 		str = str.replace(/([a-zA-Z_\$][\w\$]*\.prototype\.setState=)/, "__React=t;$1");
-// 		Object.defineProperty(globalThis, "__React", {
-// 			set: emit,
-// 		});
-// 		return str;
-// 	},
-// 	{
-// 		glob: /^\/xpui-modules\.js/,
-// 	},
-// ).then(($) => {
-// 	React = $;
-// });

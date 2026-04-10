@@ -2,11 +2,9 @@ import type { React } from "../src/expose/React.ts";
 import RootRegistry from "../src/registers/root.ts";
 import { UI } from "../src/webpack/ComponentLibrary.ts";
 import { Locale } from "../src/webpack/misc.ts";
-import { GenericModal } from "../src/webpack/ReactComponents.ts";
+import { Dialog } from "../src/webpack/ReactComponents.ts";
 
 const [RootChildrenRegistry, _RootProvidersRegistry] = RootRegistry;
-
-import { createIconComponent } from "./createIconComponent.tsx";
 
 let ref: React.ReactElement | undefined;
 
@@ -49,7 +47,7 @@ const PopupModal = (props: PopupModalProps) => {
 
   if (props.isEmbedWidgetGeneratorOrTrackCreditsModal) {
     return (
-      <GenericModal isOpen={isOpen}>
+      <Dialog animated={true} isOpen={isOpen} onClose={hide} shouldCloseOnBackdropClick={true}>
         <div
           className={MAP.modal.widget_generator.container}
           style={{ overflow: "scroll", width: "60vw" }}
@@ -58,21 +56,24 @@ const PopupModal = (props: PopupModalProps) => {
             <UI.Text as="h1" variant="titleSmall">
               {props.contentLabel}
             </UI.Text>
-            <button className={MAP.modal.widget_generator.header.close} onClick={hide}>
-              {createIconComponent({
-                icon: "<path d='M2.47 2.47a.75.75 0 0 1 1.06 0L8 6.94l4.47-4.47a.75.75 0 1 1 1.06 1.06L9.06 8l4.47 4.47a.75.75 0 1 1-1.06 1.06L8 9.06l-4.47 4.47a.75.75 0 0 1-1.06-1.06L6.94 8 2.47 3.53a.75.75 0 0 1 0-1.06Z'/>",
-                "aria-label": Locale.get("close"),
-              })}
+            <button
+              aria-label={Locale.get("close")}
+              className={MAP.modal.widget_generator.header.close}
+              onClick={hide}
+            >
+              <UI.Icon fill="currentcolor" height={18} viewBox="0 0 16 16" width={18}>
+                <path d="M2.47 2.47a.75.75 0 0 1 1.06 0L8 6.94l4.47-4.47a.75.75 0 1 1 1.06 1.06L9.06 8l4.47 4.47a.75.75 0 1 1-1.06 1.06L8 9.06l-4.47 4.47a.75.75 0 0 1-1.06-1.06L6.94 8 2.47 3.53a.75.75 0 0 1 0-1.06Z" />
+              </UI.Icon>
             </button>
           </div>
           <div className={MAP.modal.widget_generator.content.container}>{props.children}</div>
         </div>
-      </GenericModal>
+      </Dialog>
     );
   }
 
   return (
-    <GenericModal isOpen={isOpen}>
+    <Dialog animated={true} isOpen={isOpen} onClose={hide} shouldCloseOnBackdropClick={true}>
       <div className={MAP.modal.track_credits.container}>
         <div className={MAP.modal.track_credits.header.container}>
           <UI.Text as="h1" variant="titleMedium">
@@ -83,17 +84,15 @@ const PopupModal = (props: PopupModalProps) => {
             className={MAP.modal.track_credits.header.close}
             onClick={hide}
           >
-            {createIconComponent({
-              icon: "<path d='M2.47 2.47a.75.75 0 0 1 1.06 0L8 6.94l4.47-4.47a.75.75 0 1 1 1.06 1.06L9.06 8l4.47 4.47a.75.75 0 1 1-1.06 1.06L8 9.06l-4.47 4.47a.75.75 0 0 1-1.06-1.06L6.94 8 2.47 3.53a.75.75 0 0 1 0-1.06Z'/>",
-              "aria-label": Locale.get("close"),
-              iconSize: 18,
-            })}
+            <UI.Icon fill="currentcolor" height={18} viewBox="0 0 16 16" width={18}>
+              <path d="M2.47 2.47a.75.75 0 0 1 1.06 0L8 6.94l4.47-4.47a.75.75 0 1 1 1.06 1.06L9.06 8l4.47 4.47a.75.75 0 1 1-1.06 1.06L8 9.06l-4.47 4.47a.75.75 0 0 1-1.06-1.06L6.94 8 2.47 3.53a.75.75 0 0 1 0-1.06Z" />
+            </UI.Icon>
           </button>
         </div>
         <div className={MAP.modal.track_credits.content.container}>
           <div className={MAP.modal.track_credits.content.scroll.viewport}>{props.children}</div>
         </div>
       </div>
-    </GenericModal>
+    </Dialog>
   );
 };

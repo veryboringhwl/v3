@@ -79,7 +79,7 @@ export interface ButtonTertiaryProps extends React.ComponentPropsWithoutRef<"but
   condensedAll?: boolean;
   iconLeading?: React.ReactNode;
   iconTrailing?: React.ReactNode;
-  iconOnly?: React.ReactNode;
+  iconOnly?: React.ComponentType;
   "aria-label"?: string;
   "aria-labelledby"?: string;
   "aria-hidden"?: boolean;

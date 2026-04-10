@@ -1,4 +1,3 @@
-import { createIconComponent } from "../../lib/createIconComponent.tsx";
 import { transformer } from "../../mixin.ts";
 import { React } from "../expose/React.ts";
 import { UI } from "../webpack/ComponentLibrary.ts";
@@ -51,23 +50,27 @@ type TopbarRightButtonProps = {
   label: string;
   disabled?: boolean;
   onClick: () => void;
-  icon?: string;
+  icon?: React.ReactNode;
 };
 
-export const TopbarRightButton: React.FC<TopbarRightButtonProps> = (props) => (
-  <Tooltip label={props.label}>
-    <UI.ButtonTertiary
-      aria-label={props.label}
-      className={MAP.main.topbar.right.button.wrapper}
-      condensedAll
-      disabled={props.disabled}
-      onClick={props.onClick}
-      size="small"
-    >
-      {props.icon &&
-        createIconComponent({
-          icon: props.icon,
-        })}
-    </UI.ButtonTertiary>
-  </Tooltip>
-);
+export const TopbarRightButton: React.FC<TopbarRightButtonProps> = ({
+  label,
+  disabled,
+  icon,
+  onClick,
+}: TopbarRightButtonProps) => {
+  return (
+    <Tooltip label={label}>
+      <UI.ButtonTertiary
+        aria-label={label}
+        className={MAP.main.navbar.right.button.wrapper}
+        condensedAll
+        disabled={disabled}
+        onClick={onClick}
+        size="small"
+      >
+        {icon}
+      </UI.ButtonTertiary>
+    </Tooltip>
+  );
+};
