@@ -1,4 +1,4 @@
 cli/target/
 hooks/node_modules/
 modules/build/target/
-modules-rust/
+modules-js/

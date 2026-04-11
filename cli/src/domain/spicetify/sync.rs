@@ -10,7 +10,7 @@ pub fn run_with(
     archive: &dyn ArchivePort,
 ) -> Result<()> {
     let bytes = network
-        .get_bytes("http://github.com/spicetify/hooks/releases/latest/download/hooks.tar.gz")?;
+        .get_bytes("http://github.com/veryboringhwl/v3/releases/latest/download/hooks.tar.gz")?;
 
     let hooks = ctx.config_path.join("hooks");
     let _ = fs.remove_dir_all(&hooks);

@@ -1,0 +1,14 @@
+{
+  "modules": {
+    "Delusoire": {
+      "enabled": "0.0.0-latest",
+      "v": {
+        "0.0.0-latest": {
+          "artifacts": [
+            "https://github.com/Delusoire/bespoke-modules/releases/latest/download/Delusoire.zip"
+          ]
+        }
+      }
+    }
+  }
+}

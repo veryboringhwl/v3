@@ -18,13 +18,13 @@
     "yargs": "npm:yargs@18.0.0"
   },
   "tasks": {
-    "cm:fetch": "deno run -A scripts/classmap-fetch.ts",
+    "cm:fetch": "cargo run --release --manifest-path build/Cargo.toml -- classmap-fetch",
     "pw:build": "./scripts/build.ps1",
     "pw:watch": "./scripts/watch.ps1",
     "pw:enable": "./scripts/enable.ps1",
     "pw:disable": "./scripts/disable.ps1",
-    "build:release": "deno run -A scripts/build-release.ts",
-    "ci:build:release": "deno task build:release modules/*",
+    "build:release": "cargo run --release --manifest-path build/Cargo.toml -- build-release",
+    "ci:build:release": "cargo run --release --manifest-path build/Cargo.toml -- build-release modules/*",
     "check": "deno run -A @biomejs/biome check --write --unsafe"
   },
   "compilerOptions": {

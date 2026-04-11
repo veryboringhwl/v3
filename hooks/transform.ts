@@ -27,6 +27,9 @@ export class SourceFile {
       return this.path;
     }
     const content = await fetchText(this.path);
+    if (content == null) {
+      throw new Error(`Failed to fetch transform source: ${this.path}`);
+    }
     const modifiedContent = trs.reduce((p, [, transform]) => transform(p, this.path), content!);
     const ext = this.path.slice(this.path.lastIndexOf("."));
     // @ts-expect-error
@@ -34,7 +37,11 @@ export class SourceFile {
     if (!type) {
       return this.path;
     }
-    const blob = new Blob([modifiedContent], { type });
+    const withSourceURL =
+      ext === ".js"
+        ? `${modifiedContent}\n//# sourceURL=${new URL(this.path, location.origin).href}`
+        : modifiedContent;
+    const blob = new Blob([withSourceURL], { type });
     this.objectURL = URL.createObjectURL(blob);
     return this.objectURL;
   }

@@ -1,5 +1,5 @@
 import { BehaviorSubject, Subject } from "../deps.ts";
-import { postWebpackRequireHooks } from "./wpunpk.mix.ts";
+import { addPostWebpackRequireHook } from "./wpunpk.mix.ts";
 
 function createGlobalThisShadow() {
   const globalThisShadow = {} as typeof globalThis;
@@ -18,7 +18,7 @@ type CosmosRequest = { uri: string; method: string; body: string };
 const CosmosRequestSubject = new Subject<CosmosRequest>();
 export const UpdateTitlebarSubject = new BehaviorSubject<number>(-1);
 
-postWebpackRequireHooks.push(($) => {
+addPostWebpackRequireHook(($) => {
   const globalThisShadow = ($.g = createGlobalThisShadow());
 
   const $sendCosmosRequest = globalThis.sendCosmosRequest;

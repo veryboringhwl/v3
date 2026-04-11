@@ -48,7 +48,6 @@ const _type = (obj: any, access: string): string => {
       if (cached) return cached;
       if (Array.isArray(obj)) {
         const types = obj.map((e, i) => _type(e, `${access}[${i}]`));
-        // @ts-expect-error: Property 'groupBy' does not exist on type 'ObjectConstructor'.
         const uniqueTypes = Array.from(new Set(types));
         return `Array<${uniqueTypes.join("|")}>`;
       }

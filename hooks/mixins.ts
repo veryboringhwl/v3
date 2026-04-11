@@ -71,25 +71,21 @@ globalThis.__onScriptLoaded = (path: string) => {
 export default async function (transformer: Transformer) {
   transformer(
     (emit) => (str) => {
-      // JS: make the chunk loader async
       str = str.replace(
         /(=)(function\([\w$,]+\)\{)(?=(?:(?!function\()[\s\S])*?[\w$]+=Error\(\))/,
         "$1async $2",
       );
 
-      // JS: wrap URL — only place a concat expr sits beside Error()
       str = str.replace(
         /(?<=[\w$]+=)([\w$.]+\+[\w$.]+\([^)]+\))(?=,[\w$]+=Error\(\))/,
         "await __applyTransforms($1)",
       );
 
-      // CSS: make the Promise executor async
       str = str.replace(
         /new Promise\(function(\([\w$,]+\)\{var [\w$]+=[\w$]+\.miniCssF\()/,
         "new Promise(async function$1",
       );
 
-      // CSS: wrap URL — was missing . in character class so u.p wouldn't match
       str = str.replace(
         /(?<=\.miniCssF\([^)]+\),[\w$]+=)([\w$.]+\+[\w$]+)/,
         "await __applyTransforms($1)",

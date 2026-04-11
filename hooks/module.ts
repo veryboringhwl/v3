@@ -614,7 +614,7 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
     const resolve = this.transition.extend();
 
     await Promise.all(
-      Object.keys(this.metadata?.dependencies).map((dependency) => {
+      Object.keys(this.metadata?.dependencies ?? {}).map((dependency) => {
         const module = RootModule.INSTANCE.getDescendant(dependency)?.getEnabledInstance()!;
         return module.loadMixinsRecur();
       }),
@@ -627,7 +627,7 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
 
   private async awaitMixinsRecur() {
     await Promise.all(
-      Object.keys(this.metadata?.dependencies).map((dependency) => {
+      Object.keys(this.metadata?.dependencies ?? {}).map((dependency) => {
         const module = RootModule.INSTANCE.getDescendant(dependency)?.getEnabledInstance()!;
         return module.awaitMixinsRecur();
       }),
@@ -644,7 +644,7 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
     const resolve = this.transition.extend();
 
     await Promise.all(
-      Object.keys(this.metadata?.dependencies).map((dependency) => {
+      Object.keys(this.metadata?.dependencies ?? {}).map((dependency) => {
         const module = RootModule.INSTANCE.getDescendant(dependency)?.getEnabledInstance()!;
         module.dependants.add(this);
         return module.loadRecur();
@@ -665,7 +665,7 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
     this.forceUnload();
     const resolve = this.transition.extend();
 
-    for (const dependency of Object.keys(this.metadata?.dependencies)) {
+    for (const dependency of Object.keys(this.metadata?.dependencies ?? {})) {
       const module = RootModule.INSTANCE.getDescendant(dependency)?.getEnabledInstance()!;
       module.dependants.delete(this);
     }
@@ -1037,8 +1037,14 @@ function createContextPromise(): ContextPromise {
   return Object.assign(promise, {
     wrap: ($: Promise<DisposeFn | undefined>) =>
       $.then(
-        (v) => promise.resolve(v),
-        (e) => promise.reject(e),
+        (v) => {
+          promise.resolve(v);
+          return v;
+        },
+        (e) => {
+          promise.reject(e);
+          throw e;
+        },
       ),
   });
 }

@@ -8,7 +8,6 @@ export const createLogger = (mod: ModuleInstance) => {
       const func: unknown = Reflect.get(target, p, receiver);
 
       if (typeof p === "string" && hookedMethods.has(p) && typeof func === "function") {
-        // @ts-expect-error
         return (...data: any[]) => func.call(target, `[${mod.getModuleIdentifier()}]:`, ...data);
       }
 

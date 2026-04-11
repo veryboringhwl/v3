@@ -4,14 +4,14 @@ import _React from "https://esm.sh/react@18.3.1";
 import _ReactDOM from "https://esm.sh/react-dom@18.3.1";
 // @deno-types="npm:@types/react-dom@18.3.1/server"
 import _ReactDOMServer from "https://esm.sh/react-dom@18.3.1/server";
-import { postWebpackRequireHooks } from "../wpunpk.mix.ts";
+import { addPostWebpackRequireHook } from "../wpunpk.mix.ts";
 import { matchWebpackModule } from "../wpunpk.ts";
 
 export const React = _React;
 export const ReactDOM = _ReactDOM;
 export const ReactDOMServer = _ReactDOMServer;
 
-postWebpackRequireHooks.push(($) => {
+addPostWebpackRequireHook(($) => {
   matchWebpackModule(
     (_id, module) => {
       const moduleStr = module.toString();

@@ -40,13 +40,8 @@ import {
   exportedMemos,
 } from "./index.ts";
 
-// Ensure the UI chunks are loaded before proceeding
 await CHUNKS.xpui.promise;
 
-/**
- * Pairs extracted from the Webpack bundle.
- * Matches internal function strings against known "data-encore-id" attributes.
- */
 const componentPairs = [
   exportedFunctions.map((f) => [f, f]),
   exportedForwardRefs.map((f) => [(f as any).render, f]),

@@ -10,7 +10,7 @@ Install the following before building:
 - [Deno](https://deno.com/)
 - [Node.js](https://nodejs.org/)
 - [Bun](https://bun.sh/)
-- Spotify desktop client `1.2.85`
+- Spotify desktop client `1.2.86`
 - A previous `Spicetify v2` installation should be removed or backed up before proceeding
 
 ## Build Steps
@@ -72,22 +72,7 @@ After that, compile the hooks from the `hooks` folder:
 bunx tsc
 ```
 
-### 5. Build the Rust plugins
-
-Open the `modules/build` directory and build both Rust SWC plugins.
-
-For each plugin package:
-
-```sh
-bun run build
-```
-
-The two plugin packages are:
-
-- `swc-plugin-remapper`
-- `swc-plugin-transform-module-specifiers`
-
-### 6. Build the modules
+### 5. Build the modules
 
 Go back to the modules folder
 Run the following Deno tasks in order:
@@ -98,7 +83,7 @@ deno task pw:build
 deno task pw:enable
 ```
 
-### 7. Apply Spicetify
+### 6. Apply Spicetify
 
 Once everything is built, run:
 
