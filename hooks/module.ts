@@ -994,9 +994,9 @@ export async function loadLocalModules() {
 export async function loadRemoteModules() {
   const remoteModules = [
     await fetchJson<_Vault>(
-      "https://raw.githubusercontent.com/veryboringhwl/modules/main/vault.json",
+      "https://raw.githubusercontent.com/veryboringhwl/v3/main/modules/vault.json",
     ),
-    await fetchJson<_Vault>("https://raw.githubusercontent.com/veryboringhwl/pkgs/main/vault.json"),
+    await fetchJson<_Vault>("https://raw.githubusercontent.com/veryboringhwl/v3/main/pkgs/vault.json"),
   ]
     .filter(Boolean)
     .reduceRight<_Vault["modules"]>(
