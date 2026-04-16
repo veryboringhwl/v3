@@ -1,0 +1,24 @@
+{
+	"name": "playlist-labels",
+	"tags": [
+		"extension"
+	],
+	"preview": "./assets/PREVIEW.png",
+	"version": "0.1.3",
+	"authors": [
+		"Delusoire"
+	],
+	"description": "Adds interactive playlist labels to your tracklist",
+	"readme": "./assets/README.md",
+	"entries": {
+		"js": "index.js",
+		"css": "index.css"
+	},
+	"dependencies": {
+		"stdlib": "0.2.2",
+		"Delusoire.delulib": "0.1.3",
+		"Delusoire.library-db": "0.1.3",
+		"Delusoire.dexie-react-hooks": "1.1.7",
+		"Delusoire.tracklist-columns": "0.1.3"
+	}
+}
