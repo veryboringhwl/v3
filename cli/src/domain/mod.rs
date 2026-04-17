@@ -1,2 +1,11 @@
-pub(crate) mod spicetify;
-pub(crate) mod spotify;
+pub(crate) mod apply;
+pub(crate) mod config;
+pub(crate) mod daemon;
+pub(crate) mod dev;
+pub(crate) mod fix;
+pub(crate) mod init;
+pub(crate) mod pkg;
+pub(crate) mod protocol;
+pub(crate) mod run;
+pub(crate) mod sync;
+pub(crate) mod update;

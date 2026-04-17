@@ -21,8 +21,10 @@ use ratatui::style::{Color, Modifier, Style};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, BorderType, Borders, List, ListItem, ListState, Paragraph, Wrap};
 
-use crate::app::AppContext;
-use crate::cli::{DaemonAction, SpicetifyCommand, UpdateMode};
+use crate::application::dispatcher;
+use crate::core::app::AppContext;
+use crate::core::cli::{DaemonAction, SpicetifyCommand, UpdateMode};
+use crate::utils::logging;
 
 const FRAME_INTERVAL: Duration = Duration::from_millis(33);
 const INPUT_POLL_INTERVAL: Duration = Duration::from_millis(50);
@@ -404,17 +406,15 @@ impl TuiApp {
                 }
             });
 
-            crate::logging::capture_begin_stream(log_tx);
-            let success =
-                match crate::application::dispatcher::dispatch_spicetify(action.to_command(), &ctx)
-                {
-                    Ok(()) => true,
-                    Err(err) => {
-                        let _ = ui_tx.send(UiEvent::CommandLog(format!("ERROR {err}")));
-                        false
-                    }
-                };
-            let _ = crate::logging::capture_end();
+            logging::capture_begin_stream(log_tx);
+            let success = match dispatcher::dispatch_spicetify(action.to_command(), &ctx) {
+                Ok(()) => true,
+                Err(err) => {
+                    let _ = ui_tx.send(UiEvent::CommandLog(format!("ERROR {err}")));
+                    false
+                }
+            };
+            let _ = logging::capture_end();
 
             let _ = log_forwarder.join();
             let _ = ui_tx.send(UiEvent::CommandFinished { success });

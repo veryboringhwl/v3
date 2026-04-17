@@ -3,29 +3,33 @@ use std::process::Command;
 
 use anyhow::{Context, Result};
 
-use crate::app::AppContext;
+use crate::core::app::AppContext;
+use crate::core::config::{self, Config};
+use crate::infrastructure::daemon_runtime;
 use crate::infrastructure::ports::{
     ApplicationPorts, ArchivePort, ConfigPort, DaemonPort, FileSystemPort, LinkingPort,
     LoggingPort, NetworkPort, ProcessPort, SpotifyProcessPort, UriLauncherPort,
 };
+use crate::process::spotify;
+use crate::utils::{archive, linking, logging};
 
 pub struct SystemLogger;
 
 impl LoggingPort for SystemLogger {
     fn info(&self, message: &str) {
-        crate::logging::info(message);
+        logging::info(message);
     }
 
     fn warn(&self, message: &str) {
-        crate::logging::warn(message);
+        logging::warn(message);
     }
 
     fn error(&self, message: &str) {
-        crate::logging::error(message);
+        logging::error(message);
     }
 
     fn fatal(&self, message: &str) {
-        crate::logging::fatal(message);
+        logging::fatal(message);
     }
 }
 
@@ -33,19 +37,19 @@ pub struct SystemSpotifyProcess;
 
 impl SpotifyProcessPort for SystemSpotifyProcess {
     fn start(&self, ctx: &AppContext) -> Result<()> {
-        crate::process::spotify::start(ctx)
+        spotify::start(ctx)
     }
 
     fn stop(&self, ctx: &AppContext) -> Result<()> {
-        crate::process::spotify::stop(ctx)
+        spotify::stop(ctx)
     }
 
     fn restart(&self, ctx: &AppContext) -> Result<()> {
-        crate::process::spotify::restart(ctx)
+        spotify::restart(ctx)
     }
 
     fn restart_if_running(&self, ctx: &AppContext) -> Result<()> {
-        crate::process::spotify::restart_if_running(ctx)
+        spotify::restart_if_running(ctx)
     }
 }
 
@@ -126,11 +130,11 @@ pub struct SystemArchive;
 
 impl ArchivePort for SystemArchive {
     fn unzip_file(&self, zip_path: &Path, dest: &Path) -> Result<()> {
-        crate::archive::unzip_file(zip_path, dest)
+        archive::unzip_file(zip_path, dest)
     }
 
     fn untar_gz_bytes(&self, bytes: &[u8], dest: &Path) -> Result<()> {
-        crate::archive::untar_gz_reader(std::io::Cursor::new(bytes), dest)
+        archive::untar_gz_reader(std::io::Cursor::new(bytes), dest)
     }
 }
 
@@ -138,19 +142,19 @@ pub struct SystemLinking;
 
 impl LinkingPort for SystemLinking {
     fn create_dir_link(&self, src: &Path, dst: &Path) -> Result<()> {
-        crate::linking::create_dir_link(src, dst)
+        linking::create_dir_link(src, dst)
     }
 }
 
 pub struct SystemConfig;
 
 impl ConfigPort for SystemConfig {
-    fn load_or_default(&self, path: &Path) -> Result<crate::config::Config> {
-        crate::config::load_or_default(path)
+    fn load_or_default(&self, path: &Path) -> Result<Config> {
+        config::load_or_default(path)
     }
 
-    fn save(&self, path: &Path, cfg: &crate::config::Config) -> Result<()> {
-        crate::config::save(path, cfg)
+    fn save(&self, path: &Path, cfg: &Config) -> Result<()> {
+        config::save(path, cfg)
     }
 }
 
@@ -193,7 +197,7 @@ pub struct SystemDaemon;
 
 impl DaemonPort for SystemDaemon {
     fn start(&self, ctx: &AppContext) -> Result<()> {
-        crate::infrastructure::daemon_runtime::start(ctx)
+        daemon_runtime::start(ctx)
     }
 }
 

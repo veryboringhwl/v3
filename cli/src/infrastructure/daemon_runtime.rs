@@ -14,11 +14,14 @@ use axum::{Json, Router};
 use futures_util::StreamExt;
 use notify::{EventKind, RecursiveMode, Watcher};
 
-use crate::app::AppContext;
-use crate::infrastructure::ports::ApplicationPorts;
+use crate::core::app::AppContext;
+use crate::domain::{apply, protocol};
+use crate::infrastructure::ports::{ApplicationPorts, ConfigPort};
 use crate::infrastructure::system::{
     SystemArchive, SystemFileSystem, SystemLinking, SystemLogger, SystemPorts,
 };
+use crate::paths;
+use crate::utils::logging;
 
 const DAEMON_ADDR: &str = "localhost:7967";
 const ALLOWED_ORIGIN: &str = "https://xpui.app.spotify.com";
@@ -79,7 +82,7 @@ fn watch_spotify_apps(shared_ctx: Arc<Mutex<AppContext>>, stop_rx: std::sync::mp
             Err(_) => return,
         }
     };
-    let apps = crate::paths::spotify_apps_path(&ctx.spotify_data_path);
+    let apps = paths::spotify_apps_path(&ctx.spotify_data_path);
     let (tx, rx) = channel();
     let mut watcher = match notify::recommended_watcher(tx) {
         Ok(w) => w,
@@ -87,21 +90,21 @@ fn watch_spotify_apps(shared_ctx: Arc<Mutex<AppContext>>, stop_rx: std::sync::mp
     };
 
     if watcher.watch(&apps, RecursiveMode::NonRecursive).is_err() {
-        crate::logging::fatal(&format!("failed to watch: {}", apps.display()));
+        logging::fatal(&format!("failed to watch: {}", apps.display()));
         return;
     }
 
-    crate::logging::info(&format!("watching: {}", apps.display()));
+    logging::info(&format!("watching: {}", apps.display()));
 
     loop {
         if stop_rx.try_recv().is_ok() {
-            crate::logging::info("stopping");
+            logging::info("stopping");
             return;
         }
 
         match rx.recv_timeout(Duration::from_millis(200)) {
             Ok(Ok(event)) => {
-                crate::logging::info(&format!("event: {:?}", event.kind));
+                logging::info(&format!("event: {:?}", event.kind));
                 if matches!(event.kind, EventKind::Create(_)) {
                     for p in event.paths {
                         if p.file_name().and_then(|s| s.to_str()) == Some("xpui.spa") {
@@ -115,17 +118,17 @@ fn watch_spotify_apps(shared_ctx: Arc<Mutex<AppContext>>, stop_rx: std::sync::mp
                             let archive = SystemArchive;
                             let linking = SystemLinking;
                             let logger = SystemLogger;
-                            if let Err(err) = crate::domain::spicetify::apply::run_with(
-                                &apply_ctx, &fs, &archive, &linking, &logger,
-                            ) {
-                                crate::logging::warn(&err.to_string());
+                            if let Err(err) =
+                                apply::run_with(&apply_ctx, &fs, &archive, &linking, &logger)
+                            {
+                                logging::warn(&err.to_string());
                             }
                         }
                     }
                 }
             }
             Ok(Err(err)) => {
-                crate::logging::warn(&err.to_string());
+                logging::warn(&err.to_string());
                 continue;
             }
             Err(std::sync::mpsc::RecvTimeoutError::Timeout) => continue,
@@ -182,7 +185,7 @@ fn watch_config_changes(
                 }
             }
             Ok(Err(err)) => {
-                crate::logging::warn(&err.to_string());
+                logging::warn(&err.to_string());
                 continue;
             }
             Err(_) => break,
@@ -190,24 +193,21 @@ fn watch_config_changes(
     }
 }
 
-fn rebuild_context_from_config(
-    base: &AppContext,
-    config: &dyn crate::infrastructure::ports::ConfigPort,
-) -> Result<AppContext> {
+fn rebuild_context_from_config(base: &AppContext, config: &dyn ConfigPort) -> Result<AppContext> {
     let cfg = config.load_or_default(&base.config_file)?;
 
     let spotify_data_path = cfg
         .spotify_data_path
         .clone()
-        .unwrap_or_else(crate::paths::default_spotify_data_path);
+        .unwrap_or_else(paths::default_spotify_data_path);
     let spotify_exec_path = cfg
         .spotify_exec_path
         .clone()
-        .unwrap_or_else(|| crate::paths::default_spotify_exec_path(&spotify_data_path));
+        .unwrap_or_else(|| paths::default_spotify_exec_path(&spotify_data_path));
     let spotify_config_path = cfg
         .spotify_config_path
         .clone()
-        .unwrap_or_else(crate::paths::default_spotify_config_path);
+        .unwrap_or_else(paths::default_spotify_config_path);
 
     Ok(AppContext {
         config_file: base.config_file.clone(),
@@ -228,7 +228,7 @@ async fn ws_handler(
 }
 
 async fn shutdown_handler(State(state): State<Arc<DaemonState>>) -> impl IntoResponse {
-    crate::logging::info("shutdown requested");
+    logging::info("shutdown requested");
     state.shutdown.notify_waiters();
     (StatusCode::ACCEPTED, "daemon stopping")
 }
@@ -236,13 +236,13 @@ async fn shutdown_handler(State(state): State<Arc<DaemonState>>) -> impl IntoRes
 async fn handle_ws(mut socket: WebSocket, state: Arc<DaemonState>) {
     while let Some(Ok(msg)) = socket.next().await {
         if let Message::Text(text) = msg {
-            crate::logging::info(&format!("recv: {text}"));
-            match crate::domain::spicetify::protocol::handle_protocol(&state.ctx, &text) {
+            logging::info(&format!("recv: {text}"));
+            match protocol::handle_protocol(&state.ctx, &text) {
                 Ok(res) if !res.is_empty() => {
                     let _ = socket.send(Message::Text(res.into())).await;
                 }
                 Ok(_) => {}
-                Err(err) => crate::logging::warn(&format!("protocol error: {err}")),
+                Err(err) => logging::warn(&format!("protocol error: {err}")),
             }
         }
     }

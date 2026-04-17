@@ -2,8 +2,8 @@ use std::path::{Path, PathBuf};
 
 use anyhow::Result;
 
-use crate::app::AppContext;
-use crate::config::Config;
+use crate::core::app::AppContext;
+use crate::core::config::Config;
 
 #[allow(dead_code)]
 pub trait LoggingPort: Send + Sync {

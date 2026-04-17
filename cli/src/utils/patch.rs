@@ -11,4 +11,3 @@ pub fn patch_index_html(input: &str) -> Result<String> {
     out.push_str(&input[idx + target.len()..]);
     Ok(out)
 }
-

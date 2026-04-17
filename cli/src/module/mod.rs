@@ -6,8 +6,8 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Result, anyhow};
 
-use crate::archive;
-use crate::linking;
+use crate::utils::archive;
+use crate::utils::linking;
 
 pub use vault::{Store, StoreIdentifier, Vault};
 

@@ -39,8 +39,16 @@ impl StoreIdentifier {
             .ok_or_else(|| anyhow!("invalid store id, expected module@version"))?;
 
         Ok(Self {
-            module_identifier: cap.get(1).map(|m| m.as_str()).unwrap_or_default().to_string(),
-            version: cap.get(2).map(|m| m.as_str()).unwrap_or_default().to_string(),
+            module_identifier: cap
+                .get(1)
+                .map(|m| m.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            version: cap
+                .get(2)
+                .map(|m| m.as_str())
+                .unwrap_or_default()
+                .to_string(),
         })
     }
 

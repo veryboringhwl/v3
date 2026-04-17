@@ -27,7 +27,8 @@ pub fn extract_between_markers(snapshot: &[u8], start: &str, end: &str) -> Resul
     let start_b = encode_utf16le(start);
     let end_b = encode_utf16le(end);
 
-    let start_pos = find_bytes(snapshot, &start_b).ok_or_else(|| anyhow::anyhow!("start marker not found"))?;
+    let start_pos =
+        find_bytes(snapshot, &start_b).ok_or_else(|| anyhow::anyhow!("start marker not found"))?;
     let end_pos_rel = find_bytes(&snapshot[start_pos..], &end_b)
         .ok_or_else(|| anyhow::anyhow!("end marker not found"))?;
 
@@ -41,4 +42,3 @@ fn find_bytes(haystack: &[u8], needle: &[u8]) -> Option<usize> {
     }
     haystack.windows(needle.len()).position(|w| w == needle)
 }
-

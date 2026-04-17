@@ -3,9 +3,14 @@ use std::path::{Path, PathBuf};
 use directories::BaseDirs;
 
 pub fn spotify_data_path() -> PathBuf {
-    let mut candidates = vec![PathBuf::from("/Applications/Spotify.app/Contents/Resources")];
+    let mut candidates = vec![PathBuf::from(
+        "/Applications/Spotify.app/Contents/Resources",
+    )];
     if let Some(base) = BaseDirs::new() {
-        candidates.push(base.home_dir().join("Applications/Spotify.app/Contents/Resources"));
+        candidates.push(
+            base.home_dir()
+                .join("Applications/Spotify.app/Contents/Resources"),
+        );
     }
     candidates
         .into_iter()

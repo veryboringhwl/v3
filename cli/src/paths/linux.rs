@@ -8,7 +8,9 @@ pub fn spotify_data_path() -> PathBuf {
         PathBuf::from("/opt/spotify/spotify-client"),
         PathBuf::from("/usr/share/spotify"),
         PathBuf::from("/usr/libexec/spotify"),
-        PathBuf::from("/var/lib/flatpak/app/com.spotify.Client/x86_64/stable/active/files/extra/share/spotify"),
+        PathBuf::from(
+            "/var/lib/flatpak/app/com.spotify.Client/x86_64/stable/active/files/extra/share/spotify",
+        ),
     ];
 
     if let Some(base) = BaseDirs::new() {
@@ -16,7 +18,10 @@ pub fn spotify_data_path() -> PathBuf {
             base.home_dir()
                 .join(".local/share/flatpak/app/com.spotify.Client/x86_64/stable/active/files/extra/share/spotify"),
         );
-        candidates.push(base.home_dir().join(".local/share/spotify-launcher/install/usr/share/spotify"));
+        candidates.push(
+            base.home_dir()
+                .join(".local/share/spotify-launcher/install/usr/share/spotify"),
+        );
     }
 
     candidates

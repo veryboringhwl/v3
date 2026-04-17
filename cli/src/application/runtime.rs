@@ -1,6 +1,11 @@
 use anyhow::Result;
 use clap::Parser;
 
+use crate::application::dispatcher;
+use crate::core::app::AppContext;
+use crate::core::cli::{SpicetifyCli, SpotifyCli};
+use crate::ui::tui;
+
 pub fn run(force_spotify_mode: Option<bool>) -> Result<()> {
     let spotify_mode = match force_spotify_mode {
         Some(v) => v,
@@ -19,15 +24,15 @@ pub fn run(force_spotify_mode: Option<bool>) -> Result<()> {
     };
 
     if spotify_mode {
-        let cli = crate::cli::SpotifyCli::parse();
-        let ctx = crate::app::AppContext::from_cli(&cli.global)?;
-        return crate::application::dispatcher::dispatch_spotify(cli.command, &ctx);
+        let cli = SpotifyCli::parse();
+        let ctx = AppContext::from_cli(&cli.global)?;
+        return dispatcher::dispatch_spotify(cli.command, &ctx);
     }
 
-    let cli = crate::cli::SpicetifyCli::parse();
-    let ctx = crate::app::AppContext::from_cli(&cli.global)?;
+    let cli = SpicetifyCli::parse();
+    let ctx = AppContext::from_cli(&cli.global)?;
     match cli.command {
-        Some(command) => crate::application::dispatcher::dispatch_spicetify(command, &ctx),
-        None => crate::ui::tui::run(&ctx),
+        Some(command) => dispatcher::dispatch_spicetify(command, &ctx),
+        None => tui::run(&ctx),
     }
 }

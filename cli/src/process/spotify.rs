@@ -5,7 +5,8 @@ use std::time::{Duration, Instant};
 
 use anyhow::{Context, Result};
 
-use crate::app::AppContext;
+use crate::core::app::AppContext;
+use crate::utils::logging;
 
 const SHUTDOWN_TIMEOUT: Duration = Duration::from_secs(15);
 const MIN_POLL_INTERVAL: Duration = Duration::from_millis(100);
@@ -13,12 +14,12 @@ const MAX_POLL_INTERVAL: Duration = Duration::from_millis(800);
 
 pub fn start(ctx: &AppContext) -> Result<()> {
     start_spotify(ctx)?;
-    crate::logging::info("Started Spotify");
+    logging::info("Started Spotify");
     Ok(())
 }
 
 pub fn stop(ctx: &AppContext) -> Result<()> {
-    crate::logging::info("Stopping Spotify (if running)");
+    logging::info("Stopping Spotify (if running)");
     stop_spotify(ctx)?;
     wait_for_exit(ctx, SHUTDOWN_TIMEOUT);
     Ok(())
@@ -27,7 +28,7 @@ pub fn stop(ctx: &AppContext) -> Result<()> {
 pub fn restart(ctx: &AppContext) -> Result<()> {
     stop(ctx)?;
     start(ctx)?;
-    crate::logging::info("Restarted Spotify");
+    logging::info("Restarted Spotify");
     Ok(())
 }
 
@@ -45,7 +46,7 @@ fn wait_for_exit(ctx: &AppContext, timeout: Duration) {
 
     while is_spotify_running(ctx) {
         if start.elapsed() >= timeout {
-            crate::logging::warn("Timed out waiting for Spotify to exit; starting anyway");
+            logging::warn("Timed out waiting for Spotify to exit; starting anyway");
             return;
         }
 
