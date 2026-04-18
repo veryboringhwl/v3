@@ -1,11 +1,10 @@
 {
   "modules": {
-    "Delusoire": {
-      "enabled": "0.0.0-latest",
+    "test": {
       "v": {
-        "0.0.0-latest": {
+        "0.1.0": {
           "artifacts": [
-            "https://github.com/veryboringhwl/v3/releases/download/v0.1/bespoke-modules.zip"
+            "https://github.com/veryboringhwl/v3/releases/download/v0.2/test@0.1.0.zip"
           ]
         }
       }
