@@ -1,19 +1,22 @@
-import ArtistsPage from "./pages/top_artists.tsx";
-import TracksPage from "./pages/top_tracks.tsx";
-import GenresPage from "./pages/top_genres.tsx";
+import { React } from "/modules/stdlib/src/expose/React.ts";
+import {
+  InstrumentedRedirect,
+  Route,
+  Routes,
+} from "/modules/stdlib/src/webpack/ReactComponents.ts";
+import { useMatch } from "/modules/stdlib/src/webpack/ReactRouter.xpui.ts";
 import LibraryPage from "./pages/library.tsx";
 import AlbumsPage from "./pages/top_albums.tsx";
-
-import { React } from "/modules/stdlib/src/expose/React.ts";
-import { InstrumentedRedirect, Route, Routes } from "/modules/stdlib/src/webpack/ReactComponents.ts";
-import { useMatch } from "/modules/stdlib/src/webpack/ReactRouter.xpui.ts";
+import ArtistsPage from "./pages/top_artists.tsx";
+import GenresPage from "./pages/top_genres.tsx";
+import TracksPage from "./pages/top_tracks.tsx";
 
 const Pages = {
-	tracks: <TracksPage />,
-	artists: <ArtistsPage />,
-	albums: <AlbumsPage />,
-	genres: <GenresPage />,
-	library: <LibraryPage />,
+  tracks: <TracksPage />,
+  artists: <ArtistsPage />,
+  albums: <AlbumsPage />,
+  genres: <GenresPage />,
+  library: <LibraryPage />,
 };
 
 export const categories = Object.keys(Pages) as Array<keyof typeof Pages>;
@@ -21,27 +24,27 @@ export const categories = Object.keys(Pages) as Array<keyof typeof Pages>;
 export const selectedCategoryCtx = React.createContext<string>(null);
 
 export default function () {
-	const match = useMatch("/bespoke/stats/:category");
-	const selectedCategory = match?.params?.category ?? categories[0];
+  const match = useMatch("/bespoke/stats/:category");
+  const selectedCategory = match?.params?.category ?? categories[0];
 
-	const SelectedPage = Pages[selectedCategory];
+  const SelectedPage = Pages[selectedCategory];
 
-	return (
-		<div id="stats-app">
-			<Routes>
-				<Route
-					path="/"
-					element={<InstrumentedRedirect to={`/bespoke/stats/${selectedCategory}`} />}
-				/>
-				<Route
-					path=":category"
-					element={
-						<selectedCategoryCtx.Provider value={selectedCategory}>
-							{SelectedPage}
-						</selectedCategoryCtx.Provider>
-					}
-				/>
-			</Routes>
-		</div>
-	);
+  return (
+    <div id="stats-app">
+      <Routes>
+        <Route
+          element={<InstrumentedRedirect to={`/bespoke/stats/${selectedCategory}`} />}
+          path="/"
+        />
+        <Route
+          element={
+            <selectedCategoryCtx.Provider value={selectedCategory}>
+              {SelectedPage}
+            </selectedCategoryCtx.Provider>
+          }
+          path=":category"
+        />
+      </Routes>
+    </div>
+  );
 }

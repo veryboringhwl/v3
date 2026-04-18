@@ -468,7 +468,7 @@ class TypeGenerator {
       const bestHint =
         [...node.nameHints].sort((a, b) => a.split(".").length - b.split(".").length)[0] || id;
 
-      const cleanHint = bestHint.startsWith(this.rootName + ".")
+      const cleanHint = bestHint.startsWith(`${this.rootName}.`)
         ? bestHint.slice(this.rootName.length + 1)
         : bestHint;
 

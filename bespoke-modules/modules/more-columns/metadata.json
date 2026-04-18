@@ -1,22 +1,18 @@
 {
-	"name": "more-columns",
-	"tags": [
-		"extension"
-	],
-	"preview": "./assets/PREVIEW.png",
-	"version": "0.1.3",
-	"authors": [
-		"Delusoire"
-	],
-	"description": "Inline stats for your playlist tracks",
-	"readme": "./assets/README.md",
-	"entries": {
-		"js": "index.js"
-	},
-	"dependencies": {
-		"stdlib": "0.2.2",
-		"Delusoire.delulib": "0.1.3",
-		"Delusoire.library-db": "0.1.3",
-		"Delusoire.tracklist-columns": "0.1.3"
-	}
+  "name": "more-columns",
+  "tags": ["extension"],
+  "preview": "./assets/PREVIEW.png",
+  "version": "0.1.3",
+  "authors": ["Delusoire"],
+  "description": "Inline stats for your playlist tracks",
+  "readme": "./assets/README.md",
+  "entries": {
+    "js": "index.js"
+  },
+  "dependencies": {
+    "stdlib": "0.2.2",
+    "Delusoire.delulib": "0.1.3",
+    "Delusoire.library-db": "0.1.3",
+    "Delusoire.tracklist-columns": "0.1.3"
+  }
 }

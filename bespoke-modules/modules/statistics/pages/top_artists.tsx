@@ -1,77 +1,75 @@
-import { React } from "/modules/stdlib/src/expose/React.ts";
-
-import SpotifyCard from "../components/shared/spotify_card.tsx";
-import PageContainer from "../components/shared/page_container.tsx";
-import { DEFAULT_TRACK_IMG } from "../static.ts";
-import RefreshButton from "../components/buttons/refresh_button.tsx";
 import { spotifyApi } from "/modules/Delusoire.delulib/lib/api.ts";
-
+import { useDropdown } from "/modules/stdlib/lib/components/index.tsx";
+import { React } from "/modules/stdlib/src/expose/React.ts";
+import { useQuery } from "/modules/stdlib/src/webpack/ReactQuery.ts";
 import { SpotifyTimeRange } from "../api/spotify.ts";
+import RefreshButton from "../components/buttons/refresh_button.tsx";
+import PageContainer from "../components/shared/page_container.tsx";
+import SpotifyCard from "../components/shared/spotify_card.tsx";
 import { useStatus } from "../components/status/useStatus.tsx";
 import { logger, settingsButton, storage } from "../mod.tsx";
-import { useDropdown } from "/modules/stdlib/lib/components/index.tsx";
-import { useQuery } from "/modules/stdlib/src/webpack/ReactQuery.ts";
+import { DEFAULT_TRACK_IMG } from "../static.ts";
 
 const DropdownOptions = {
-	"Past Month": () => "Past Month",
-	"Past 6 Months": () => "Past 6 Months",
-	"All Time": () => "All Time",
+  "Past Month": () => "Past Month",
+  "Past 6 Months": () => "Past 6 Months",
+  "All Time": () => "All Time",
 } as const;
 const OptionToTimeRange = {
-	"Past Month": SpotifyTimeRange.Short,
-	"Past 6 Months": SpotifyTimeRange.Medium,
-	"All Time": SpotifyTimeRange.Long,
+  "Past Month": SpotifyTimeRange.Short,
+  "Past 6 Months": SpotifyTimeRange.Medium,
+  "All Time": SpotifyTimeRange.Long,
 } as const;
 
 export const fetchTopArtists = (timeRange: SpotifyTimeRange) =>
-	spotifyApi.currentUser.topItems("artists", timeRange, 50, 0);
+  spotifyApi.currentUser.topItems("artists", timeRange, 50, 0);
 interface ArtistsPageContentProps {
-	topArtists: any[];
+  topArtists: any[];
 }
 const ArtistsPageContent = ({ topArtists }: ArtistsPageContentProps) => {
-	// TODO: CLASSMAP iKwGKEfAfW7Rkx2_Ba4E gridContainer
-	return (
-		<div className={`${"iKwGKEfAfW7Rkx2_Ba4E"} grid`}>
-			{topArtists.map((artist, index) => (
-				<SpotifyCard
-					type={"artist"}
-					uri={artist.uri}
-					header={artist.name}
-					subheader={`#${index + 1} Artist`}
-					imageUrl={artist.images.at(-1)?.url ?? DEFAULT_TRACK_IMG}
-				/>
-			))}
-		</div>
-	);
+  // TODO: CLASSMAP iKwGKEfAfW7Rkx2_Ba4E gridContainer
+  return (
+    <div className={`${"iKwGKEfAfW7Rkx2_Ba4E"} grid`}>
+      {topArtists.map((artist, index) => (
+        <SpotifyCard
+          header={artist.name}
+          imageUrl={artist.images.at(-1)?.url ?? DEFAULT_TRACK_IMG}
+          subheader={`#${index + 1} Artist`}
+          type={"artist"}
+          uri={artist.uri}
+        />
+      ))}
+    </div>
+  );
 };
 
 const ArtistsPage = () => {
-	const [dropdown, activeOption] = useDropdown({
-		options: DropdownOptions,
-		storage,
-		storageVariable: "top-artists",
-	});
-	const timeRange = OptionToTimeRange[activeOption];
+  const [dropdown, activeOption] = useDropdown({
+    options: DropdownOptions,
+    storage,
+    storageVariable: "top-artists",
+  });
+  const timeRange = OptionToTimeRange[activeOption];
 
-	const { status, error, data, refetch } = useQuery({
-		queryKey: ["topArtists", timeRange],
-		queryFn: () => fetchTopArtists(timeRange),
-	});
+  const { status, error, data, refetch } = useQuery({
+    queryKey: ["topArtists", timeRange],
+    queryFn: () => fetchTopArtists(timeRange),
+  });
 
-	const Status = useStatus({ status, error, logger });
+  const Status = useStatus({ status, error, logger });
 
-	return (
-		<PageContainer
-			title="Top Artists"
-			headerRight={[
-				dropdown,
-				status !== "pending" && <RefreshButton refresh={refetch} />,
-				settingsButton,
-			]}
-		>
-			{Status || <ArtistsPageContent topArtists={data.items} />}
-		</PageContainer>
-	);
+  return (
+    <PageContainer
+      headerRight={[
+        dropdown,
+        status !== "pending" && <RefreshButton refresh={refetch} />,
+        settingsButton,
+      ]}
+      title="Top Artists"
+    >
+      {Status || <ArtistsPageContent topArtists={data.items} />}
+    </PageContainer>
+  );
 };
 
 export default React.memo(ArtistsPage);

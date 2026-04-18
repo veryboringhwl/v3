@@ -1,20 +1,16 @@
 {
-	"name": "library-db",
-	"tags": [
-		"lib"
-	],
-	"preview": "./assets/PREVIEW.png",
-	"version": "0.1.3",
-	"authors": [
-		"Delusoire"
-	],
-	"description": "Provides metadata about your Spotify library to other modules.",
-	"readme": "./assets/README.md",
-	"entries": {
-		"js": "index.js"
-	},
-	"dependencies": {
-		"stdlib": "0.2.2",
-		"Delusoire.delulib": "0.1.3"
-	}
+  "name": "library-db",
+  "tags": ["lib"],
+  "preview": "./assets/PREVIEW.png",
+  "version": "0.1.3",
+  "authors": ["Delusoire"],
+  "description": "Provides metadata about your Spotify library to other modules.",
+  "readme": "./assets/README.md",
+  "entries": {
+    "js": "index.js"
+  },
+  "dependencies": {
+    "stdlib": "0.2.2",
+    "Delusoire.delulib": "0.1.3"
+  }
 }

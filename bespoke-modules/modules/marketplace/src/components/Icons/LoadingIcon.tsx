@@ -1,52 +1,50 @@
-import { React } from "/modules/stdlib/src/expose/React.ts";
-
 export default function () {
-	return (
-		<svg width="100px" height="100px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
-			<circle cx="50" cy="50" r="0" fill="none" stroke="currentColor" strokeWidth="2">
-				<animate
-					attributeName="r"
-					repeatCount="indefinite"
-					dur="1s"
-					values="0;40"
-					keyTimes="0;1"
-					keySplines="0 0.2 0.8 1"
-					calcMode="spline"
-					begin="0s"
-				/>
-				<animate
-					attributeName="opacity"
-					repeatCount="indefinite"
-					dur="1s"
-					values="1;0"
-					keyTimes="0;1"
-					keySplines="0.2 0 0.8 1"
-					calcMode="spline"
-					begin="0s"
-				/>
-			</circle>
-			<circle cx="50" cy="50" r="0" fill="none" stroke="currentColor" strokeWidth="2">
-				<animate
-					attributeName="r"
-					repeatCount="indefinite"
-					dur="1s"
-					values="0;40"
-					keyTimes="0;1"
-					keySplines="0 0.2 0.8 1"
-					calcMode="spline"
-					begin="-0.5s"
-				/>
-				<animate
-					attributeName="opacity"
-					repeatCount="indefinite"
-					dur="1s"
-					values="1;0"
-					keyTimes="0;1"
-					keySplines="0.2 0 0.8 1"
-					calcMode="spline"
-					begin="-0.5s"
-				/>
-			</circle>
-		</svg>
-	);
+  return (
+    <svg height="100px" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100" width="100px">
+      <circle cx="50" cy="50" fill="none" r="0" stroke="currentColor" strokeWidth="2">
+        <animate
+          attributeName="r"
+          begin="0s"
+          calcMode="spline"
+          dur="1s"
+          keySplines="0 0.2 0.8 1"
+          keyTimes="0;1"
+          repeatCount="indefinite"
+          values="0;40"
+        />
+        <animate
+          attributeName="opacity"
+          begin="0s"
+          calcMode="spline"
+          dur="1s"
+          keySplines="0.2 0 0.8 1"
+          keyTimes="0;1"
+          repeatCount="indefinite"
+          values="1;0"
+        />
+      </circle>
+      <circle cx="50" cy="50" fill="none" r="0" stroke="currentColor" strokeWidth="2">
+        <animate
+          attributeName="r"
+          begin="-0.5s"
+          calcMode="spline"
+          dur="1s"
+          keySplines="0 0.2 0.8 1"
+          keyTimes="0;1"
+          repeatCount="indefinite"
+          values="0;40"
+        />
+        <animate
+          attributeName="opacity"
+          begin="-0.5s"
+          calcMode="spline"
+          dur="1s"
+          keySplines="0.2 0 0.8 1"
+          keyTimes="0;1"
+          repeatCount="indefinite"
+          values="1;0"
+        />
+      </circle>
+    </svg>
+  );
 }

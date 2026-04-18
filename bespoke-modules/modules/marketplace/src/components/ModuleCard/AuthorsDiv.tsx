@@ -1,26 +1,24 @@
-import { React } from "/modules/stdlib/src/expose/React.ts";
-
 interface AuthorsProps {
-	authors: string[];
+  authors: string[];
 }
 export default function ({ authors }: AuthorsProps) {
-	return (
-		<div className="marketplace-card__authors">
-			{authors.map((author, index) => (
-				<a
-					title={author}
-					className="marketplace-card__author"
-					href={`https://github.com/${author}`}
-					draggable="false"
-					dir="auto"
-					target="_blank"
-					rel="noopener noreferrer"
-					onClick={e => e.stopPropagation()}
-					key={index}
-				>
-					{author}
-				</a>
-			))}
-		</div>
-	);
+  return (
+    <div className="marketplace-card__authors">
+      {authors.map((author, index) => (
+        <a
+          className="marketplace-card__author"
+          dir="auto"
+          draggable="false"
+          href={`https://github.com/${author}`}
+          key={index}
+          onClick={(e) => e.stopPropagation()}
+          rel="noopener noreferrer"
+          target="_blank"
+          title={author}
+        >
+          {author}
+        </a>
+      ))}
+    </div>
+  );
 }

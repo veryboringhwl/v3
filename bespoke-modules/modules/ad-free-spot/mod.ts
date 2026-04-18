@@ -7,10 +7,10 @@ const ProductStateAPI = Platform.getProductStateAPI();
 const PrefsAPI = Platform.getSettingsAPI().quality.volumeLevel.prefsApi;
 
 function getAdsCoreConnector() {
-	const { adsCoreConnector, settingsClient, slotsClient } = exports.find((m) =>
-		m.adsCoreConnector && m.settingsClient && m.slotsClient
-	);
-	return { adsCoreConnector, settingsClient, slotsClient };
+  const { adsCoreConnector, settingsClient, slotsClient } = exports.find(
+    (m) => m.adsCoreConnector && m.settingsClient && m.slotsClient,
+  );
+  return { adsCoreConnector, settingsClient, slotsClient };
 }
 
 const { adsCoreConnector, settingsClient, slotsClient } = getAdsCoreConnector();
@@ -18,55 +18,57 @@ const { adsCoreConnector, settingsClient, slotsClient } = getAdsCoreConnector();
 await adsCoreConnector.increaseStreamTime(-100000000000);
 
 export default async function () {
-	overridePrefs();
+  overridePrefs();
 
-	const prefsSubscription = PrefsAPI.sub({ key: "ui.hide_hpto" }, ({ entries }) => overridePrefs(entries));
+  const prefsSubscription = PrefsAPI.sub({ key: "ui.hide_hpto" }, ({ entries }) =>
+    overridePrefs(entries),
+  );
 
-	overrideProductState();
+  overrideProductState();
 
-	const productStateSubscription = ProductStateAPI.productStateApi.subValues(
-		{ keys: Object.keys(pairOverrides) },
-		({ pairs }) => overrideProductState(pairs),
-	);
+  const productStateSubscription = ProductStateAPI.productStateApi.subValues(
+    { keys: Object.keys(pairOverrides) },
+    ({ pairs }) => overrideProductState(pairs),
+  );
 
-	overrideConfig();
+  overrideConfig();
 
-	const slotSubscriptions: Array<{ cancel: () => void }> = [];
-	const { adSlots } = await slotsClient.getSlots();
-	for (const { slotId } of adSlots) {
-		overrideSlot({ slotId });
-		slotSubscriptions.push(
-			adsCoreConnector.subscribeToSlot(slotId, ({ adSlotEvent }) => overrideSlot(adSlotEvent)),
-		);
-	}
+  const slotSubscriptions: Array<{ cancel: () => void }> = [];
+  const { adSlots } = await slotsClient.getSlots();
+  for (const { slotId } of adSlots) {
+    overrideSlot({ slotId });
+    slotSubscriptions.push(
+      adsCoreConnector.subscribeToSlot(slotId, ({ adSlotEvent }) => overrideSlot(adSlotEvent)),
+    );
+  }
 
-	const inStreamSubscription = adsCoreConnector.subscribeToInStreamAds(({ ad }) => {
-		if (ad) {
-			AdManagers.inStreamApi.disable();
-		}
-	});
+  const inStreamSubscription = adsCoreConnector.subscribeToInStreamAds(({ ad }) => {
+    if (ad) {
+      AdManagers.inStreamApi.disable();
+    }
+  });
 
-	return async () => {
-		prefsSubscription.cancel();
-		await revertProductState();
-		productStateSubscription.cancel();
-		for (const slotSubscription of slotSubscriptions) {
-			slotSubscription.cancel();
-		}
-		inStreamSubscription.cancel();
-	};
+  return async () => {
+    prefsSubscription.cancel();
+    await revertProductState();
+    productStateSubscription.cancel();
+    for (const slotSubscription of slotSubscriptions) {
+      slotSubscription.cancel();
+    }
+    inStreamSubscription.cancel();
+  };
 }
 
 /* */
 
 async function overrideSlot({ slotId }: { slotId: string }) {
-	adsCoreConnector.clearSlot(slotId);
-	await Promise.all([
-		settingsClient.updateSlotEnabled({ slotId, enabled: false }),
-		settingsClient.updateDisplayTimeInterval({ slotId }),
-		settingsClient.updateExpiryTimeInterval({ slotId, timeInterval: "1800000n" }),
-		settingsClient.updateStreamTimeInterval({ slotId }),
-	]);
+  adsCoreConnector.clearSlot(slotId);
+  await Promise.all([
+    settingsClient.updateSlotEnabled({ slotId, enabled: false }),
+    settingsClient.updateDisplayTimeInterval({ slotId }),
+    settingsClient.updateExpiryTimeInterval({ slotId, timeInterval: "1800000n" }),
+    settingsClient.updateStreamTimeInterval({ slotId }),
+  ]);
 }
 
 /* */
@@ -89,11 +91,11 @@ async function overrideSlot({ slotId }: { slotId: string }) {
 // type --renamed-to-(in-js)-> product (product [product state]), used directly by some react components
 
 async function overridePrefs(entries?: { "ui.hide_hpto"?: { bool: boolean | undefined | null } }) {
-	if (entries && ("ui.hide_hpto" in entries) && entries["ui.hide_hpto"]!.bool) {
-		return;
-	}
+  if (entries && "ui.hide_hpto" in entries && entries["ui.hide_hpto"]?.bool) {
+    return;
+  }
 
-	await PrefsAPI.set({ entries: { "ui.hide_hpto": { bool: true } } });
+  await PrefsAPI.set({ entries: { "ui.hide_hpto": { bool: true } } });
 }
 
 /* */
@@ -102,53 +104,53 @@ const pairOverrides = { ads: "0", catalogue: "premium", product: "premium", type
 type PairOverrides = typeof pairOverrides;
 
 async function overrideProductState(pairs?: Partial<PairOverrides>) {
-	const newPairs: Partial<PairOverrides> = {};
-	if (pairs) {
-		const test = (k: keyof PairOverrides) => k in pairs && pairs[k] !== pairOverrides[k];
+  const newPairs: Partial<PairOverrides> = {};
+  if (pairs) {
+    const test = (k: keyof PairOverrides) => k in pairs && pairs[k] !== pairOverrides[k];
 
-		if (test("ads")) {
-			newPairs.ads = pairOverrides.ads;
-		}
-		if (test("catalogue")) {
-			newPairs.catalogue = pairOverrides.catalogue;
-		}
-		if (test("product") || test("type")) {
-			newPairs.product = pairOverrides.product;
-			newPairs.type = pairOverrides.type;
-		}
-	} else {
-		Object.assign(newPairs, pairOverrides);
-	}
+    if (test("ads")) {
+      newPairs.ads = pairOverrides.ads;
+    }
+    if (test("catalogue")) {
+      newPairs.catalogue = pairOverrides.catalogue;
+    }
+    if (test("product") || test("type")) {
+      newPairs.product = pairOverrides.product;
+      newPairs.type = pairOverrides.type;
+    }
+  } else {
+    Object.assign(newPairs, pairOverrides);
+  }
 
-	if (Object.keys(newPairs).length === 0) {
-		return;
-	}
+  if (Object.keys(newPairs).length === 0) {
+    return;
+  }
 
-	await ProductStateAPI.productStateApi.putOverridesValues({ pairs: newPairs });
+  await ProductStateAPI.productStateApi.putOverridesValues({ pairs: newPairs });
 
-	// AdManagers.audio.isNewAdsNpvEnabled = false;
-	// AdManagers.vto.manager.isNewAdsNpvEnabled = false;
+  // AdManagers.audio.isNewAdsNpvEnabled = false;
+  // AdManagers.vto.manager.isNewAdsNpvEnabled = false;
 }
 
 async function revertProductState() {
-	await ProductStateAPI.productStateApi.delOverridesValues({ keys: Object.keys(pairOverrides) });
+  await ProductStateAPI.productStateApi.delOverridesValues({ keys: Object.keys(pairOverrides) });
 }
 
 /* */
 
 function overrideConfig() {
-	const expFeatures = JSON.parse(localStorage.getItem("remote-config-overrides") ?? "{}");
+  const expFeatures = JSON.parse(localStorage.getItem("remote-config-overrides") ?? "{}");
 
-	const overrides = {
-		...expFeatures,
-		enableEsperantoMigration: true,
-		// disables the Upgrade button
-		hideUpgradeCTA: true,
-		// disables QuickSilver In App Messaging at the react component level
-		enableInAppMessaging: false,
-		// should theoretically disable QuickSilver In App Messaging at the api level as the dev endpoints shouldn't work?
-		enableInAppMessagingDevEnvironment: true,
-	};
+  const overrides = {
+    ...expFeatures,
+    enableEsperantoMigration: true,
+    // disables the Upgrade button
+    hideUpgradeCTA: true,
+    // disables QuickSilver In App Messaging at the react component level
+    enableInAppMessaging: false,
+    // should theoretically disable QuickSilver In App Messaging at the api level as the dev endpoints shouldn't work?
+    enableInAppMessagingDevEnvironment: true,
+  };
 
-	localStorage.setItem("remote-config-overrides", JSON.stringify(overrides));
+  localStorage.setItem("remote-config-overrides", JSON.stringify(overrides));
 }

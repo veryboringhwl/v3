@@ -3,7 +3,7 @@ import { createSettings, type Settings } from "/modules/stdlib/lib/settings.tsx"
 
 export let settings: Settings;
 export default async function (mod: ModuleInstance) {
-	[settings] = createSettings(mod);
+  [settings] = createSettings(mod);
 
-	await import("./settings.ts");
+  await import("./settings.ts");
 }

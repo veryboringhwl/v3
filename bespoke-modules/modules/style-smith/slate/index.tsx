@@ -1,63 +1,72 @@
 import Prism from "https://esm.sh/prismjs";
 import "https://esm.sh/prismjs/components/prism-css";
 import { React } from "/modules/stdlib/src/expose/React.ts";
+
 const { useCallback, useState } = React;
-import { createEditor, Editor, Element, Node, NodeEntry, Range } from "https://esm.sh/slate";
-import {
-	Editable,
-	RenderElementProps,
-	RenderLeafProps,
-	Slate,
-	useSlate,
-	useSlateStatic,
-	withReact,
-} from "https://esm.sh/slate-react";
-import { withHistory } from "https://esm.sh/slate-history";
-import isHotkey from "https://esm.sh/is-hotkey";
+
 import { css } from "https://esm.sh/@emotion/css";
-import { CodeBlockElement } from "./custom-types.d.ts";
-import { normalizeTokens } from "./normalize-tokens.ts";
-import { Configlet, ConfigletManager } from "../src/configlet.ts";
+import isHotkey from "https://esm.sh/is-hotkey";
+import {
+  createEditor,
+  Editor,
+  Element,
+  Node,
+  type NodeEntry,
+  type Range,
+} from "https://esm.sh/slate";
+import { withHistory } from "https://esm.sh/slate-history";
+import {
+  Editable,
+  type RenderElementProps,
+  type RenderLeafProps,
+  Slate,
+  useSlate,
+  useSlateStatic,
+  withReact,
+} from "https://esm.sh/slate-react";
+import type { Configlet, ConfigletManager } from "../src/configlet.ts";
 import { Button, Icon, Toolbar } from "./components.tsx";
+import type { CodeBlockElement } from "./custom-types.d.ts";
+import { normalizeTokens } from "./normalize-tokens.ts";
 
 const ParagraphType = "paragraph";
 const CodeBlockType = "code-block";
 const CodeLineType = "code-line";
 
 interface ConfigletEditorProps {
-	configlet: Configlet;
-	configletManager: ConfigletManager;
+  configlet: Configlet;
+  configletManager: ConfigletManager;
 }
 const ConfigletEditor = ({ configlet, configletManager }: ConfigletEditorProps) => {
-	const [editor] = useState(() => withHistory(withReact(createEditor())));
+  const [editor] = useState(() => withHistory(withReact(createEditor())));
 
-	const decorate = useDecorate(editor);
-	const onKeyDown = useOnKeydown(editor);
+  const decorate = useDecorate(editor);
+  const onKeyDown = useOnKeydown(editor);
 
-	return (
-		<Slate editor={editor} initialValue={initialValue}>
-			<ExampleToolbar />
-			<SetNodeToDecorations />
-			<Editable
-				decorate={decorate}
-				renderElement={ElementWrapper}
-				renderLeaf={renderLeaf}
-				onKeyDown={onKeyDown}
-			/>
-			<style>{prismThemeCss}</style>
-		</Slate>
-	);
+  return (
+    <Slate editor={editor} initialValue={initialValue}>
+      <ExampleToolbar />
+      <SetNodeToDecorations />
+      <Editable
+        decorate={decorate}
+        onKeyDown={onKeyDown}
+        renderElement={ElementWrapper}
+        renderLeaf={renderLeaf}
+      />
+      <style>{prismThemeCss}</style>
+    </Slate>
+  );
 };
 
 const ElementWrapper = (props: RenderElementProps) => {
-	const { attributes, children, element } = props;
-	const editor = useSlateStatic();
+  const { attributes, children, element } = props;
+  const editor = useSlateStatic();
 
-	if (element.type === CodeBlockType) {
-		return (
-			<div
-				{...attributes}
-				className={css(`
+  if (element.type === CodeBlockType) {
+    return (
+      <div
+        {...attributes}
+        className={css(`
         font-family: monospace;
         font-size: 16px;
         line-height: 20px;
@@ -65,177 +74,170 @@ const ElementWrapper = (props: RenderElementProps) => {
         background: rgba(0, 20, 60, .03);
         padding: 5px 13px;
       `)}
-				style={{ position: "relative" }}
-				spellCheck={false}
-			>
-				{children}
-			</div>
-		);
-	}
+        spellCheck={false}
+        style={{ position: "relative" }}
+      >
+        {children}
+      </div>
+    );
+  }
 
-	if (element.type === CodeLineType) {
-		return (
-			<div {...attributes} style={{ position: "relative" }}>
-				{children}
-			</div>
-		);
-	}
+  if (element.type === CodeLineType) {
+    return (
+      <div {...attributes} style={{ position: "relative" }}>
+        {children}
+      </div>
+    );
+  }
 
-	const Tag = editor.isInline(element) ? "span" : "div";
-	return (
-		<Tag {...attributes} style={{ position: "relative" }}>
-			{children}
-		</Tag>
-	);
+  const Tag = editor.isInline(element) ? "span" : "div";
+  return (
+    <Tag {...attributes} style={{ position: "relative" }}>
+      {children}
+    </Tag>
+  );
 };
 
 const ExampleToolbar = () => {
-	return (
-		<Toolbar>
-			<SaveButton />
-		</Toolbar>
-	);
+  return (
+    <Toolbar>
+      <SaveButton />
+    </Toolbar>
+  );
 };
 
 const SaveButton = () => {
-	return (
-		<Button
-			data-test-id="save-button"
-			active
-			onMouseDown={(event) => {
-				event.preventDefault();
-			}}
-		>
-			<Icon>code</Icon>
-		</Button>
-	);
+  return (
+    <Button
+      active
+      data-test-id="save-button"
+      onMouseDown={(event) => {
+        event.preventDefault();
+      }}
+    >
+      <Icon>code</Icon>
+    </Button>
+  );
 };
 
 const renderLeaf = (props: RenderLeafProps) => {
-	const { attributes, children, leaf } = props;
-	const { text, ...rest } = leaf;
+  const { attributes, children, leaf } = props;
+  const { text, ...rest } = leaf;
 
-	return (
-		<span {...attributes} className={Object.keys(rest).join(" ")}>
-			{children}
-		</span>
-	);
+  return (
+    <span {...attributes} className={Object.keys(rest).join(" ")}>
+      {children}
+    </span>
+  );
 };
 
 const useDecorate = (editor: Editor) => {
-	return useCallback(
-		([node, path]: NodeEntry) => {
-			if (Element.isElement(node) && node.type === CodeLineType) {
-				const ranges = editor.nodeToDecorations!.get(node) || [];
-				return ranges;
-			}
+  return useCallback(
+    ([node, _path]: NodeEntry) => {
+      if (Element.isElement(node) && node.type === CodeLineType) {
+        const ranges = editor.nodeToDecorations?.get(node) || [];
+        return ranges;
+      }
 
-			return [];
-		},
-		[editor.nodeToDecorations],
-	);
+      return [];
+    },
+    [editor.nodeToDecorations],
+  );
 };
 
-const getChildNodeToDecorations = ([
-	block,
-	blockPath,
-]: NodeEntry<CodeBlockElement>) => {
-	const nodeToDecorations = new Map<Element, Range[]>();
+const getChildNodeToDecorations = ([block, blockPath]: NodeEntry<CodeBlockElement>) => {
+  const nodeToDecorations = new Map<Element, Range[]>();
 
-	const text = block.children.map((line) => Node.string(line)).join("\n");
-	const language = block.language;
-	const tokens = Prism.tokenize(text, Prism.languages[language]);
-	const normalizedTokens = normalizeTokens(tokens); // make tokens flat and grouped by line
-	const blockChildren = block.children as Element[];
+  const text = block.children.map((line) => Node.string(line)).join("\n");
+  const language = block.language;
+  const tokens = Prism.tokenize(text, Prism.languages[language]);
+  const normalizedTokens = normalizeTokens(tokens); // make tokens flat and grouped by line
+  const blockChildren = block.children as Element[];
 
-	for (let index = 0; index < normalizedTokens.length; index++) {
-		const tokens = normalizedTokens[index];
-		const element = blockChildren[index];
+  for (let index = 0; index < normalizedTokens.length; index++) {
+    const tokens = normalizedTokens[index];
+    const element = blockChildren[index];
 
-		if (!nodeToDecorations.has(element)) {
-			nodeToDecorations.set(element, []);
-		}
+    if (!nodeToDecorations.has(element)) {
+      nodeToDecorations.set(element, []);
+    }
 
-		let start = 0;
-		for (const token of tokens) {
-			const length = token.content.length;
-			if (!length) {
-				continue;
-			}
+    let start = 0;
+    for (const token of tokens) {
+      const length = token.content.length;
+      if (!length) {
+        continue;
+      }
 
-			const end = start + length;
+      const end = start + length;
 
-			const path = [...blockPath, index, 0];
-			const range = {
-				anchor: { path, offset: start },
-				focus: { path, offset: end },
-				token: true,
-				...Object.fromEntries(token.types.map((type) => [type, true])),
-			};
+      const path = [...blockPath, index, 0];
+      const range = {
+        anchor: { path, offset: start },
+        focus: { path, offset: end },
+        token: true,
+        ...Object.fromEntries(token.types.map((type) => [type, true])),
+      };
 
-			nodeToDecorations.get(element)!.push(range);
+      nodeToDecorations.get(element)?.push(range);
 
-			start = end;
-		}
-	}
+      start = end;
+    }
+  }
 
-	return nodeToDecorations;
+  return nodeToDecorations;
 };
 
 // precalculate editor.nodeToDecorations map to use it inside decorate function then
 const SetNodeToDecorations = () => {
-	const editor = useSlate();
+  const editor = useSlate();
 
-	const blockEntries = Array.from(
-		Editor.nodes(editor, {
-			at: [],
-			mode: "highest",
-			match: (n) => Element.isElement(n) && n.type === CodeBlockType,
-		}),
-	);
+  const blockEntries = Array.from(
+    Editor.nodes(editor, {
+      at: [],
+      mode: "highest",
+      match: (n) => Element.isElement(n) && n.type === CodeBlockType,
+    }),
+  );
 
-	const nodeToDecorations = new Map(
-		blockEntries.flatMap((blockEntry) => Array.from(getChildNodeToDecorations(blockEntry))),
-	);
+  const nodeToDecorations = new Map(
+    blockEntries.flatMap((blockEntry) => Array.from(getChildNodeToDecorations(blockEntry))),
+  );
 
-	editor.nodeToDecorations = nodeToDecorations;
+  editor.nodeToDecorations = nodeToDecorations;
 
-	return null;
+  return null;
 };
 
 const useOnKeydown = (editor: Editor) => {
-	const onKeyDown: React.KeyboardEventHandler = useCallback(
-		(e) => {
-			if (isHotkey("tab", e)) {
-				// handle tab key, insert spaces
-				e.preventDefault();
+  const onKeyDown: React.KeyboardEventHandler = useCallback(
+    (e) => {
+      if (isHotkey("tab", e)) {
+        // handle tab key, insert spaces
+        e.preventDefault();
 
-				Editor.insertText(editor, "  ");
-			}
-		},
-		[editor],
-	);
+        Editor.insertText(editor, "  ");
+      }
+    },
+    [editor],
+  );
 
-	return onKeyDown;
+  return onKeyDown;
 };
 
 const toChildren = (content: string) => [{ text: content }];
 const toCodeLines = (content: string): Element[] =>
-	content
-		.split("\n")
-		.map((line) => ({ type: CodeLineType, children: toChildren(line) }));
+  content.split("\n").map((line) => ({ type: CodeLineType, children: toChildren(line) }));
 
 const initialValue: Element[] = [
-	{
-		type: ParagraphType,
-		children: toChildren(
-			"Here's one containing a single paragraph block with some text in it:",
-		),
-	},
-	{
-		type: CodeBlockType,
-		language: "css",
-		children: toCodeLines(`
+  {
+    type: ParagraphType,
+    children: toChildren("Here's one containing a single paragraph block with some text in it:"),
+  },
+  {
+    type: CodeBlockType,
+    language: "css",
+    children: toCodeLines(`
 /* Modal Styles */
 
 .MAP__modal__widget-generator__container {
@@ -268,11 +270,11 @@ const initialValue: Element[] = [
 	}
 }
 `),
-	},
-	{
-		type: ParagraphType,
-		children: toChildren("There you have it!"),
-	},
+  },
+  {
+    type: ParagraphType,
+    children: toChildren("There you have it!"),
+  },
 ];
 
 // Prismjs theme stored as a string instead of emotion css function.

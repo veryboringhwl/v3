@@ -1,4 +1,4 @@
-// Auto-generated at 2026-04-14T08:39:49.290Z on Spotify Version: 1.2.87.413
+// Auto-generated at 2026-04-18T13:05:10.751Z on Spotify Version: 1.2.88.471
 
 export interface PlatformAutoGen {
   container: string;
@@ -87,6 +87,7 @@ export interface PlatformAutoGen {
   readonly getSmartShuffleEligibilityAPI: GetSmartShuffleEligibilityAPI;
   readonly getSocialConnectAPI: GetSocialConnectAPI;
   readonly getStandalonePlayerCoordinatorAPI: GetStandalonePlayerCoordinatorAPI;
+  readonly getSuperConnectAPI: GetSuperConnectAPI;
   readonly getTimeKeeper: GetTimeKeeper;
   readonly getTokenProvider: GetTokenProvider;
   getTranslations: GetTranslations;
@@ -2341,7 +2342,7 @@ type GetAdManagersReturnVtoManagerPlayerAPIPlaylistPlayServiceClientPlay = (
   arg1: any,
 ) => unknown;
 
-type GetAdManagersReturnVtoManagerPlayerAPIPlaylistResyncerAPILastSync = Map<unknown, unknown>;
+type GetAdManagersReturnVtoManagerPlayerAPIPlaylistResyncerAPILastSync = Map<string, number>;
 
 type GetAdManagersReturnVtoManagerPlayerAPIPlaylistResyncerAPIMaybeResync = (
   arg0: any,
@@ -2483,8 +2484,7 @@ type GetAdManagersReturnVtoManagerPlayerAPIQueueQueueNextTracksItemBlocked5 = Ar
 interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueNextTracksItemContextTrack {
   metadata:
     | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueNextTracksItemContextTrackMetadata
-    | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueNextTracksItemContextTrackMetadata2
-    | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueNextTracksItemContextTrackMetadata3;
+    | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueNextTracksItemContextTrackMetadata2;
   uid: string;
   uri: string;
 }
@@ -2497,11 +2497,23 @@ interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueNextTracksItemContextT
   album_uri: string;
   artist_name: string;
   artist_uri: string;
+  "canvas.artist.avatar": string;
+  "canvas.artist.name": string;
+  "canvas.artist.uri": string;
+  "canvas.canvasUri": string;
+  "canvas.entityUri": string;
+  "canvas.explicit": string;
+  "canvas.fileId": string;
+  "canvas.id": string;
+  "canvas.type": string;
+  "canvas.uploadedBy": string;
+  "canvas.url": string;
   "collection.can_add": string;
   "collection.can_ban": string;
   "collection.in_collection": string;
   "collection.is_banned": string;
   context_uri: string;
+  current_pos: string;
   duration: string;
   entity_uri: string;
   has_lyrics: string;
@@ -2512,6 +2524,11 @@ interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueNextTracksItemContextT
   interaction_id: string;
   iteration: string;
   marked_for_download: string;
+  page_instance_id: string;
+  previous_pos: string;
+  rank: string;
+  screen_recording_enabled: string;
+  status: string;
   title: string;
   track_player: string;
   view_index: string;
@@ -2523,11 +2540,23 @@ interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueNextTracksItemContextT
   album_uri: string;
   artist_name: string;
   artist_uri: string;
+  "canvas.artist.avatar": string;
+  "canvas.artist.name": string;
+  "canvas.artist.uri": string;
+  "canvas.canvasUri": string;
+  "canvas.entityUri": string;
+  "canvas.explicit": string;
+  "canvas.fileId": string;
+  "canvas.id": string;
+  "canvas.type": string;
+  "canvas.uploadedBy": string;
+  "canvas.url": string;
   "collection.can_add": string;
   "collection.can_ban": string;
   "collection.in_collection": string;
   "collection.is_banned": string;
   context_uri: string;
+  current_pos: string;
   duration: string;
   entity_uri: string;
   has_lyrics: string;
@@ -2536,17 +2565,14 @@ interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueNextTracksItemContextT
   interaction_id: string;
   iteration: string;
   marked_for_download: string;
+  page_instance_id: string;
+  previous_pos: string;
+  rank: string;
+  screen_recording_enabled: string;
+  status: string;
   title: string;
   track_player: string;
   view_index: string;
-}
-
-interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueNextTracksItemContextTrackMetadata3 {
-  "actions.advancing_past_track": string;
-  "actions.skipping_next_past_track": string;
-  hidden: string;
-  interaction_id: string;
-  iteration: string;
 }
 
 type GetAdManagersReturnVtoManagerPlayerAPIQueueQueueNextTracksItemRemoved = Array<unknown>;
@@ -2557,7 +2583,7 @@ type GetAdManagersReturnVtoManagerPlayerAPIQueueQueueNextTracksItemRemoved3 = Ar
 
 type GetAdManagersReturnVtoManagerPlayerAPIQueueQueueNextTracksItemRemoved4 = Array<unknown>;
 
-type GetAdManagersReturnVtoManagerPlayerAPIQueueQueueNextTracksItemRemoved5 = Array<string>;
+type GetAdManagersReturnVtoManagerPlayerAPIQueueQueueNextTracksItemRemoved5 = Array<unknown>;
 
 type GetAdManagersReturnVtoManagerPlayerAPIQueueQueuePrevTracks =
   Array<GetAdManagersReturnVtoManagerPlayerAPIQueueQueuePrevTracksItem>;
@@ -2592,7 +2618,9 @@ type GetAdManagersReturnVtoManagerPlayerAPIQueueQueuePrevTracksItemBlocked5 = Ar
 interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueuePrevTracksItemContextTrack {
   metadata:
     | GetAdManagersReturnVtoManagerPlayerAPIQueueQueuePrevTracksItemContextTrackMetadata
-    | GetAdManagersReturnVtoManagerPlayerAPIQueueQueuePrevTracksItemContextTrackMetadata2;
+    | GetAdManagersReturnVtoManagerPlayerAPIQueueQueuePrevTracksItemContextTrackMetadata2
+    | GetAdManagersReturnVtoManagerPlayerAPIQueueQueuePrevTracksItemContextTrackMetadata3
+    | GetAdManagersReturnVtoManagerPlayerAPIQueueQueuePrevTracksItemContextTrackMetadata4;
   uid: string;
   uri: string;
 }
@@ -2602,12 +2630,26 @@ interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueuePrevTracksItemContextT
   album_title: string;
   album_uri: string;
   artist_name: string;
+  "artist_name:1": string;
   artist_uri: string;
+  "artist_uri:1": string;
+  "canvas.artist.avatar": string;
+  "canvas.artist.name": string;
+  "canvas.artist.uri": string;
+  "canvas.canvasUri": string;
+  "canvas.entityUri": string;
+  "canvas.explicit": string;
+  "canvas.fileId": string;
+  "canvas.id": string;
+  "canvas.type": string;
+  "canvas.uploadedBy": string;
+  "canvas.url": string;
   "collection.can_add": string;
   "collection.can_ban": string;
   "collection.in_collection": string;
   "collection.is_banned": string;
   context_uri: string;
+  current_pos: string;
   duration: string;
   entity_uri: string;
   has_lyrics: string;
@@ -2616,6 +2658,11 @@ interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueuePrevTracksItemContextT
   interaction_id: string;
   iteration: string;
   marked_for_download: string;
+  page_instance_id: string;
+  previous_pos: string;
+  rank: string;
+  screen_recording_enabled: string;
+  status: string;
   title: string;
   track_player: string;
   view_index: string;
@@ -2643,6 +2690,7 @@ interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueuePrevTracksItemContextT
   "collection.in_collection": string;
   "collection.is_banned": string;
   context_uri: string;
+  current_pos: string;
   duration: string;
   entity_uri: string;
   has_lyrics: string;
@@ -2651,6 +2699,83 @@ interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueuePrevTracksItemContextT
   interaction_id: string;
   iteration: string;
   marked_for_download: string;
+  page_instance_id: string;
+  previous_pos: string;
+  rank: string;
+  screen_recording_enabled: string;
+  status: string;
+  title: string;
+  track_player: string;
+  view_index: string;
+}
+
+interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueuePrevTracksItemContextTrackMetadata3 {
+  album_artist_name: string;
+  album_title: string;
+  album_uri: string;
+  artist_name: string;
+  artist_uri: string;
+  "collection.can_add": string;
+  "collection.can_ban": string;
+  "collection.in_collection": string;
+  "collection.is_banned": string;
+  context_uri: string;
+  current_pos: string;
+  duration: string;
+  entity_uri: string;
+  has_lyrics: string;
+  image_small_url: string;
+  image_url: string;
+  interaction_id: string;
+  iteration: string;
+  marked_for_download: string;
+  page_instance_id: string;
+  previous_pos: string;
+  rank: string;
+  screen_recording_enabled: string;
+  status: string;
+  title: string;
+  track_player: string;
+  view_index: string;
+}
+
+interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueuePrevTracksItemContextTrackMetadata4 {
+  album_artist_name: string;
+  album_title: string;
+  album_uri: string;
+  artist_name: string;
+  "artist_name:1": string;
+  artist_uri: string;
+  "artist_uri:1": string;
+  "canvas.artist.avatar": string;
+  "canvas.artist.name": string;
+  "canvas.artist.uri": string;
+  "canvas.canvasUri": string;
+  "canvas.entityUri": string;
+  "canvas.explicit": string;
+  "canvas.fileId": string;
+  "canvas.id": string;
+  "canvas.type": string;
+  "canvas.uploadedBy": string;
+  "canvas.url": string;
+  "collection.can_add": string;
+  "collection.can_ban": string;
+  "collection.in_collection": string;
+  "collection.is_banned": string;
+  context_uri: string;
+  current_pos: string;
+  duration: string;
+  entity_uri: string;
+  has_lyrics: string;
+  image_small_url: string;
+  image_url: string;
+  interaction_id: string;
+  iteration: string;
+  marked_for_download: string;
+  page_instance_id: string;
+  rank: string;
+  screen_recording_enabled: string;
+  status: string;
   title: string;
   track_player: string;
   view_index: string;
@@ -2723,11 +2848,23 @@ interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateCurrentMetadata {
   album_uri: string;
   artist_name: string;
   artist_uri: string;
+  "canvas.artist.avatar": string;
+  "canvas.artist.name": string;
+  "canvas.artist.uri": string;
+  "canvas.canvasUri": string;
+  "canvas.entityUri": string;
+  "canvas.explicit": string;
+  "canvas.fileId": string;
+  "canvas.id": string;
+  "canvas.type": string;
+  "canvas.uploadedBy": string;
+  "canvas.url": string;
   "collection.can_add": string;
   "collection.can_ban": string;
   "collection.in_collection": string;
   "collection.is_banned": string;
   context_uri: string;
+  current_pos: string;
   duration: string;
   entity_uri: string;
   has_lyrics: string;
@@ -2738,7 +2875,11 @@ interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateCurrentMetadata {
   interaction_id: string;
   iteration: string;
   marked_for_download: string;
-  "media.start_position": string;
+  page_instance_id: string;
+  previous_pos: string;
+  rank: string;
+  screen_recording_enabled: string;
+  status: string;
   title: string;
   track_player: string;
   view_index: string;
@@ -2753,14 +2894,16 @@ interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItem {
     | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtists
     | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtists2
     | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtists3
-    | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtists4;
+    | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtists4
+    | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtists5;
   duration: GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemDuration;
   hasAssociatedVideo: boolean;
   readonly images:
     | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImages
     | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImages2
     | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImages3
-    | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImages4;
+    | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImages4
+    | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImages5;
   is19PlusOnly: boolean;
   isExplicit: boolean;
   isLocal: boolean;
@@ -2779,7 +2922,8 @@ interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbum {
     | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImages
     | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImages2
     | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImages3
-    | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImages4;
+    | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImages4
+    | GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImages5;
   type: string;
   uri: string;
 }
@@ -2795,6 +2939,9 @@ type GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImages3
 
 type GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImages4 =
   Array<GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImagesItem4>;
+
+type GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImages5 =
+  Array<GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImagesItem5>;
 
 interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImagesItem {
   label: string;
@@ -2816,6 +2963,11 @@ interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumIm
   url: string;
 }
 
+interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemAlbumImagesItem5 {
+  label: string;
+  url: string;
+}
+
 type GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtists =
   Array<GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtistsItem>;
 
@@ -2827,6 +2979,9 @@ type GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtists3 =
 
 type GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtists4 =
   Array<GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtistsItem4>;
+
+type GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtists5 =
+  Array<GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtistsItem5>;
 
 interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtistsItem {
   type: string;
@@ -2844,6 +2999,11 @@ interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtists
 }
 
 interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtistsItem4 {
+  type: string;
+  uri: string;
+}
+
+interface GetAdManagersReturnVtoManagerPlayerAPIQueueQueueStateNextUpItemArtistsItem5 {
   type: string;
   uri: string;
 }
@@ -3005,7 +3165,22 @@ interface GetAdManagersReturnVtoManagerPlayerAPISmartShuffleEligibilityMetadataE
   removeListeners: GetTransportReturnRemoveListeners;
 }
 
-type GetAdManagersReturnVtoManagerPlayerAPISmartShuffleEligibilityMetadataExtensionsAPIEventsEmitterListeners =
+interface GetAdManagersReturnVtoManagerPlayerAPISmartShuffleEligibilityMetadataExtensionsAPIEventsEmitterListeners {
+  expire: GetAdManagersReturnVtoManagerPlayerAPISmartShuffleEligibilityMetadataExtensionsAPIEventsEmitterListenersExpire;
+}
+
+type GetAdManagersReturnVtoManagerPlayerAPISmartShuffleEligibilityMetadataExtensionsAPIEventsEmitterListenersExpire =
+  Array<GetAdManagersReturnVtoManagerPlayerAPISmartShuffleEligibilityMetadataExtensionsAPIEventsEmitterListenersExpireItem>;
+
+interface GetAdManagersReturnVtoManagerPlayerAPISmartShuffleEligibilityMetadataExtensionsAPIEventsEmitterListenersExpireItem {
+  listener: GetAdManagersReturnVtoManagerPlayerAPISmartShuffleEligibilityMetadataExtensionsAPIEventsEmitterListenersExpireItemListener;
+  options: GetAdManagersReturnVtoManagerPlayerAPISmartShuffleEligibilityMetadataExtensionsAPIEventsEmitterListenersExpireItemOptions;
+}
+
+type GetAdManagersReturnVtoManagerPlayerAPISmartShuffleEligibilityMetadataExtensionsAPIEventsEmitterListenersExpireItemListener =
+  (arg0: any) => unknown;
+
+type GetAdManagersReturnVtoManagerPlayerAPISmartShuffleEligibilityMetadataExtensionsAPIEventsEmitterListenersExpireItemOptions =
   Record<string, unknown>;
 
 interface GetAdManagersReturnVtoManagerPlayerAPISmartShuffleEligibilityMetadataExtensionsAPIEventsEmitterMetaListeners {
@@ -3076,23 +3251,22 @@ interface GetAdManagersReturnVtoManagerPlayerAPIStateContext {
 }
 
 interface GetAdManagersReturnVtoManagerPlayerAPIStateContextMetadata {
-  albumType: string;
-  albumUri: string;
-  artistUris: string;
+  chart_entity_type: string;
   context_description: string;
   context_owner: string;
-  copyrights: string;
-  courtesyLine: string;
   enhanced_context: string;
   format_list_type: string;
+  ignore_enhance_lens: string;
   image_url: string;
+  initiated_from_list_play_esperanto: string;
+  last_updated: string;
   mixer_enabled: string;
+  new_entries_count: string;
   "player.arch": string;
   playlist_number_of_episodes: string;
   playlist_number_of_tracks: string;
   playlist_volatile_context_id: string;
-  releaseDate: string;
-  "reporting.uri": string;
+  rank_type: string;
 }
 
 interface GetAdManagersReturnVtoManagerPlayerAPIStateIndex {
@@ -3156,11 +3330,23 @@ interface GetAdManagersReturnVtoManagerPlayerAPIStateItemMetadata {
   album_uri: string;
   artist_name: string;
   artist_uri: string;
+  "canvas.artist.avatar": string;
+  "canvas.artist.name": string;
+  "canvas.artist.uri": string;
+  "canvas.canvasUri": string;
+  "canvas.entityUri": string;
+  "canvas.explicit": string;
+  "canvas.fileId": string;
+  "canvas.id": string;
+  "canvas.type": string;
+  "canvas.uploadedBy": string;
+  "canvas.url": string;
   "collection.can_add": string;
   "collection.can_ban": string;
   "collection.in_collection": string;
   "collection.is_banned": string;
   context_uri: string;
+  current_pos: string;
   duration: string;
   entity_uri: string;
   has_lyrics: string;
@@ -3171,8 +3357,12 @@ interface GetAdManagersReturnVtoManagerPlayerAPIStateItemMetadata {
   interaction_id: string;
   iteration: string;
   marked_for_download: string;
-  "media.start_position": string;
+  page_instance_id: string;
   popularity: string;
+  previous_pos: string;
+  rank: string;
+  screen_recording_enabled: string;
+  status: string;
   title: string;
   track_player: string;
   view_index: string;
@@ -3187,14 +3377,16 @@ interface GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItem {
     | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemArtists
     | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemArtists2
     | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemArtists3
-    | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemArtists4;
+    | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemArtists4
+    | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemArtists5;
   duration: GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemDuration;
   hasAssociatedVideo: boolean;
   readonly images:
     | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImages
     | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImages2
     | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImages3
-    | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImages4;
+    | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImages4
+    | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImages5;
   is19PlusOnly: boolean;
   isExplicit: boolean;
   isLocal: boolean;
@@ -3213,7 +3405,8 @@ interface GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbum {
     | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImages
     | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImages2
     | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImages3
-    | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImages4;
+    | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImages4
+    | GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImages5;
   type: string;
   uri: string;
 }
@@ -3229,6 +3422,9 @@ type GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImages3 =
 
 type GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImages4 =
   Array<GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImagesItem4>;
+
+type GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImages5 =
+  Array<GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImagesItem5>;
 
 interface GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImagesItem {
   label: string;
@@ -3250,6 +3446,11 @@ interface GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImagesIte
   url: string;
 }
 
+interface GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemAlbumImagesItem5 {
+  label: string;
+  url: string;
+}
+
 type GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemArtists =
   Array<GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemArtistsItem>;
 
@@ -3261,6 +3462,9 @@ type GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemArtists3 =
 
 type GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemArtists4 =
   Array<GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemArtistsItem4>;
+
+type GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemArtists5 =
+  Array<GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemArtistsItem5>;
 
 interface GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemArtistsItem {
   type: string;
@@ -3282,6 +3486,11 @@ interface GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemArtistsItem4 {
   uri: string;
 }
 
+interface GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemArtistsItem5 {
+  type: string;
+  uri: string;
+}
+
 interface GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemDuration {
   milliseconds: number;
 }
@@ -3298,11 +3507,23 @@ interface GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemMetadata {
   album_uri: string;
   artist_name: string;
   artist_uri: string;
+  "canvas.artist.avatar": string;
+  "canvas.artist.name": string;
+  "canvas.artist.uri": string;
+  "canvas.canvasUri": string;
+  "canvas.entityUri": string;
+  "canvas.explicit": string;
+  "canvas.fileId": string;
+  "canvas.id": string;
+  "canvas.type": string;
+  "canvas.uploadedBy": string;
+  "canvas.url": string;
   "collection.can_add": string;
   "collection.can_ban": string;
   "collection.in_collection": string;
   "collection.is_banned": string;
   context_uri: string;
+  current_pos: string;
   duration: string;
   entity_uri: string;
   has_lyrics: string;
@@ -3313,7 +3534,12 @@ interface GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemMetadata {
   interaction_id: string;
   iteration: string;
   marked_for_download: string;
+  page_instance_id: string;
   popularity: string;
+  previous_pos: string;
+  rank: string;
+  screen_recording_enabled: string;
+  status: string;
   title: string;
   track_player: string;
   view_index: string;
@@ -3329,11 +3555,23 @@ interface GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemMetadata2 {
   album_uri: string;
   artist_name: string;
   artist_uri: string;
+  "canvas.artist.avatar": string;
+  "canvas.artist.name": string;
+  "canvas.artist.uri": string;
+  "canvas.canvasUri": string;
+  "canvas.entityUri": string;
+  "canvas.explicit": string;
+  "canvas.fileId": string;
+  "canvas.id": string;
+  "canvas.type": string;
+  "canvas.uploadedBy": string;
+  "canvas.url": string;
   "collection.can_add": string;
   "collection.can_ban": string;
   "collection.in_collection": string;
   "collection.is_banned": string;
   context_uri: string;
+  current_pos: string;
   duration: string;
   entity_uri: string;
   has_lyrics: string;
@@ -3344,7 +3582,12 @@ interface GetAdManagersReturnVtoManagerPlayerAPIStateNextItemsItemMetadata2 {
   interaction_id: string;
   iteration: string;
   marked_for_download: string;
+  page_instance_id: string;
   popularity: string;
+  previous_pos: string;
+  rank: string;
+  screen_recording_enabled: string;
+  status: string;
   title: string;
   track_player: string;
   view_index: string;
@@ -3421,6 +3664,7 @@ interface GetAdManagersReturnVtoManagerPlayerAPIStatePreviousItemsItemMetadata {
   "collection.in_collection": string;
   "collection.is_banned": string;
   context_uri: string;
+  current_pos: string;
   duration: string;
   entity_uri: string;
   has_lyrics: string;
@@ -3429,10 +3673,13 @@ interface GetAdManagersReturnVtoManagerPlayerAPIStatePreviousItemsItemMetadata {
   image_url: string;
   image_xlarge_url: string;
   interaction_id: string;
-  is_explicit: string;
   iteration: string;
   marked_for_download: string;
+  page_instance_id: string;
   popularity: string;
+  rank: string;
+  screen_recording_enabled: string;
+  status: string;
   title: string;
   track_player: string;
   view_index: string;
@@ -3466,10 +3713,9 @@ interface GetAdManagersReturnVtoManagerPlayerAPIStateRestrictions {
 type GetAdManagersReturnVtoManagerPlayerAPIStateRestrictionsDisallowAddToQueueReasons =
   Array<unknown>;
 
-type GetAdManagersReturnVtoManagerPlayerAPIStateRestrictionsDisallowPausingReasons = Array<string>;
+type GetAdManagersReturnVtoManagerPlayerAPIStateRestrictionsDisallowPausingReasons = Array<unknown>;
 
-type GetAdManagersReturnVtoManagerPlayerAPIStateRestrictionsDisallowResumingReasons =
-  Array<unknown>;
+type GetAdManagersReturnVtoManagerPlayerAPIStateRestrictionsDisallowResumingReasons = Array<string>;
 
 type GetAdManagersReturnVtoManagerPlayerAPIStateRestrictionsDisallowSeekingReasons = Array<unknown>;
 
@@ -4999,7 +5245,44 @@ interface GetConnectAPIReturnStateActiveDeviceLosslessSupport {
 
 type GetConnectAPIReturnStateActiveDeviceSupportedMediaTypes = Set<string>;
 
-type GetConnectAPIReturnStateDevices = Array<GetConnectAPIReturnStateActiveDevice>;
+type GetConnectAPIReturnStateDevices = Array<
+  GetConnectAPIReturnStateActiveDevice | GetConnectAPIReturnStateDevicesItem
+>;
+
+interface GetConnectAPIReturnStateDevicesItem {
+  brandDisplayName: string;
+  connectStateId: string;
+  currentState: string;
+  disabledReason?: unknown;
+  id: string;
+  isActive: boolean;
+  isConnecting: boolean;
+  isDisabled: boolean;
+  isGroup: boolean;
+  isLocal: boolean;
+  isLocalNetwork: boolean;
+  isWebApp: boolean;
+  isZeroconf: boolean;
+  libraryVersion: string;
+  license: string;
+  losslessSupport: GetConnectAPIReturnStateDevicesItemLosslessSupport;
+  modelDisplayName: string;
+  supportedMediaTypes: GetConnectAPIReturnStateDevicesItemSupportedMediaTypes;
+  supportsDJNarration: boolean;
+  supportsLogout: boolean;
+  supportsPlaylistMixing: boolean;
+  supportsRemoteSleepTimer: boolean;
+  type: string;
+  volume: number;
+}
+
+interface GetConnectAPIReturnStateDevicesItemLosslessSupport {
+  deviceSupported: boolean;
+  fullySupported: boolean;
+  userEligible: boolean;
+}
+
+type GetConnectAPIReturnStateDevicesItemSupportedMediaTypes = Set<string>;
 
 type GetConnectAPIReturnTransferPlayback = (arg0: any, arg1: any) => Promise<unknown>;
 
@@ -5224,7 +5507,44 @@ interface GetConnectDevicesAPIReturnStateActiveDeviceLosslessSupport {
 
 type GetConnectDevicesAPIReturnStateActiveDeviceSupportedMediaTypes = Set<string>;
 
-type GetConnectDevicesAPIReturnStateDevices = Array<GetConnectDevicesAPIReturnStateActiveDevice>;
+type GetConnectDevicesAPIReturnStateDevices = Array<
+  GetConnectDevicesAPIReturnStateActiveDevice | GetConnectDevicesAPIReturnStateDevicesItem
+>;
+
+interface GetConnectDevicesAPIReturnStateDevicesItem {
+  brandDisplayName: string;
+  connectStateId: string;
+  currentState: string;
+  disabledReason?: unknown;
+  id: string;
+  isActive: boolean;
+  isConnecting: boolean;
+  isDisabled: boolean;
+  isGroup: boolean;
+  isLocal: boolean;
+  isLocalNetwork: boolean;
+  isWebApp: boolean;
+  isZeroconf: boolean;
+  libraryVersion: string;
+  license: string;
+  losslessSupport: GetConnectDevicesAPIReturnStateDevicesItemLosslessSupport;
+  modelDisplayName: string;
+  supportedMediaTypes: GetConnectDevicesAPIReturnStateDevicesItemSupportedMediaTypes;
+  supportsDJNarration: boolean;
+  supportsLogout: boolean;
+  supportsPlaylistMixing: boolean;
+  supportsRemoteSleepTimer: boolean;
+  type: string;
+  volume: number;
+}
+
+interface GetConnectDevicesAPIReturnStateDevicesItemLosslessSupport {
+  deviceSupported: boolean;
+  fullySupported: boolean;
+  userEligible: boolean;
+}
+
+type GetConnectDevicesAPIReturnStateDevicesItemSupportedMediaTypes = Set<string>;
 
 type GetConnectDiscoveryAPI = () => GetConnectDiscoveryAPIReturn;
 
@@ -5346,13 +5666,12 @@ type GetControlMessageAPI = () => GetControlMessageAPIReturn;
 
 interface GetControlMessageAPIReturn {
   _cosmos: GetCosmosReturn;
+  _lifecycleClient: GetControlMessageAPIReturnLifecycleClient;
   _partnerApiClient: GetControlMessageAPIReturnPartnerApiClient;
   _updateUiClient: GetControlMessageAPIReturnUpdateUiClient;
   disableMenuItem: GetControlMessageAPIReturnDisableMenuItem;
   enableMenuItem: GetControlMessageAPIReturnEnableMenuItem;
   getEvents: GetControlMessageAPIReturnGetEvents;
-  notifyReadyStateReached: GetControlMessageAPIReturnNotifyReadyStateReached;
-  notifyUsableStateReached: GetControlMessageAPIReturnNotifyUsableStateReached;
   notifyViewLoaded: GetControlMessageAPIReturnNotifyViewLoaded;
   setPLEPorts: GetControlMessageAPIReturnSetPLEPorts;
   setTitlebarHeight: GetControlMessageAPIReturnSetTitlebarHeight;
@@ -5364,9 +5683,21 @@ type GetControlMessageAPIReturnEnableMenuItem = (arg0: any) => Promise<unknown>;
 
 type GetControlMessageAPIReturnGetEvents = () => unknown;
 
-type GetControlMessageAPIReturnNotifyReadyStateReached = () => Promise<unknown>;
+interface GetControlMessageAPIReturnLifecycleClient {
+  notifyViewLoaded: GetControlMessageAPIReturnLifecycleClientNotifyViewLoaded;
+  options: GetControlMessageAPIReturnLifecycleClientOptions;
+  restart: GetControlMessageAPIReturnLifecycleClientRestart;
+  shutdown: GetControlMessageAPIReturnLifecycleClientShutdown;
+  transport: GetEsperantoTransportReturn;
+}
 
-type GetControlMessageAPIReturnNotifyUsableStateReached = (arg0: any) => Promise<unknown>;
+type GetControlMessageAPIReturnLifecycleClientNotifyViewLoaded = (arg0: any, arg1: any) => unknown;
+
+type GetControlMessageAPIReturnLifecycleClientOptions = Record<string, unknown>;
+
+type GetControlMessageAPIReturnLifecycleClientRestart = (arg0: any, arg1: any) => unknown;
+
+type GetControlMessageAPIReturnLifecycleClientShutdown = (arg0: any, arg1: any) => unknown;
 
 type GetControlMessageAPIReturnNotifyViewLoaded = (arg0: any) => Promise<unknown>;
 
@@ -5619,12 +5950,14 @@ type GetDataPoolReturnTablesValueApiCacheCache = Map<unknown, unknown>;
 interface GetDataPoolReturnTablesValueApiClient {
   getAllDetails: GetShowAPIReturnResumptionProgressClientGetAllDetails;
   getDetails: GetShowAPIReturnResumptionProgressClientGetDetails;
+  getProgress: GetShowAPIReturnResumptionProgressClientGetProgress;
   getResumePoint: GetShowAPIReturnResumptionProgressClientGetResumePoint;
   getState: GetShowAPIReturnResumptionProgressClientGetState;
   markAsFinished: GetShowAPIReturnResumptionProgressClientMarkAsFinished;
   markAsNotStarted: GetShowAPIReturnResumptionProgressClientMarkAsNotStarted;
   options: GetDataPoolReturnTablesValueApiClientOptions;
   subDetails: GetShowAPIReturnResumptionProgressClientSubDetails;
+  subProgress: GetShowAPIReturnResumptionProgressClientSubProgress;
   subResumePoint: GetShowAPIReturnResumptionProgressClientSubResumePoint;
   subState: GetShowAPIReturnResumptionProgressClientSubState;
   transport: GetEsperantoTransportReturn;
@@ -7092,17 +7425,17 @@ interface GetDataPoolReturnTablesValueFeedbackAPIEvents {
 }
 
 interface GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUri {
-  "spotify:album:3ukkRHDHbN8tNRPKsGZR1h": GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1h;
+  "spotify:playlist:37i9dQZEVXbMwmF30ppw50": GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50;
 }
 
-interface GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1h {
-  _additions: GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1hAdditions;
-  _batch: GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1hBatch;
-  _deletions: GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1hDeletions;
-  _onAdd: GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1hOnAdd;
-  _onBatch: GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1hOnBatch;
-  _onRemove: GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1hOnRemove;
-  _onUpdate: GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1hOnUpdate;
+interface GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50 {
+  _additions: GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50Additions;
+  _batch: GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50Batch;
+  _deletions: GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50Deletions;
+  _onAdd: GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50OnAdd;
+  _onBatch: GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50OnBatch;
+  _onRemove: GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50OnRemove;
+  _onUpdate: GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50OnUpdate;
   _timeout: number;
   _timeoutId: null;
   getBatch: GetRootlistAPIReturnEventsAggregatorGetBatch;
@@ -7112,32 +7445,32 @@ interface GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorBy
   unsubscribe: GetRootlistAPIReturnEventsAggregatorUnsubscribe;
 }
 
-type GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1hAdditions =
+type GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50Additions =
   Map<unknown, unknown>;
 
-type GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1hBatch =
+type GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50Batch =
   Map<string, number>;
 
-type GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1hDeletions =
+type GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50Deletions =
   Map<unknown, unknown>;
 
-type GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1hOnAdd =
+type GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50OnAdd =
   (arg0: any, arg1: any) => unknown;
 
-type GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1hOnBatch =
+type GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50OnBatch =
   (arg0: any) => Promise<unknown>;
 
-type GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1hOnRemove =
+type GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50OnRemove =
   (arg0: any, arg1: any) => unknown;
 
-type GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1hOnUpdate =
+type GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanAggregatorByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50OnUpdate =
   (arg0: any, arg1: any, arg2: any) => unknown;
 
 interface GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanCancelFunctionByContextUri {
-  "spotify:album:3ukkRHDHbN8tNRPKsGZR1h": GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanCancelFunctionByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1h;
+  "spotify:playlist:37i9dQZEVXbMwmF30ppw50": GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanCancelFunctionByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50;
 }
 
-type GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanCancelFunctionByContextUriSpotifyalbum3ukkRHDHbN8tNRPKsGZR1h =
+type GetDataPoolReturnTablesValueFeedbackAPIEventsContextualBanCancelFunctionByContextUriSpotifyplaylist37i9dQZEVXbMwmF30ppw50 =
   () => unknown;
 
 interface GetDataPoolReturnTablesValueFeedbackAPIEventsEmitter {
@@ -7510,6 +7843,11 @@ type GetDataPoolReturnTablesValueLocalFilesHandlerLocalFilesAPIRemoveFolder = (
   arg0: any,
 ) => Promise<unknown>;
 
+type GetDataPoolReturnTablesValueLocalFilesHandlerLocalFilesAPISaveLocalListConfig = (
+  arg0: any,
+  arg1: any,
+) => unknown;
+
 type GetDataPoolReturnTablesValueLocalFilesHandlerLocalFilesAPISetIsEnabled = (
   arg0: any,
 ) => unknown;
@@ -7572,7 +7910,7 @@ type GetDataPoolReturnTablesValueOfflineAPICanDownload = (arg0: any) => unknown;
 
 interface GetDataPoolReturnTablesValueOfflineAPIEvents {
   _cache: GetDataPoolReturnTablesValueOfflineAPICache;
-  _cosmos: GetCosmosReturn;
+  _connectivityPolicy: GetDataPoolReturnTablesValueOfflineAPIEventsConnectivityPolicy;
   _emitter: GetDataPoolReturnTablesValueOfflineAPIEventsEmitter;
   _offline: GetDataPoolReturnTablesValueOfflineAPIOffline;
   _productState: GetDataPoolReturnTablesValueOfflineAPIProductState;
@@ -7591,6 +7929,52 @@ interface GetDataPoolReturnTablesValueOfflineAPIEvents {
   setupErrorEvents: GetDataPoolReturnTablesValueOfflineAPIEventsSetupErrorEvents;
   setupTotalProgressEvents: GetDataPoolReturnTablesValueOfflineAPIEventsSetupTotalProgressEvents;
 }
+
+interface GetDataPoolReturnTablesValueOfflineAPIEventsConnectivityPolicy {
+  getRules: GetDataPoolReturnTablesValueOfflineAPIEventsConnectivityPolicyGetRules;
+  getState: GetDataPoolReturnTablesValueOfflineAPIEventsConnectivityPolicyGetState;
+  options: GetDataPoolReturnTablesValueOfflineAPIEventsConnectivityPolicyOptions;
+  setConnectionType: GetDataPoolReturnTablesValueOfflineAPIEventsConnectivityPolicySetConnectionType;
+  setForceOffline: GetDataPoolReturnTablesValueOfflineAPIEventsConnectivityPolicySetForceOffline;
+  setRules: GetDataPoolReturnTablesValueOfflineAPIEventsConnectivityPolicySetRules;
+  subState: GetDataPoolReturnTablesValueOfflineAPIEventsConnectivityPolicySubState;
+  transport: GetEsperantoTransportReturn;
+}
+
+type GetDataPoolReturnTablesValueOfflineAPIEventsConnectivityPolicyGetRules = (
+  arg0: any,
+  arg1: any,
+) => unknown;
+
+type GetDataPoolReturnTablesValueOfflineAPIEventsConnectivityPolicyGetState = (
+  arg0: any,
+  arg1: any,
+) => unknown;
+
+type GetDataPoolReturnTablesValueOfflineAPIEventsConnectivityPolicyOptions = Record<
+  string,
+  unknown
+>;
+
+type GetDataPoolReturnTablesValueOfflineAPIEventsConnectivityPolicySetConnectionType = (
+  arg0: any,
+  arg1: any,
+) => unknown;
+
+type GetDataPoolReturnTablesValueOfflineAPIEventsConnectivityPolicySetForceOffline = (
+  arg0: any,
+  arg1: any,
+) => unknown;
+
+type GetDataPoolReturnTablesValueOfflineAPIEventsConnectivityPolicySetRules = (
+  arg0: any,
+  arg1: any,
+) => unknown;
+
+type GetDataPoolReturnTablesValueOfflineAPIEventsConnectivityPolicySubState = (
+  arg0: any,
+  arg1: any,
+) => unknown;
 
 interface GetDataPoolReturnTablesValueOfflineAPIEventsEmitter {
   _dispatchFromStore: GetTransportReturnDispatchFromStore;
@@ -7623,6 +8007,7 @@ interface GetDataPoolReturnTablesValueOfflineAPIEventsEmitterListeners {
   update_availability: GetDataPoolReturnTablesValueOfflineAPIEventsEmitterListenersUpdateAvailability;
   update_capabilities: GetDataPoolReturnTablesValueOfflineAPIEventsEmitterListenersUpdateCapabilities;
   update_context_progress: GetDataPoolReturnTablesValueOfflineAPIEventsEmitterListenersUpdateContextProgress;
+  update_total_progress: GetDataPoolReturnTablesValueOfflineAPIEventsEmitterListenersUpdateTotalProgress;
 }
 
 type GetDataPoolReturnTablesValueOfflineAPIEventsEmitterListenersError =
@@ -7746,6 +8131,21 @@ type GetDataPoolReturnTablesValueOfflineAPIEventsEmitterListenersUpdateContextPr
 interface GetDataPoolReturnTablesValueOfflineAPIEventsEmitterListenersUpdateContextProgressItemOptions {
   uri: string;
 }
+
+type GetDataPoolReturnTablesValueOfflineAPIEventsEmitterListenersUpdateTotalProgress =
+  Array<GetDataPoolReturnTablesValueOfflineAPIEventsEmitterListenersUpdateTotalProgressItem>;
+
+interface GetDataPoolReturnTablesValueOfflineAPIEventsEmitterListenersUpdateTotalProgressItem {
+  listener: GetDataPoolReturnTablesValueOfflineAPIEventsEmitterListenersUpdateTotalProgressItemListener;
+  options: GetDataPoolReturnTablesValueOfflineAPIEventsEmitterListenersUpdateTotalProgressItemOptions;
+}
+
+type GetDataPoolReturnTablesValueOfflineAPIEventsEmitterListenersUpdateTotalProgressItemListener = (
+  arg0: any,
+) => unknown;
+
+type GetDataPoolReturnTablesValueOfflineAPIEventsEmitterListenersUpdateTotalProgressItemOptions =
+  Record<string, unknown>;
 
 interface GetDataPoolReturnTablesValueOfflineAPIEventsEmitterMetaListeners {
   add: GetDataPoolReturnTablesValueOfflineAPIEventsEmitterMetaListenersAdd;
@@ -7989,6 +8389,7 @@ interface GetDataPoolReturnTablesValueOfflineAPIOffline {
   removeResource: GetDataPoolReturnTablesValueOfflineAPIOfflineRemoveResource;
   setOfflinePlaybackAllowed: GetDataPoolReturnTablesValueOfflineAPIOfflineSetOfflinePlaybackAllowed;
   subscribeBulkRedownloadProgress: GetDataPoolReturnTablesValueOfflineAPIOfflineSubscribeBulkRedownloadProgress;
+  subscribeContextAdded: GetDataPoolReturnTablesValueOfflineAPIOfflineSubscribeContextAdded;
   subscribeContexts: GetDataPoolReturnTablesValueOfflineAPIOfflineSubscribeContexts;
   subscribeContextsProgress: GetDataPoolReturnTablesValueOfflineAPIOfflineSubscribeContextsProgress;
   subscribeDevicesWithContext: GetDataPoolReturnTablesValueOfflineAPIOfflineSubscribeDevicesWithContext;
@@ -8089,6 +8490,11 @@ type GetDataPoolReturnTablesValueOfflineAPIOfflineSetOfflinePlaybackAllowed = (
 ) => unknown;
 
 type GetDataPoolReturnTablesValueOfflineAPIOfflineSubscribeBulkRedownloadProgress = (
+  arg0: any,
+  arg1: any,
+) => unknown;
+
+type GetDataPoolReturnTablesValueOfflineAPIOfflineSubscribeContextAdded = (
   arg0: any,
   arg1: any,
 ) => unknown;
@@ -8723,18 +9129,10 @@ type GetEqualizerAPIReturnLocalStorageAPIItemsUSERNAMEonboardingchecklistComplet
 >;
 
 interface GetEqualizerAPIReturnLocalStorageAPIItemsUSERNAMEremoteconfigoverrides {
-  enableCamelotKeyBadge: boolean;
+  "#v": string;
   enableDebugTools: boolean;
-  enableEpisodeCoverArtModal: boolean;
-  enableEsperantoMigration: boolean;
   enableInAppMessaging: boolean;
-  enableLeaderboardCrossOriginIframe: boolean;
-  enablePlaylistExtenderBpmKey: boolean;
-  enablePodcastChaptersSaving: boolean;
   enablePremiumUserForMiniPlayer: boolean;
-  enableRateabilityTraitCheck: boolean;
-  enableRegisteredArtistBanner: boolean;
-  enableVideoThumbnailScrubbing: boolean;
   hideUpgradeCTA: boolean;
 }
 
@@ -9658,15 +10056,7 @@ interface GetExternalAccessoryAPIReturnCache {
   set: GetExternalAccessoryAPIReturnCacheSet;
 }
 
-type GetExternalAccessoryAPIReturnCacheCache = Map<
-  string,
-  GetExternalAccessoryAPIReturnCacheCacheValue
->;
-
-interface GetExternalAccessoryAPIReturnCacheCacheValue {
-  expiry: number;
-  value: Promise<unknown>;
-}
+type GetExternalAccessoryAPIReturnCacheCache = Map<unknown, unknown>;
 
 type GetExternalAccessoryAPIReturnCacheCleanup = () => unknown;
 
@@ -9715,7 +10105,7 @@ interface GetFeedbackAPIReturn {
 type GetFocusMainWindowAPI = () => GetFocusMainWindowAPIReturn;
 
 interface GetFocusMainWindowAPIReturn {
-  _cosmos: GetCosmosReturn;
+  _windowStateClient: GetFocusMainWindowAPIReturnWindowStateClient;
   canFocusMainWindow: GetFocusMainWindowAPIReturnCanFocusMainWindow;
   focusMainWindow: GetFocusMainWindowAPIReturnFocusMainWindow;
 }
@@ -9723,6 +10113,31 @@ interface GetFocusMainWindowAPIReturn {
 type GetFocusMainWindowAPIReturnCanFocusMainWindow = () => unknown;
 
 type GetFocusMainWindowAPIReturnFocusMainWindow = () => unknown;
+
+interface GetFocusMainWindowAPIReturnWindowStateClient {
+  closeWindow: GetFocusMainWindowAPIReturnWindowStateClientCloseWindow;
+  focusWindow: GetFocusMainWindowAPIReturnWindowStateClientFocusWindow;
+  getWindowState: GetFocusMainWindowAPIReturnWindowStateClientGetWindowState;
+  options: GetFocusMainWindowAPIReturnWindowStateClientOptions;
+  setWindowState: GetFocusMainWindowAPIReturnWindowStateClientSetWindowState;
+  subscribeWindowState: GetFocusMainWindowAPIReturnWindowStateClientSubscribeWindowState;
+  transport: GetEsperantoTransportReturn;
+}
+
+type GetFocusMainWindowAPIReturnWindowStateClientCloseWindow = (arg0: any, arg1: any) => unknown;
+
+type GetFocusMainWindowAPIReturnWindowStateClientFocusWindow = (arg0: any, arg1: any) => unknown;
+
+type GetFocusMainWindowAPIReturnWindowStateClientGetWindowState = (arg0: any, arg1: any) => unknown;
+
+type GetFocusMainWindowAPIReturnWindowStateClientOptions = Record<string, unknown>;
+
+type GetFocusMainWindowAPIReturnWindowStateClientSetWindowState = (arg0: any, arg1: any) => unknown;
+
+type GetFocusMainWindowAPIReturnWindowStateClientSubscribeWindowState = (
+  arg0: any,
+  arg1: any,
+) => unknown;
 
 type GetFollowAPI = () => GetFollowAPIReturn;
 
@@ -10137,17 +10552,14 @@ interface GetLifecycleAPIReturn {
 }
 
 interface GetLifecycleAPIReturnClient {
+  notifyViewLoaded: GetControlMessageAPIReturnLifecycleClientNotifyViewLoaded;
   options: GetLifecycleAPIReturnClientOptions;
-  restart: GetLifecycleAPIReturnClientRestart;
-  shutdown: GetLifecycleAPIReturnClientShutdown;
+  restart: GetControlMessageAPIReturnLifecycleClientRestart;
+  shutdown: GetControlMessageAPIReturnLifecycleClientShutdown;
   transport: GetEsperantoTransportReturn;
 }
 
 type GetLifecycleAPIReturnClientOptions = Record<string, unknown>;
-
-type GetLifecycleAPIReturnClientRestart = (arg0: any, arg1: any) => unknown;
-
-type GetLifecycleAPIReturnClientShutdown = (arg0: any, arg1: any) => unknown;
 
 type GetLifecycleAPIReturnRestart = () => Promise<unknown>;
 
@@ -10215,6 +10627,7 @@ type GetListPlatformAPIReturnListPlatformFetchAPIGetListContents = (
 type GetListPlatformAPIReturnListPlatformFetchAPIGetPlaylistGetRequest = (
   arg0: any,
   arg1: any,
+  arg2: any,
 ) => unknown;
 
 type GetListPlatformAPIReturnListPlatformFetchAPIOnListUpdate = (
@@ -10291,6 +10704,7 @@ interface GetLocalFilesAPIReturn {
   _emitUpdate: GetDataPoolReturnTablesValueLocalFilesHandlerLocalFilesAPIEmitUpdate;
   _events: GetDataPoolReturnTablesValueLocalFilesHandlerLocalFilesAPIEvents;
   _localStorageAPI: GetLocalStorageAPIReturn;
+  _saveLocalListConfig: GetDataPoolReturnTablesValueLocalFilesHandlerLocalFilesAPISaveLocalListConfig;
   _subscribeToTracksUpdates: GetDataPoolReturnTablesValueLocalFilesHandlerLocalFilesAPISubscribeToTracksUpdates;
   _totalLength: number;
   addFolder: GetDataPoolReturnTablesValueLocalFilesHandlerLocalFilesAPIAddFolder;
@@ -12762,6 +13176,7 @@ interface GetPlaylistPermissionsAPIReturn {
   _client: GetPlaylistPermissionsAPIReturnClient;
   _events: GetPlaylistPermissionsAPIReturnEvents;
   claimPermissions: GetPlaylistPermissionsAPIReturnClaimPermissions;
+  getBasePermission: GetPlaylistPermissionsAPIReturnGetBasePermission;
   getCapabilities: GetPlaylistPermissionsAPIReturnGetCapabilities;
   getEvents: GetPlaylistPermissionsAPIReturnGetEvents;
   getMembers: GetPlaylistPermissionsAPIReturnGetMembers;
@@ -12896,6 +13311,8 @@ type GetPlaylistPermissionsAPIReturnEventsEmitterMetaListenersAdd = Record<strin
 
 type GetPlaylistPermissionsAPIReturnEventsEmitterMetaListenersRemove = Record<string, unknown>;
 
+type GetPlaylistPermissionsAPIReturnGetBasePermission = (arg0: any) => Promise<unknown>;
+
 type GetPlaylistPermissionsAPIReturnGetCapabilities = () => unknown;
 
 type GetPlaylistPermissionsAPIReturnGetEvents = () => unknown;
@@ -13008,24 +13425,6 @@ type GetRecentlyPlayedAPIReturnContexts = Array<
 >;
 
 interface GetRecentlyPlayedAPIReturnContextsItem {
-  artists:
-    | GetRecentlyPlayedAPIReturnContextsItemArtists
-    | GetRecentlyPlayedAPIReturnContextsItemArtists2
-    | GetRecentlyPlayedAPIReturnContextsItemArtists3
-    | GetRecentlyPlayedAPIReturnContextsItemArtists4
-    | GetRecentlyPlayedAPIReturnContextsItemArtists5;
-  images:
-    | GetRecentlyPlayedAPIReturnContextsItemImages
-    | GetRecentlyPlayedAPIReturnContextsItemImages2
-    | GetRecentlyPlayedAPIReturnContextsItemImages3
-    | GetRecentlyPlayedAPIReturnContextsItemImages4
-    | GetRecentlyPlayedAPIReturnContextsItemImages5;
-  timestampMs: number;
-  type: string;
-  uri: string;
-}
-
-interface GetRecentlyPlayedAPIReturnContextsItem2 {
   attributes:
     | GetRecentlyPlayedAPIReturnContextsItemAttributes
     | GetRecentlyPlayedAPIReturnContextsItemAttributes2
@@ -13034,12 +13433,30 @@ interface GetRecentlyPlayedAPIReturnContextsItem2 {
     | GetRecentlyPlayedAPIReturnContextsItemAttributes5;
   description: string;
   images:
+    | GetRecentlyPlayedAPIReturnContextsItemImages
+    | GetRecentlyPlayedAPIReturnContextsItemImages2
+    | GetRecentlyPlayedAPIReturnContextsItemImages3
+    | GetRecentlyPlayedAPIReturnContextsItemImages4
+    | GetRecentlyPlayedAPIReturnContextsItemImages5;
+  owner: GetRecentlyPlayedAPIReturnContextsItemOwner;
+  timestampMs: number;
+  type: string;
+  uri: string;
+}
+
+interface GetRecentlyPlayedAPIReturnContextsItem2 {
+  artists:
+    | GetRecentlyPlayedAPIReturnContextsItemArtists
+    | GetRecentlyPlayedAPIReturnContextsItemArtists2
+    | GetRecentlyPlayedAPIReturnContextsItemArtists3
+    | GetRecentlyPlayedAPIReturnContextsItemArtists4
+    | GetRecentlyPlayedAPIReturnContextsItemArtists5;
+  images:
     | GetRecentlyPlayedAPIReturnContextsItemImages6
     | GetRecentlyPlayedAPIReturnContextsItemImages7
     | GetRecentlyPlayedAPIReturnContextsItemImages8
     | GetRecentlyPlayedAPIReturnContextsItemImages9
     | GetRecentlyPlayedAPIReturnContextsItemImages10;
-  owner: GetRecentlyPlayedAPIReturnContextsItemOwner;
   timestampMs: number;
   type: string;
   uri: string;
@@ -13588,7 +14005,6 @@ interface GetRemoteConfigurationReturnValuesValue {
   enableAgeAssuranceSettings: number;
   enableAlbumSortByReleaseDate: number;
   enableAmbientModeTimer: number;
-  enableArtistBookmarkModelSavedTracks: number;
   enableAudiobookCardPlayButton: number;
   enableAuthorPage: number;
   enableAutoPlayOnLoad: number;
@@ -13620,7 +14036,6 @@ interface GetRemoteConfigurationReturnValuesValue {
   enableImprovedCinemaModeCanvas: number;
   enableJamNearbyJoining: number;
   enableKeyNotationToggle: number;
-  enableLauncherAutoStartToggle: number;
   enableLeaderboardCrossOriginIframe: number;
   enableLibraryAlbumNewReleaseSignifier: number;
   enableLikedSongsFilterTags: number;
@@ -14128,18 +14543,12 @@ type GetRootlistAPIReturnRenameFolder = (arg0: any, arg1: any) => Promise<unknow
 
 interface GetRootlistAPIReturnRootlistDataClient {
   get: GetRootlistAPIReturnRootlistDataClientGet;
-  getOfflinePlaylistsContainingItem: GetRootlistAPIReturnRootlistDataClientGetOfflinePlaylistsContainingItem;
   options: GetRootlistAPIReturnRootlistDataClientOptions;
   subscribe: GetRootlistAPIReturnRootlistDataClientSubscribe;
   transport: GetEsperantoTransportReturn;
 }
 
 type GetRootlistAPIReturnRootlistDataClientGet = (arg0: any, arg1: any) => unknown;
-
-type GetRootlistAPIReturnRootlistDataClientGetOfflinePlaylistsContainingItem = (
-  arg0: any,
-  arg1: any,
-) => unknown;
 
 type GetRootlistAPIReturnRootlistDataClientOptions = Record<string, unknown>;
 
@@ -14259,7 +14668,6 @@ interface GetSettingsAPIReturn {
   social: GetSettingsAPIReturnSocial;
   startupBehaviour: GetSettingsAPIReturnStartupBehaviour;
   storage: GetSettingsAPIReturnStorage;
-  videoQuality: GetSettingsAPIReturnVideoQuality;
   viewportZoom: GetSettingsAPIReturnViewportZoom;
 }
 
@@ -14555,8 +14963,6 @@ type GetSettingsAPIReturnEmployeeIsEmployeeSubs = Set<
   | GetSettingsAPIReturnEmployeeIsEmployeeSubsItem18
   | GetSettingsAPIReturnEmployeeIsEmployeeSubsItem19
   | GetSettingsAPIReturnEmployeeIsEmployeeSubsItem20
-  | GetSettingsAPIReturnEmployeeIsEmployeeSubsItem21
-  | GetSettingsAPIReturnEmployeeIsEmployeeSubsItem22
 >;
 
 type GetSettingsAPIReturnEmployeeIsEmployeeSubscription = () => unknown;
@@ -14586,10 +14992,6 @@ type GetSettingsAPIReturnEmployeeIsEmployeeSubsItem19 = (arg0: any) => unknown;
 type GetSettingsAPIReturnEmployeeIsEmployeeSubsItem2 = (arg0: any) => unknown;
 
 type GetSettingsAPIReturnEmployeeIsEmployeeSubsItem20 = (arg0: any) => unknown;
-
-type GetSettingsAPIReturnEmployeeIsEmployeeSubsItem21 = (arg0: any) => unknown;
-
-type GetSettingsAPIReturnEmployeeIsEmployeeSubsItem22 = (arg0: any) => unknown;
 
 type GetSettingsAPIReturnEmployeeIsEmployeeSubsItem3 = (arg0: any) => unknown;
 
@@ -15314,6 +15716,7 @@ interface GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductS
   "enable-crossfade": string;
   "estimated-age": string;
   "explicit-content": string;
+  "fdks-engange": string;
   "filter-explicit-content": string;
   "financial-product": string;
   "has-audiobooks-subscription": string;
@@ -15338,8 +15741,10 @@ interface GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductS
   libspotify: string;
   "license-agreements": string;
   "list-private-by-default": string;
+  "listening-activity": string;
   "market-portfolio-type": string;
   "metadata-link-lookup-modes": string;
+  "mixing-fx-looping-jogwheel": string;
   "mixing-tools": string;
   mobile: string;
   "nft-disabled": string;
@@ -15379,6 +15784,7 @@ interface GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductS
   "smart-shuffle": string;
   "social-session": string;
   "social-session-free-tier": string;
+  "speed-control": string;
   "storage-size-config": string;
   streaming: string;
   "streaming-only-premium": string;
@@ -15493,6 +15899,29 @@ type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateA
   | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem48
   | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem49
   | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem50
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem51
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem52
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem53
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem54
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem55
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem56
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem57
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem58
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem59
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem60
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem61
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem62
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem63
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem64
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem65
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem66
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem67
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem68
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem69
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem70
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem71
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem72
+  | GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem73
 >;
 
 type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem = (
@@ -15635,10 +16064,79 @@ type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateA
 type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem50 =
   () => unknown;
 
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem51 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem52 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem53 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem54 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem55 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem56 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem57 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem58 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem59 =
+  () => unknown;
+
 type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem6 =
   () => unknown;
 
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem60 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem61 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem62 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem63 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem64 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem65 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem66 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem67 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem68 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem69 =
+  () => unknown;
+
 type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem7 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem70 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem71 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem72 =
+  () => unknown;
+
+type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem73 =
   () => unknown;
 
 type GetSettingsAPIReturnQualityStreamingQualityMaxSupportedQualityProductStateApiSubsItem8 =
@@ -16017,20 +16515,6 @@ type GetSettingsAPIReturnStorageStorageLocationSubs = Set<unknown>;
 
 type GetSettingsAPIReturnStorageStorageLocationSubValue = (arg0: any) => unknown;
 
-interface GetSettingsAPIReturnVideoQuality {
-  getValue: GetSettingsAPIReturnVideoQualityGetValue;
-  key: string;
-  localStorageAPI: GetLocalStorageAPIReturn;
-  setValue: GetSettingsAPIReturnVideoQualitySetValue;
-  subValue: GetSettingsAPIReturnVideoQualitySubValue;
-}
-
-type GetSettingsAPIReturnVideoQualityGetValue = () => Promise<unknown>;
-
-type GetSettingsAPIReturnVideoQualitySetValue = (arg0: any) => Promise<unknown>;
-
-type GetSettingsAPIReturnVideoQualitySubValue = (arg0: any) => unknown;
-
 interface GetSettingsAPIReturnViewportZoom {
   deserializeValue: GetSettingsAPIReturnViewportZoomDeserializeValue;
   getValue: GetSettingsAPIReturnViewportZoomGetValue;
@@ -16328,12 +16812,14 @@ type GetShowAPIReturnPodcastPaywallsClientPutShowSubscription = (arg0: any, arg1
 interface GetShowAPIReturnResumptionProgressClient {
   getAllDetails: GetShowAPIReturnResumptionProgressClientGetAllDetails;
   getDetails: GetShowAPIReturnResumptionProgressClientGetDetails;
+  getProgress: GetShowAPIReturnResumptionProgressClientGetProgress;
   getResumePoint: GetShowAPIReturnResumptionProgressClientGetResumePoint;
   getState: GetShowAPIReturnResumptionProgressClientGetState;
   markAsFinished: GetShowAPIReturnResumptionProgressClientMarkAsFinished;
   markAsNotStarted: GetShowAPIReturnResumptionProgressClientMarkAsNotStarted;
   options: GetShowAPIReturnResumptionProgressClientOptions;
   subDetails: GetShowAPIReturnResumptionProgressClientSubDetails;
+  subProgress: GetShowAPIReturnResumptionProgressClientSubProgress;
   subResumePoint: GetShowAPIReturnResumptionProgressClientSubResumePoint;
   subState: GetShowAPIReturnResumptionProgressClientSubState;
   transport: GetEsperantoTransportReturn;
@@ -16342,6 +16828,8 @@ interface GetShowAPIReturnResumptionProgressClient {
 type GetShowAPIReturnResumptionProgressClientGetAllDetails = (arg0: any, arg1: any) => unknown;
 
 type GetShowAPIReturnResumptionProgressClientGetDetails = (arg0: any, arg1: any) => unknown;
+
+type GetShowAPIReturnResumptionProgressClientGetProgress = (arg0: any, arg1: any) => unknown;
 
 type GetShowAPIReturnResumptionProgressClientGetResumePoint = (arg0: any, arg1: any) => unknown;
 
@@ -16355,6 +16843,8 @@ type GetShowAPIReturnResumptionProgressClientOptions = Record<string, unknown>;
 
 type GetShowAPIReturnResumptionProgressClientSubDetails = (arg0: any, arg1: any) => unknown;
 
+type GetShowAPIReturnResumptionProgressClientSubProgress = (arg0: any, arg1: any) => unknown;
+
 type GetShowAPIReturnResumptionProgressClientSubResumePoint = (arg0: any, arg1: any) => unknown;
 
 type GetShowAPIReturnResumptionProgressClientSubState = (arg0: any, arg1: any) => unknown;
@@ -16366,7 +16856,6 @@ interface GetShowAPIReturnShowServiceClient {
   getUnfinishedEpisodes: GetShowAPIReturnShowServiceClientGetUnfinishedEpisodes;
   markShowAsPlayed: GetShowAPIReturnShowServiceClientMarkShowAsPlayed;
   options: GetShowAPIReturnShowServiceClientOptions;
-  playShow: GetShowAPIReturnShowServiceClientPlayShow;
   subDecorate: GetShowAPIReturnShowServiceClientSubDecorate;
   subShow: GetShowAPIReturnShowServiceClientSubShow;
   subShowEpisode: GetShowAPIReturnShowServiceClientSubShowEpisode;
@@ -16385,8 +16874,6 @@ type GetShowAPIReturnShowServiceClientGetUnfinishedEpisodes = (arg0: any, arg1: 
 type GetShowAPIReturnShowServiceClientMarkShowAsPlayed = (arg0: any, arg1: any) => unknown;
 
 type GetShowAPIReturnShowServiceClientOptions = Record<string, unknown>;
-
-type GetShowAPIReturnShowServiceClientPlayShow = (arg0: any, arg1: any) => unknown;
 
 type GetShowAPIReturnShowServiceClientSubDecorate = (arg0: any, arg1: any) => unknown;
 
@@ -17510,6 +17997,8 @@ type GetStandalonePlayerCoordinatorAPIReturnInactivateInstance = (arg0: any) => 
 interface GetStandalonePlayerCoordinatorAPIReturnInstances {
   delete: GetStandalonePlayerCoordinatorAPIReturnInstancesDelete;
   get: GetStandalonePlayerCoordinatorAPIReturnInstancesGet;
+  getOrInsert: GetStandalonePlayerCoordinatorAPIReturnInstancesGetOrInsert;
+  getOrInsertComputed: GetStandalonePlayerCoordinatorAPIReturnInstancesGetOrInsertComputed;
   has: GetStandalonePlayerCoordinatorAPIReturnInstancesHas;
   set: GetStandalonePlayerCoordinatorAPIReturnInstancesSet;
 }
@@ -17517,6 +18006,16 @@ interface GetStandalonePlayerCoordinatorAPIReturnInstances {
 type GetStandalonePlayerCoordinatorAPIReturnInstancesDelete = (arg0: any) => unknown;
 
 type GetStandalonePlayerCoordinatorAPIReturnInstancesGet = (arg0: any) => unknown;
+
+type GetStandalonePlayerCoordinatorAPIReturnInstancesGetOrInsert = (
+  arg0: any,
+  arg1: any,
+) => unknown;
+
+type GetStandalonePlayerCoordinatorAPIReturnInstancesGetOrInsertComputed = (
+  arg0: any,
+  arg1: any,
+) => unknown;
 
 type GetStandalonePlayerCoordinatorAPIReturnInstancesHas = (arg0: any) => unknown;
 
@@ -17899,6 +18398,38 @@ type GetStandalonePlayerCoordinatorAPIReturnSetupStandalonePlayerListeners = (
   arg2: any,
 ) => unknown;
 
+type GetSuperConnectAPI = () => GetSuperConnectAPIReturn;
+
+interface GetSuperConnectAPIReturn {
+  abortAgent: GetSuperConnectAPIReturnAbortAgent;
+  bootstrapOrchestratorCredentials: GetSuperConnectAPIReturnBootstrapOrchestratorCredentials;
+  createEventSource: GetSuperConnectAPIReturnCreateEventSource;
+  createOrGetSession: GetSuperConnectAPIReturnCreateOrGetSession;
+  fetchAgentStatus: GetSuperConnectAPIReturnFetchAgentStatus;
+  fetchAgents: GetSuperConnectAPIReturnFetchAgents;
+  fetchModels: GetSuperConnectAPIReturnFetchModels;
+  sendMessage: GetSuperConnectAPIReturnSendMessage;
+  switchModel: GetSuperConnectAPIReturnSwitchModel;
+}
+
+type GetSuperConnectAPIReturnAbortAgent = (arg0: any) => unknown;
+
+type GetSuperConnectAPIReturnBootstrapOrchestratorCredentials = () => unknown;
+
+type GetSuperConnectAPIReturnCreateEventSource = (arg0: any, arg1: any) => unknown;
+
+type GetSuperConnectAPIReturnCreateOrGetSession = () => unknown;
+
+type GetSuperConnectAPIReturnFetchAgents = (arg0: any, arg1: any) => unknown;
+
+type GetSuperConnectAPIReturnFetchAgentStatus = (arg0: any) => unknown;
+
+type GetSuperConnectAPIReturnFetchModels = (arg0: any) => unknown;
+
+type GetSuperConnectAPIReturnSendMessage = (arg0: any, arg1: any, arg2: any) => unknown;
+
+type GetSuperConnectAPIReturnSwitchModel = (arg0: any, arg1: any, arg2: any) => unknown;
+
 type GetTimeKeeper = () => GetTimeKeeperReturn;
 
 interface GetTimeKeeperReturn {
@@ -18134,8 +18665,6 @@ interface GetTranslationsReturn {
   "artist-page.merch": string;
   "artist-page.popular": string;
   "artist-page.saved-by-artist": string;
-  "artist-page.saved-header": string;
-  "artist-page.saved-tracks-amount": GetTranslationsReturnArtistpageSavedtracksamount;
   "artist-page.show-discography": string;
   "artist-page.tracks.seemore": string;
   "artist-page.tracks.showless": string;
@@ -18145,6 +18674,8 @@ interface GetTranslationsReturn {
   "artist.about": string;
   "artist.albums": string;
   "artist.appears-on": string;
+  "artist.badges-modal.close": string;
+  "artist.badges-modal.title": string;
   "artist.ban-label.ban": string;
   "artist.ban-label.unban": string;
   "artist.compilations": string;
@@ -18154,6 +18685,9 @@ interface GetTranslationsReturn {
   "artist.monthly-listeners-count": GetTranslationsReturnArtistMonthlylistenerscount;
   "artist.popular-tracks": string;
   "artist.singles": string;
+  "artist.verified-by-spotify": string;
+  "artist.verified-description": string;
+  "artist.verified-description.link": string;
   "audiobook.freePriceDescription": string;
   "audiobook.freePriceExplanation": string;
   "audiobook.page.sample": string;
@@ -18173,10 +18707,13 @@ interface GetTranslationsReturn {
   "block-user.dialog.title": string;
   browse: string;
   browser_upgrade_notice: string;
+  "buddy-feed.enable-listening-activity": string;
   "buddy-feed.enable-share-listening-activity": string;
   "buddy-feed.friend-activity": string;
   "buddy-feed.let-followers-see-your-listening": string;
+  "buddy-feed.listening-activity": string;
   "buddy-feed.see-what-your-friends-are-playing": string;
+  "cannot-switch-to-video-modal.all-other-videos-turned-off": string;
   "cannot-switch-to-video-modal.disabled-by-family-manager-description": string;
   "cannot-switch-to-video-modal.music-videos-turned-off": string;
   "cannot-switch-to-video-modal.title": string;
@@ -18384,6 +18921,10 @@ interface GetTranslationsReturn {
   "contextmenu.include-in-recommendations": string;
   "contextmenu.invite-collaborators": string;
   "contextmenu.leave-playlist": string;
+  "contextmenu.looping-visuals-hide": string;
+  "contextmenu.looping-visuals-hide.feedback": string;
+  "contextmenu.looping-visuals-show": string;
+  "contextmenu.looping-visuals-show.feedback": string;
   "contextmenu.make-collaborator": string;
   "contextmenu.make-listener": string;
   "contextmenu.make-playlist-private": string;
@@ -18987,6 +19528,7 @@ interface GetTranslationsReturn {
   "keyboard.shortcuts.section.layout": string;
   "keyboard.shortcuts.section.navigation": string;
   "keyboard.shortcuts.section.playback": string;
+  "label.private": string;
   "leave-playlist.dialog.cancel": string;
   "leave-playlist.dialog.leave": string;
   "leave-playlist.dialog.private-description": string;
@@ -19244,6 +19786,7 @@ interface GetTranslationsReturn {
   "playlist.remove_from_playlist": string;
   "playlist.remove_multiple_description": string;
   "playlist.search_in_playlist": string;
+  "playlist.shelf.related-playlists": string;
   "playlist.similar-playlist": string;
   "podcast-ads.recent_ads": string;
   "podcast-ads.recent_ads_from": string;
@@ -19357,16 +19900,15 @@ interface GetTranslationsReturn {
   "settings.showTrackNotifications": string;
   "settings.videos-and-canvas.all-other-videos": string;
   "settings.videos-and-canvas.all-other-videos-description": string;
+  "settings.videos-and-canvas.all-other-videos-podcast-info": string;
   "settings.videos-and-canvas.cannot-change-setting-modal.description": string;
   "settings.videos-and-canvas.cannot-change-setting-modal.dismiss": string;
   "settings.videos-and-canvas.cannot-change-setting-modal.title": string;
   "settings.videos-and-canvas.canvas": string;
   "settings.videos-and-canvas.canvas-description": string;
-  "settings.videos-and-canvas.description": string;
   "settings.videos-and-canvas.music-videos": string;
   "settings.videos-and-canvas.music-videos-description": string;
   "settings.videos-and-canvas.title": string;
-  "settings.videos-and-canvas.video-ads-cannot-be-turned-off": string;
   "share-dialog.copied": string;
   "share-dialog.copy-link": string;
   "share-dialog.destination.email": string;
@@ -19701,6 +20243,30 @@ interface GetTranslationsReturn {
   "web-player.age-assurance.buddy-feed.title": string;
   "web-player.age-assurance.comments.verify-age": string;
   "web-player.age-assurance.confirm-age-action.title": string;
+  "web-player.age-assurance.local-flow.ask-parent-permission": string;
+  "web-player.age-assurance.local-flow.back": string;
+  "web-player.age-assurance.local-flow.blocked.body": string;
+  "web-player.age-assurance.local-flow.blocked.deactivation": GetTranslationsReturnWebplayerAgeassuranceLocalflowBlockedDeactivation;
+  "web-player.age-assurance.local-flow.blocked.deactivation-less-than-day": string;
+  "web-player.age-assurance.local-flow.blocked.deactivation-no-timestamp": string;
+  "web-player.age-assurance.local-flow.blocked.footer": string;
+  "web-player.age-assurance.local-flow.blocked.still-want-to-listen": string;
+  "web-player.age-assurance.local-flow.blocked.title": string;
+  "web-player.age-assurance.local-flow.confirm-age-with-id": string;
+  "web-player.age-assurance.local-flow.confirm-age-with-phone": string;
+  "web-player.age-assurance.local-flow.log-out": string;
+  "web-player.age-assurance.local-flow.reactivation.age-wrong": string;
+  "web-player.age-assurance.local-flow.reactivation.body": GetTranslationsReturnWebplayerAgeassuranceLocalflowReactivationBody;
+  "web-player.age-assurance.local-flow.reactivation.body-less-than-day": string;
+  "web-player.age-assurance.local-flow.reactivation.body-no-timestamp": string;
+  "web-player.age-assurance.local-flow.reactivation.footer": string;
+  "web-player.age-assurance.local-flow.reactivation.title": string;
+  "web-player.age-assurance.local-flow.scan-qr": string;
+  "web-player.age-assurance.local-flow.verify-modal.body": string;
+  "web-player.age-assurance.local-flow.verify-modal.confirm-button": string;
+  "web-player.age-assurance.local-flow.verify-modal.footer": string;
+  "web-player.age-assurance.local-flow.verify-modal.not-now": string;
+  "web-player.age-assurance.local-flow.verify-modal.title": string;
   "web-player.age-assurance.modal.scan-qr": string;
   "web-player.age-assurance.reactivation-blocking-modal.description": GetTranslationsReturnWebplayerAgeassuranceReactivationblockingmodalDescription;
   "web-player.age-assurance.reactivation-blocking-modal.description-less-than-day": string;
@@ -19760,14 +20326,11 @@ interface GetTranslationsReturn {
   "web-player.assisted-curation.add-button.remove-from-named": string;
   "web-player.assisted-curation.add-button.remove-from-playlist": string;
   "web-player.assisted-curation.audiobook.rating-label": string;
-  "web-player.assisted-curation.empty-state.subtitle": string;
-  "web-player.assisted-curation.empty-state.title": string;
   "web-player.assisted-curation.header.add-to-playlist": string;
   "web-player.assisted-curation.header.search": string;
   "web-player.assisted-curation.mixing.bpm": string;
   "web-player.assisted-curation.panel-label": string;
   "web-player.assisted-curation.preview.pause": string;
-  "web-player.assisted-curation.preview.play": string;
   "web-player.assisted-curation.preview.play-track": string;
   "web-player.assisted-curation.preview.progress-label": string;
   "web-player.assisted-curation.provider.aria-label": string;
@@ -19788,10 +20351,14 @@ interface GetTranslationsReturn {
   "web-player.assisted-curation.search-filter.audiobooks": string;
   "web-player.assisted-curation.search-filter.episodes": string;
   "web-player.assisted-curation.search-results.albums": string;
+  "web-player.assisted-curation.search-results.appears-on": string;
   "web-player.assisted-curation.search-results.aria-label": string;
   "web-player.assisted-curation.search-results.popular": string;
-  "web-player.assisted-curation.search.placeholder-audiobooks": string;
-  "web-player.assisted-curation.search.placeholder-songs": string;
+  "web-player.assisted-curation.search-results.result-count": string;
+  "web-player.assisted-curation.search-results.see-all": string;
+  "web-player.assisted-curation.search-results.see-all-label": string;
+  "web-player.assisted-curation.search-results.singles": string;
+  "web-player.assisted-curation.search.placeholder": string;
   "web-player.audiobooks.audiobook": string;
   "web-player.audiobooks.buy": string;
   "web-player.audiobooks.buyFree": string;
@@ -19932,7 +20499,11 @@ interface GetTranslationsReturn {
   "web-player.episode.transcript.disclaimer": string;
   "web-player.episode.transcript.disclaimer.creator-provided": string;
   "web-player.feedback.hidden": string;
+  "web-player.feedback.hide-in-album": string;
+  "web-player.feedback.hide-in-playlist": string;
   "web-player.feedback.hide-song": string;
+  "web-player.feedback.show-in-album": string;
+  "web-player.feedback.show-in-playlist": string;
   "web-player.feedback.track-banned-in-context": string;
   "web-player.feedback.track-banned-in-context-undo": string;
   "web-player.global-nav-bar.blend-button.subtitle": string;
@@ -20691,6 +21262,7 @@ interface GetTranslationsReturn {
   "web-player.subfeeds.home.subfeed.podcasts-following.empty-state.filtered.title": string;
   "web-player.subfeeds.home.subfeed.podcasts-following.filter-placeholder": string;
   "web-player.subfeeds.home.subfeed.podcasts-following.header": string;
+  "web-player.taste-profile.title": string;
   "web-player.user-comments.comment": string;
   "web-player.user-comments.comment-input.cancel": string;
   "web-player.user-comments.comment-input.error": string;
@@ -20766,18 +21338,13 @@ interface GetTranslationsReturn {
   "web-player.venues.venue": string;
   "web-player.video-player.video-quality": string;
   "web-player.video-player.video-quality-auto": string;
-  "web-player.video-player.video-quality-auto-with-resolution": string;
-  "web-player.video-player.video-quality-high": string;
-  "web-player.video-player.video-quality-low": string;
-  "web-player.video-player.video-quality-medium": string;
-  "web-player.video-player.video-quality-very-high": string;
-  "web-player.video-player.video-resolution-1080p": string;
-  "web-player.video-player.video-resolution-360p": string;
-  "web-player.video-player.video-resolution-480p": string;
-  "web-player.video-player.video-resolution-720p": string;
-  "web-player.video-player.video-streaming-quality": string;
+  "web-player.video-player.video-quality-auto-description": string;
+  "web-player.video-player.video-resolution-4k": string;
+  "web-player.video-player.video-resolution-8k": string;
+  "web-player.video-player.video-resolution-numeric": string;
   "web-player.video-player.video-tier-hd": string;
   "web-player.video-player.video-tier-sd": string;
+  "web-player.video-player.video-tier-ultra-hd": string;
   "web-player.watch-feed.entity-button.aria-label": string;
   "web-player.watch-feed.entity-button.label-album": string;
   "web-player.watch-feed.entity-button.label-artist": string;
@@ -20960,11 +21527,6 @@ interface GetTranslationsReturnArtistpageHowmanylisteners {
   other: string;
 }
 
-interface GetTranslationsReturnArtistpageSavedtracksamount {
-  one: string;
-  other: string;
-}
-
 interface GetTranslationsReturnChartNewentries {
   one: string;
   other: string;
@@ -21071,6 +21633,16 @@ interface GetTranslationsReturnUserPublicplaylists {
 }
 
 interface GetTranslationsReturnWebplayerAgeassuranceBlockingmodalDescription {
+  one: string;
+  other: string;
+}
+
+interface GetTranslationsReturnWebplayerAgeassuranceLocalflowBlockedDeactivation {
+  one: string;
+  other: string;
+}
+
+interface GetTranslationsReturnWebplayerAgeassuranceLocalflowReactivationBody {
   one: string;
   other: string;
 }
@@ -22462,13 +23034,19 @@ type GetTransportReturnListenersBeforeOnlineDisconnect =
 interface GetTransportReturnListenersBeforeOnlineDisconnectItem {
   listener:
     | GetTransportReturnListenersBeforeOnlineDisconnectItemListener
-    | GetTransportReturnListenersBeforeOnlineDisconnectItemListener2;
+    | GetTransportReturnListenersBeforeOnlineDisconnectItemListener2
+    | GetTransportReturnListenersBeforeOnlineDisconnectItemListener3
+    | GetTransportReturnListenersBeforeOnlineDisconnectItemListener4;
   options: GetTransportReturnListenersBeforeOnlineDisconnectItemOptions;
 }
 
 type GetTransportReturnListenersBeforeOnlineDisconnectItemListener = (arg0: any) => unknown;
 
 type GetTransportReturnListenersBeforeOnlineDisconnectItemListener2 = (arg0: any) => unknown;
+
+type GetTransportReturnListenersBeforeOnlineDisconnectItemListener3 = (arg0: any) => unknown;
+
+type GetTransportReturnListenersBeforeOnlineDisconnectItemListener4 = (arg0: any) => unknown;
 
 type GetTransportReturnListenersBeforeOnlineDisconnectItemOptions = Record<string, unknown>;
 
@@ -22490,13 +23068,19 @@ type GetTransportReturnListenersConnectionId = Array<GetTransportReturnListeners
 interface GetTransportReturnListenersConnectionIdItem {
   listener:
     | GetTransportReturnListenersConnectionIdItemListener
-    | GetTransportReturnListenersConnectionIdItemListener2;
+    | GetTransportReturnListenersConnectionIdItemListener2
+    | GetTransportReturnListenersConnectionIdItemListener3
+    | GetTransportReturnListenersConnectionIdItemListener4;
   options: GetTransportReturnListenersConnectionIdItemOptions;
 }
 
 type GetTransportReturnListenersConnectionIdItemListener = (arg0: any) => unknown;
 
 type GetTransportReturnListenersConnectionIdItemListener2 = (arg0: any) => unknown;
+
+type GetTransportReturnListenersConnectionIdItemListener3 = (arg0: any) => unknown;
+
+type GetTransportReturnListenersConnectionIdItemListener4 = (arg0: any) => unknown;
 
 type GetTransportReturnListenersConnectionIdItemOptions = Record<string, unknown>;
 
@@ -23430,7 +24014,7 @@ interface GetUBIAppStateMonitorReturnBackgroundPageCurrentPageVisitCurrentPagePr
   startTimestamp: number;
 }
 
-type GetUBIAppStateMonitorReturnBeforeMutationSnapshot = Array<string>;
+type GetUBIAppStateMonitorReturnBeforeMutationSnapshot = Array<unknown>;
 
 type GetUBIAppStateMonitorReturnCreateBackgroundPage = () => unknown;
 
@@ -23442,7 +24026,7 @@ interface GetUBIAppStateMonitorReturnCurrentAppState {
 }
 
 interface GetUBIAppStateMonitorReturnCurrentAppStateActivePages {
-  "b7125ef9-5321-4cdc-a692-6e4f0e818e96": GetUBIAppStateMonitorReturnBackgroundPage;
+  "679a6231-c259-4a10-9614-507b924b1f72": GetUBIAppStateMonitorReturnBackgroundPage;
 }
 
 type GetUBIAppStateMonitorReturnDerivePresentationGlobalId = (arg0: any, arg1: any) => unknown;
@@ -23648,22 +24232,11 @@ type GetUBILoggerReturnIncrementAppVisitIndex = () => unknown;
 
 interface GetUBILoggerReturnLastLoggedLocationByChain {
   "global-nav-bar": GetUBILoggerReturnLastLoggedLocationByChainGlobalnavbar;
-  main: GetUBILoggerReturnLastLoggedLocationByChainMain;
+  main?: unknown;
   npv: GetUBILoggerReturnLastLoggedLocationByChainNpv;
 }
 
 interface GetUBILoggerReturnLastLoggedLocationByChainGlobalnavbar {
-  isInForeground: boolean;
-  navigationReason: string;
-  navigationalRoot: null;
-  pageId: string;
-  pageInstanceId: string;
-  pageUri: null;
-  pathName: null;
-  referrerId: null;
-}
-
-interface GetUBILoggerReturnLastLoggedLocationByChainMain {
   isInForeground: boolean;
   navigationReason: string;
   navigationalRoot: null;
@@ -24187,7 +24760,7 @@ type GetUpdateAPIReturnApplyUpdate = () => Promise<unknown>;
 
 type GetUpdateAPIReturnGetVersionInfo = () => Promise<unknown>;
 
-type GetUpdateAPIReturnPrepareUpdate = () => Promise<unknown>;
+type GetUpdateAPIReturnPrepareUpdate = (arg0: any) => Promise<unknown>;
 
 type GetUpdateAPIReturnSubscribe = (arg0: any) => unknown;
 
@@ -24229,12 +24802,37 @@ type GetUrlDispenserServiceClientReturnGetShortUrl = (arg0: any, arg1: any) => P
 type GetUserAPI = () => GetUserAPIReturn;
 
 interface GetUserAPIReturn {
-  _cosmos: GetCosmosReturn;
+  _loginClient: GetUserAPIReturnLoginClient;
   _profileServiceClient: GetUserAPIReturnProfileServiceClient;
   getUser: GetUserAPIReturnGetUser;
 }
 
 type GetUserAPIReturnGetUser = () => Promise<unknown>;
+
+interface GetUserAPIReturnLoginClient {
+  approveConnectLogin: GetUserAPIReturnLoginClientApproveConnectLogin;
+  getSessionState: GetUserAPIReturnLoginClientGetSessionState;
+  loginWithAccounts: GetUserAPIReturnLoginClientLoginWithAccounts;
+  loginWithConnect: GetUserAPIReturnLoginClientLoginWithConnect;
+  loginWithQRCode: GetUserAPIReturnLoginClientLoginWithQRCode;
+  logout: GetUserAPIReturnLoginClientLogout;
+  options: GetUserAPIReturnLoginClientOptions;
+  transport: GetEsperantoTransportReturn;
+}
+
+type GetUserAPIReturnLoginClientApproveConnectLogin = (arg0: any, arg1: any) => unknown;
+
+type GetUserAPIReturnLoginClientGetSessionState = (arg0: any, arg1: any) => unknown;
+
+type GetUserAPIReturnLoginClientLoginWithAccounts = (arg0: any, arg1: any) => unknown;
+
+type GetUserAPIReturnLoginClientLoginWithConnect = (arg0: any, arg1: any) => unknown;
+
+type GetUserAPIReturnLoginClientLoginWithQRCode = (arg0: any, arg1: any) => unknown;
+
+type GetUserAPIReturnLoginClientLogout = (arg0: any, arg1: any) => unknown;
+
+type GetUserAPIReturnLoginClientOptions = Record<string, unknown>;
 
 interface GetUserAPIReturnProfileServiceClient {
   changeDisplayName: GetUserAPIReturnProfileServiceClientChangeDisplayName;
@@ -24301,9 +24899,11 @@ interface GetVideoAPIReturn {
   _hasMinimizeBitrateSupport: boolean;
   _hasPipSupport: boolean;
   _hasSubtitleSupport: boolean;
+  _lastQualityState: GetVideoAPIReturnLastQualityState;
   _pendingEventsService: GetVideoAPIReturnPendingEventsService;
   _pictureInPictureState: boolean;
   _playbackAPI: GetPlaybackAPIReturn;
+  _player: GetVideoAPIReturnPlayer;
   _prefsClient: GetVideoAPIReturnPrefsClient;
   _remoteConfigDebugAPI: GetRemoteConfigDebugAPIReturn;
   _resolver: GetRemoteConfigurationWithLocalOverridesReturn;
@@ -24313,22 +24913,25 @@ interface GetVideoAPIReturn {
   _videoCoordinator: GetVideoAPIReturnVideoCoordinator;
   createCoreExtensionVideoCoordinator: GetVideoAPIReturnCreateCoreExtensionVideoCoordinator;
   createLogging: GetVideoAPIReturnCreateLogging;
+  emitVideoQualityState: GetVideoAPIReturnEmitVideoQualityState;
   getCapabilities: GetVideoAPIReturnGetCapabilities;
   getEvents: GetVideoAPIReturnGetEvents;
   getPictureInPictureState: GetVideoAPIReturnGetPictureInPictureState;
   getPreferredSubtitleLanguage: GetVideoAPIReturnGetPreferredSubtitleLanguage;
+  getQuality: GetVideoAPIReturnGetQuality;
   getSeekPanels: GetVideoAPIReturnGetSeekPanels;
   getSubtitleLanguages: GetVideoAPIReturnGetSubtitleLanguages;
   initialize: GetVideoAPIReturnInitialize;
   onManifestLoaded: GetVideoAPIReturnOnManifestLoaded;
   onPictureInPictureChanged: GetVideoAPIReturnOnPictureInPictureChanged;
+  optimisticallyUpdateQuality: GetVideoAPIReturnOptimisticallyUpdateQuality;
   reportVideoMode: GetVideoAPIReturnReportVideoMode;
   setFullscreen: GetVideoAPIReturnSetFullscreen;
   setIsVideoVisible: GetVideoAPIReturnSetIsVideoVisible;
   setPip: GetVideoAPIReturnSetPip;
   setPreferredSubtitleLanguage: GetVideoAPIReturnSetPreferredSubtitleLanguage;
+  setQuality: GetVideoAPIReturnSetQuality;
   setSubtitleLanguages: GetVideoAPIReturnSetSubtitleLanguages;
-  setVideoQualityLevel: GetVideoAPIReturnSetVideoQualityLevel;
   setWindow: GetVideoAPIReturnSetWindow;
   videoModeToSurface: GetVideoAPIReturnVideoModeToSurface;
 }
@@ -24364,6 +24967,8 @@ type GetVideoAPIReturnConnectVolumeServiceVolumeUp = (arg0: any, arg1: any) => u
 type GetVideoAPIReturnCreateCoreExtensionVideoCoordinator = () => Promise<unknown>;
 
 type GetVideoAPIReturnCreateLogging = () => Promise<unknown>;
+
+type GetVideoAPIReturnEmitVideoQualityState = (arg0: any) => unknown;
 
 interface GetVideoAPIReturnEvents {
   _emitter: GetVideoAPIReturnEventsEmitter;
@@ -24478,15 +25083,27 @@ type GetVideoAPIReturnGetPictureInPictureState = () => unknown;
 
 type GetVideoAPIReturnGetPreferredSubtitleLanguage = () => Promise<unknown>;
 
+type GetVideoAPIReturnGetQuality = () => unknown;
+
 type GetVideoAPIReturnGetSeekPanels = () => unknown;
 
 type GetVideoAPIReturnGetSubtitleLanguages = () => Promise<unknown>;
 
 type GetVideoAPIReturnInitialize = () => Promise<unknown>;
 
+interface GetVideoAPIReturnLastQualityState {
+  available: GetVideoAPIReturnLastQualityStateAvailable;
+  current: null;
+  selected: string;
+}
+
+type GetVideoAPIReturnLastQualityStateAvailable = Array<unknown>;
+
 type GetVideoAPIReturnOnManifestLoaded = (arg0: any) => unknown;
 
 type GetVideoAPIReturnOnPictureInPictureChanged = (arg0: any) => unknown;
+
+type GetVideoAPIReturnOptimisticallyUpdateQuality = (arg0: any) => unknown;
 
 interface GetVideoAPIReturnPendingEventsService {
   addPendingEvent: GetVideoAPIReturnPendingEventsServiceAddPendingEvent;
@@ -24503,6 +25120,74 @@ type GetVideoAPIReturnPendingEventsServiceCommitPendingEvent = (arg0: any, arg1:
 type GetVideoAPIReturnPendingEventsServiceOptions = Record<string, unknown>;
 
 type GetVideoAPIReturnPendingEventsServiceReplacePendingEvent = (arg0: any, arg1: any) => unknown;
+
+interface GetVideoAPIReturnPlayer {
+  _autoActivateElement: boolean;
+  _dispatchFromStore: GetTransportReturnDispatchFromStore;
+  _emitStateChanged: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerEmitStateChanged;
+  _init: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerInit;
+  _listPlayer: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayer;
+  _listeners: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListeners;
+  _metaListeners: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerMetaListeners;
+  _playerPromise: Promise<unknown>;
+  _transport: GetTransportReturn;
+  activateElement: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerActivateElement;
+  activateSubtitleEvents: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerActivateSubtitleEvents;
+  addListener: GetTransportReturnAddListener;
+  addListeners: GetTransportReturnAddListeners;
+  areSubtitlesShown: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerAreSubtitlesShown;
+  createEvent: GetTransportReturnCreateEvent;
+  deactivateSubtitleEvents: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerDeactivateSubtitleEvents;
+  emit: GetTransportReturnEmit;
+  emitAndWait: GetTransportReturnEmitAndWait;
+  emitEvent: GetTransportReturnEmitEvent;
+  emitEventAndWait: GetTransportReturnEmitEventAndWait;
+  emitEventSync: GetTransportReturnEmitEventSync;
+  emitSync: GetTransportReturnEmitSync;
+  getActiveSubtitleLanguage: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetActiveSubtitleLanguage;
+  getCurrentState: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetCurrentState;
+  getMediaConfig: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetMediaConfig;
+  getPlayerVisibility: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetPlayerVisibility;
+  getSeekPanels: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetSeekPanels;
+  getState: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetState;
+  getSubtitleLanguages: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetSubtitleLanguages;
+  getVideoProfiles: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetVideoProfiles;
+  getVolume: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetVolume;
+  hideSubtitles: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerHideSubtitles;
+  nextTrack: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerNextTrack;
+  on: GetTransportReturnOn;
+  onAddListener: GetTransportReturnOnAddListener;
+  onRemoveListener: GetTransportReturnOnRemoveListener;
+  once: GetTransportReturnOnce;
+  pause: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerPause;
+  playList: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerPlayList;
+  playTracks: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerPlayTracks;
+  preloadTrack: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerPreloadTrack;
+  previousTrack: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerPreviousTrack;
+  proxyEmit: GetTransportReturnProxyEmit;
+  proxyEmitAll: GetTransportReturnProxyEmitAll;
+  proxyEmitAllSync: GetTransportReturnProxyEmitAllSync;
+  proxyEmitSync: GetTransportReturnProxyEmitSync;
+  removeAllListeners: GetEventSenderReturnRemoveAllListeners;
+  removeListener: GetTransportReturnRemoveListener;
+  removeListeners: GetTransportReturnRemoveListeners;
+  resolveTrack: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerResolveTrack;
+  resume: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerResume;
+  seek: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSeek;
+  setIsVideoVisible: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetIsVideoVisible;
+  setMediaPlaybackMode: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetMediaPlaybackMode;
+  setMediaPlaybackQuality: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetMediaPlaybackQuality;
+  setMuted: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetMuted;
+  setPlaybackSpeed: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetPlaybackSpeed;
+  setPlayerVisibility: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetPlayerVisibility;
+  setSubtitleLanguage: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetSubtitleLanguage;
+  setVideoResolution: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetVideoResolution;
+  setVideoSurface: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetVideoSurface;
+  setVolume: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetVolume;
+  showSubtitles: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerShowSubtitles;
+  stop: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerStop;
+  togglePlay: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerTogglePlay;
+}
 
 interface GetVideoAPIReturnPrefsClient {
   create: GetEqualizerAPIReturnPrefsCreate;
@@ -24527,9 +25212,9 @@ type GetVideoAPIReturnSetPip = (arg0: any) => unknown;
 
 type GetVideoAPIReturnSetPreferredSubtitleLanguage = (arg0: any) => Promise<unknown>;
 
-type GetVideoAPIReturnSetSubtitleLanguages = (arg0: any) => unknown;
+type GetVideoAPIReturnSetQuality = (arg0: any) => unknown;
 
-type GetVideoAPIReturnSetVideoQualityLevel = (arg0: any) => unknown;
+type GetVideoAPIReturnSetSubtitleLanguages = (arg0: any) => unknown;
 
 type GetVideoAPIReturnSetWindow = (arg0: any) => unknown;
 
@@ -25107,7 +25792,6 @@ interface GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerL
   REBUFFERING_END: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersREBUFFERINGEND;
   REBUFFERING_START: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersREBUFFERINGSTART;
   SEEKING: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersSEEKING;
-  SEEK_PANELS_LOADED: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersSEEKPANELSLOADED;
   SPEED_CHANGED: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersSPEEDCHANGED;
   STATE_CHANGED: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersSTATECHANGED;
   STOPPED: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersSTOPPED;
@@ -25308,20 +25992,6 @@ interface GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerL
 type GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersSEEKINGItemOptions =
   Record<string, unknown>;
 
-type GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersSEEKPANELSLOADED =
-  Array<GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersSEEKPANELSLOADEDItem>;
-
-interface GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersSEEKPANELSLOADEDItem {
-  listener: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersSEEKPANELSLOADEDItemListener;
-  options: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersSEEKPANELSLOADEDItemOptions;
-}
-
-type GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersSEEKPANELSLOADEDItemListener =
-  (arg0: any) => unknown;
-
-type GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersSEEKPANELSLOADEDItemOptions =
-  Record<string, unknown>;
-
 type GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersSPEEDCHANGED =
   Array<GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListenersSPEEDCHANGEDItem>;
 
@@ -25434,9 +26104,11 @@ interface GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerL
   _handlePlayedThresholdReached: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPlayerHandlePlayedThresholdReached;
   _handlePlayerInitError: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPlayerHandlePlayerInitError;
   _handlePlaying: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPlayerHandlePlaying;
+  _handlePlayingProfileChanged: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPlayerHandlePlayingProfileChanged;
   _handlePositionChanged: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPlayerHandlePositionChanged;
   _handleProgress: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPlayerHandleProgress;
   _handleResumeFulfilled: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPlayerHandleResumeFulfilled;
+  _handleSeeking: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPlayerHandleSeeking;
   _handleSpeedChanged: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPlayerHandleSpeedChanged;
   _handleTimeout: GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPlayerHandleTimeout;
   _handleTrackLoaded: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandleTrackLoaded;
@@ -25563,6 +26235,9 @@ type GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPl
 type GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPlayerHandlePlaying =
   (arg0: any) => unknown;
 
+type GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPlayerHandlePlayingProfileChanged =
+  (arg0: any) => unknown;
+
 type GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPlayerHandlePositionChanged =
   (arg0: any) => unknown;
 
@@ -25570,6 +26245,9 @@ type GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPl
   (arg0: any) => unknown;
 
 type GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPlayerHandleResumeFulfilled =
+  (arg0: any) => unknown;
+
+type GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPlayerHandleSeeking =
   (arg0: any) => unknown;
 
 type GetVideoAPIReturnVideoCoordinatorPlayerRouterAdPlayerStandalonePlayerListPlayerHandleSpeedChanged =
@@ -26515,7 +27193,7 @@ interface GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayer {
   _onStateChanged: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerOnStateChanged;
   _parseMarker: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerParseMarker;
   _playerAvailable: boolean;
-  _standalonePlayer: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayer;
+  _standalonePlayer: GetVideoAPIReturnPlayer;
   getCurrentState: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerGetCurrentState;
   getEventBridge: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerGetEventBridge;
   getMediaElement: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerGetMediaElement;
@@ -26569,7 +27247,7 @@ interface GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerCoreVideoPlayer
   _sendPlaybackError: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerCoreVideoPlayerReporterSendPlaybackError;
   _sendPlaybackState: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerCoreVideoPlayerReporterSendPlaybackState;
   _sendPlaybackStatePayload: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerCoreVideoPlayerReporterSendPlaybackStatePayload;
-  _standalonePlayer: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayer;
+  _standalonePlayer: GetVideoAPIReturnPlayer;
   _streamingType: string;
   _suppressResumeActiveState: boolean;
   captureFormerPosition: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerCoreVideoPlayerReporterCaptureFormerPosition;
@@ -26834,74 +27512,6 @@ type GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerSetWindow = (arg0: a
 type GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerShowNode = () => unknown;
 
 type GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerShowSubtitles = () => unknown;
-
-interface GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayer {
-  _autoActivateElement: boolean;
-  _dispatchFromStore: GetTransportReturnDispatchFromStore;
-  _emitStateChanged: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerEmitStateChanged;
-  _init: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerInit;
-  _listPlayer: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayer;
-  _listeners: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListeners;
-  _metaListeners: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerMetaListeners;
-  _playerPromise: Promise<unknown>;
-  _transport: GetTransportReturn;
-  activateElement: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerActivateElement;
-  activateSubtitleEvents: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerActivateSubtitleEvents;
-  addListener: GetTransportReturnAddListener;
-  addListeners: GetTransportReturnAddListeners;
-  areSubtitlesShown: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerAreSubtitlesShown;
-  createEvent: GetTransportReturnCreateEvent;
-  deactivateSubtitleEvents: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerDeactivateSubtitleEvents;
-  emit: GetTransportReturnEmit;
-  emitAndWait: GetTransportReturnEmitAndWait;
-  emitEvent: GetTransportReturnEmitEvent;
-  emitEventAndWait: GetTransportReturnEmitEventAndWait;
-  emitEventSync: GetTransportReturnEmitEventSync;
-  emitSync: GetTransportReturnEmitSync;
-  getActiveSubtitleLanguage: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetActiveSubtitleLanguage;
-  getCurrentState: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetCurrentState;
-  getMediaConfig: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetMediaConfig;
-  getPlayerVisibility: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetPlayerVisibility;
-  getSeekPanels: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetSeekPanels;
-  getState: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetState;
-  getSubtitleLanguages: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetSubtitleLanguages;
-  getVideoProfiles: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetVideoProfiles;
-  getVolume: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerGetVolume;
-  hideSubtitles: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerHideSubtitles;
-  nextTrack: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerNextTrack;
-  on: GetTransportReturnOn;
-  onAddListener: GetTransportReturnOnAddListener;
-  onRemoveListener: GetTransportReturnOnRemoveListener;
-  once: GetTransportReturnOnce;
-  pause: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerPause;
-  playList: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerPlayList;
-  playTracks: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerPlayTracks;
-  preloadTrack: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerPreloadTrack;
-  previousTrack: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerPreviousTrack;
-  proxyEmit: GetTransportReturnProxyEmit;
-  proxyEmitAll: GetTransportReturnProxyEmitAll;
-  proxyEmitAllSync: GetTransportReturnProxyEmitAllSync;
-  proxyEmitSync: GetTransportReturnProxyEmitSync;
-  removeAllListeners: GetEventSenderReturnRemoveAllListeners;
-  removeListener: GetTransportReturnRemoveListener;
-  removeListeners: GetTransportReturnRemoveListeners;
-  resolveTrack: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerResolveTrack;
-  resume: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerResume;
-  seek: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSeek;
-  setIsVideoVisible: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetIsVideoVisible;
-  setMediaPlaybackMode: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetMediaPlaybackMode;
-  setMediaPlaybackQuality: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetMediaPlaybackQuality;
-  setMuted: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetMuted;
-  setPlaybackSpeed: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetPlaybackSpeed;
-  setPlayerVisibility: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetPlayerVisibility;
-  setSubtitleLanguage: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetSubtitleLanguage;
-  setVideoResolution: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetVideoResolution;
-  setVideoSurface: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetVideoSurface;
-  setVolume: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerSetVolume;
-  showSubtitles: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerShowSubtitles;
-  stop: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerStop;
-  togglePlay: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerTogglePlay;
-}
 
 type GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerActivateElement =
   () => unknown;
@@ -27202,11 +27812,15 @@ type GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerList
 interface GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListenersSTATECHANGEDItem {
   listener:
     | GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListenersSTATECHANGEDItemListener
-    | GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerCoreVideoPlayerReporterListenersSTATECHANGED;
+    | GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerCoreVideoPlayerReporterListenersSTATECHANGED
+    | GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListenersSTATECHANGEDItemListener2;
   options: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListenersSTATECHANGEDItemOptions;
 }
 
 type GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListenersSTATECHANGEDItemListener =
+  (arg0: any) => unknown;
+
+type GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListenersSTATECHANGEDItemListener2 =
   (arg0: any) => unknown;
 
 type GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListenersSTATECHANGEDItemOptions =
@@ -27297,9 +27911,11 @@ interface GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlaye
   _handlePlayedThresholdReached: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandlePlayedThresholdReached;
   _handlePlayerInitError: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandlePlayerInitError;
   _handlePlaying: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandlePlaying;
+  _handlePlayingProfileChanged: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandlePlayingProfileChanged;
   _handlePositionChanged: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandlePositionChanged;
   _handleProgress: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandleProgress;
   _handleResumeFulfilled: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandleResumeFulfilled;
+  _handleSeeking: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandleSeeking;
   _handleSpeedChanged: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandleSpeedChanged;
   _handleTimeout: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandleTimeout;
   _handleTrackLoaded: GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandleTrackLoaded;
@@ -27498,6 +28114,9 @@ type GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerList
 type GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandlePlaying =
   (arg0: any) => unknown;
 
+type GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandlePlayingProfileChanged =
+  (arg0: any) => unknown;
+
 type GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandlePositionChanged =
   (arg0: any) => unknown;
 
@@ -27505,6 +28124,9 @@ type GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerList
   (arg0: any) => unknown;
 
 type GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandleResumeFulfilled =
+  (arg0: any) => unknown;
+
+type GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandleSeeking =
   (arg0: any) => unknown;
 
 type GetVideoAPIReturnVideoCoordinatorPlayerRouterMainPlayerStandalonePlayerListPlayerHandleSpeedChanged =
@@ -28739,6 +29361,7 @@ interface InitialProductState {
   "enable-crossfade": string;
   "estimated-age": string;
   "explicit-content": string;
+  "fdks-engange": string;
   "filter-explicit-content": string;
   "financial-product": string;
   "has-audiobooks-subscription": string;
@@ -28763,8 +29386,10 @@ interface InitialProductState {
   libspotify: string;
   "license-agreements": string;
   "list-private-by-default": string;
+  "listening-activity": string;
   "market-portfolio-type": string;
   "metadata-link-lookup-modes": string;
+  "mixing-fx-looping-jogwheel": string;
   "mixing-tools": string;
   mobile: string;
   "nft-disabled": string;
@@ -28804,6 +29429,7 @@ interface InitialProductState {
   "smart-shuffle": string;
   "social-session": string;
   "social-session-free-tier": string;
+  "speed-control": string;
   "storage-size-config": string;
   streaming: string;
   "streaming-only-premium": string;

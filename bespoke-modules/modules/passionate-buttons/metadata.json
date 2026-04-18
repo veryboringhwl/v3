@@ -1,18 +1,14 @@
 {
-	"name": "passionate-buttons",
-	"tags": [
-		"extension"
-	],
-	"preview": "./assets/PREVIEW.png",
-	"version": "0.1.3",
-	"authors": [
-		"Delusoire"
-	],
-	"description": "❤️‍🔥",
-	"readme": "./assets/README.md",
-	"entries": {
-		"js": "index.js"
-	},
-	"hasMixins": true,
-	"dependencies": {}
+  "name": "passionate-buttons",
+  "tags": ["extension"],
+  "preview": "./assets/PREVIEW.png",
+  "version": "0.1.3",
+  "authors": ["Delusoire"],
+  "description": "❤️‍🔥",
+  "readme": "./assets/README.md",
+  "entries": {
+    "js": "index.js"
+  },
+  "hasMixins": true,
+  "dependencies": {}
 }

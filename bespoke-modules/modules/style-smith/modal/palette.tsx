@@ -1,12 +1,11 @@
+// @deno-types="npm:react-colorful"
+import { HexAlphaColorPicker } from "https://esm.sh/react-colorful?deps=react@18.3.1,react-dom@18.3.1";
 import { startCase } from "/modules/stdlib/deps.ts";
 import { React } from "/modules/stdlib/src/expose/React.ts";
 import { Color } from "/modules/stdlib/src/webpack/misc.ts";
 import { ContextMenu } from "/modules/stdlib/src/webpack/ReactComponents.xpui.ts";
-
-// @deno-types="npm:react-colorful"
-import { HexAlphaColorPicker } from "https://esm.sh/react-colorful?deps=react@18.3.1,react-dom@18.3.1";
-import { DarkLightPair, Palette, type PaletteManager } from "../src/palette.ts";
-import { ColorSet, FlatColorScheme, ThemeType } from "../src/webpack.ts";
+import type { DarkLightPair, Palette, PaletteManager } from "../src/palette.ts";
+import type { ColorSet, FlatColorScheme, ThemeType } from "../src/webpack.ts";
 import { useSyncedState } from "./hooks.ts";
 
 // import { HexAlphaColorPicker } from "https://esm.sh/vanilla-colorful/hex-alpha-color-picker.js";
@@ -25,135 +24,139 @@ import { useSyncedState } from "./hooks.ts";
 // });
 
 export interface PaletteColorSetsProps {
-	palette: Palette;
-	paletteManager: PaletteManager;
+  palette: Palette;
+  paletteManager: PaletteManager;
 }
 export const PaletteColorSets = ({ palette, paletteManager }: PaletteColorSetsProps) => {
-	const [selectedSet, selectSet] = React.useState<ColorSet>("base");
+  const [selectedSet, selectSet] = React.useState<ColorSet>("base");
 
-	const colorThemes = palette.data.getColors();
-	const sets = Object.keys(colorThemes) as ColorSet[];
+  const colorThemes = palette.data.getColors();
+  const sets = Object.keys(colorThemes) as ColorSet[];
 
-	const selectedScheme = colorThemes[selectedSet];
+  const selectedScheme = colorThemes[selectedSet];
 
-	return (
-		<div className="flex flex-col h-full">
-			<div className="flex flex-row overflow-x-auto flex-shrink-0" style={{ scrollbarWidth: "thin" }}>
-				{sets.map((set) => (
-					<button
-						key={set}
-						className={`${set === selectedSet ? "bg-green-500" : "bg-transparent"} px-2 py-1 rounded-md`}
-						onClick={() => selectSet(set)}
-					>
-						{startCase(set)}
-					</button>
-				))}
-			</div>
-			<div className="palette__color-attributes bg-[var(--secondary-bg)] p-[var(--gap-primary)] rounded-[var(--border-radius)] flex-grow min-h-0">
-				<div className="flex flex-col flex-nowrap overflow-y-auto gap-y-1 gap-x-[var(--gap-secondary)] h-full">
-					{Object.entries(selectedScheme).map(([attribute, colors]) => (
-						<PaletteColorAttribute
-							set={selectedSet}
-							colors={colors}
-							attribute={attribute as keyof FlatColorScheme}
-							palette={palette}
-							paletteManager={paletteManager}
-						/>
-					))}
-				</div>
-			</div>
-		</div>
-	);
+  return (
+    <div className="flex flex-col h-full">
+      <div
+        className="flex flex-row overflow-x-auto flex-shrink-0"
+        style={{ scrollbarWidth: "thin" }}
+      >
+        {sets.map((set) => (
+          <button
+            className={`${set === selectedSet ? "bg-green-500" : "bg-transparent"} px-2 py-1 rounded-md`}
+            key={set}
+            onClick={() => selectSet(set)}
+          >
+            {startCase(set)}
+          </button>
+        ))}
+      </div>
+      <div className="palette__color-attributes bg-[var(--secondary-bg)] p-[var(--gap-primary)] rounded-[var(--border-radius)] flex-grow min-h-0">
+        <div className="flex flex-col flex-nowrap overflow-y-auto gap-y-1 gap-x-[var(--gap-secondary)] h-full">
+          {Object.entries(selectedScheme).map(([attribute, colors]) => (
+            <PaletteColorAttribute
+              attribute={attribute as keyof FlatColorScheme}
+              colors={colors}
+              palette={palette}
+              paletteManager={paletteManager}
+              set={selectedSet}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export interface PaletteColorAttributeProps {
-	set: ColorSet;
-	attribute: keyof FlatColorScheme;
-	colors: DarkLightPair<Color>;
-	palette: Palette;
-	paletteManager: PaletteManager;
+  set: ColorSet;
+  attribute: keyof FlatColorScheme;
+  colors: DarkLightPair<Color>;
+  palette: Palette;
+  paletteManager: PaletteManager;
 }
 export const PaletteColorAttribute = (props: PaletteColorAttributeProps) => {
-	return (
-		<div className="palette__color-attribute flex items-center justify-between">
-			<label>{startCase(props.attribute)}</label>
-			<div className="color-set__color-inputs flex gap-[var(--gap-primary)] items-center">
-				<>
-					<PaletteColorInput
-						type={"dark"}
-						set={props.set}
-						attribute={props.attribute}
-						color={props.colors.dark}
-						palette={props.palette}
-						paletteManager={props.paletteManager}
-					/>
-					<PaletteColorInput
-						type={"light"}
-						set={props.set}
-						attribute={props.attribute}
-						color={props.colors.light}
-						palette={props.palette}
-						paletteManager={props.paletteManager}
-					/>
-				</>
-			</div>
-		</div>
-	);
+  return (
+    <div className="palette__color-attribute flex items-center justify-between">
+      <label>{startCase(props.attribute)}</label>
+      <div className="color-set__color-inputs flex gap-[var(--gap-primary)] items-center">
+        <PaletteColorInput
+          attribute={props.attribute}
+          color={props.colors.dark}
+          palette={props.palette}
+          paletteManager={props.paletteManager}
+          set={props.set}
+          type={"dark"}
+        />
+        <PaletteColorInput
+          attribute={props.attribute}
+          color={props.colors.light}
+          palette={props.palette}
+          paletteManager={props.paletteManager}
+          set={props.set}
+          type={"light"}
+        />
+      </div>
+    </div>
+  );
 };
 
 export interface PaletteColorInputProps {
-	type: ThemeType;
-	set: ColorSet;
-	attribute: keyof FlatColorScheme;
-	color: Color;
-	palette: Palette;
-	paletteManager: PaletteManager;
+  type: ThemeType;
+  set: ColorSet;
+  attribute: keyof FlatColorScheme;
+  color: Color;
+  palette: Palette;
+  paletteManager: PaletteManager;
 }
 export const PaletteColorInput = (props: PaletteColorInputProps) => {
-	const passedColor = props.color.toCSS(Color.Format.HEXA) as string;
-	// const initialColor = React.useRef(passedColor);
-	const [color, setColor] = useSyncedState(passedColor);
+  const passedColor = props.color.toCSS(Color.Format.HEXA) as string;
+  // const initialColor = React.useRef(passedColor);
+  const [color, setColor] = useSyncedState(passedColor);
 
-	const onChange = React.useCallback((newColor: string) => {
-		setColor(newColor);
+  const onChange = React.useCallback(
+    (newColor: string) => {
+      setColor(newColor);
 
-		let color: Color;
-		try {
-			color = Color.fromHex(newColor);
-		} catch (_) {}
-		if (!color) {
-			return;
-		}
+      let color: Color;
+      try {
+        color = Color.fromHex(newColor);
+      } catch (_) {}
+      if (!color) {
+        return;
+      }
 
-		props.palette.data.setColor(props.type, props.set, props.attribute, color);
+      props.palette.data.setColor(props.type, props.set, props.attribute, color);
 
-		props.paletteManager.save(props.palette);
+      props.paletteManager.save(props.palette);
 
-		if (props.paletteManager.isActive(props.palette)) {
-			props.paletteManager.applyActive();
-		}
-	}, [props.palette, props.attribute, props.set]);
+      if (props.paletteManager.isActive(props.palette)) {
+        props.paletteManager.applyActive();
+      }
+    },
+    [props.palette, props.attribute, props.set],
+  );
 
-	return (
-		<div className="color-set__color-input flex items-center bg-[var(--color-input-bg)] rounded-[var(--border-radius)] h-8 w-28">
-			<ContextMenu
-				menu={
-					// <ColorPicker color={color} onEventColorChanged={(e) => onChange(e.detail.value)} />
-					<HexAlphaColorPicker color={passedColor} onChange={onChange} />
-				}
-			>
-				<input
-					className="color-input__picker bg-transparent border-none h-8 w-8 p-2 cursor-pointer"
-					type="color"
-					value={color.slice(0, 7)}
-				/>
-			</ContextMenu>
-			<input
-				className="color-input__text bg-transparent border-none w-20 p-2"
-				type="text"
-				value={color}
-				onChange={(e) => onChange(e.target.value)}
-			/>
-		</div>
-	);
+  return (
+    <div className="color-set__color-input flex items-center bg-[var(--color-input-bg)] rounded-[var(--border-radius)] h-8 w-28">
+      <ContextMenu
+        menu={
+          // <ColorPicker color={color} onEventColorChanged={(e) => onChange(e.detail.value)} />
+          <HexAlphaColorPicker color={passedColor} onChange={onChange} />
+        }
+      >
+        <input
+          className="color-input__picker bg-transparent border-none h-8 w-8 p-2 cursor-pointer"
+          type="color"
+          value={color.slice(0, 7)}
+        />
+      </ContextMenu>
+      <input
+        className="color-input__text bg-transparent border-none w-20 p-2"
+        onChange={(e) => onChange(e.target.value)}
+        type="text"
+        value={color}
+      />
+    </div>
+  );
 };

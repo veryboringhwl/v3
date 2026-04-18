@@ -10,6 +10,6 @@ const { createSchemer } = await import("./src/index.ts");
 
 const registrar = createRegistrar(module);
 registrar.register("topbarLeftButton", React.createElement(EditButton));
-const schemer = createSchemer(module);
+const _schemer = createSchemer(module);
 
 promise.resolve();
