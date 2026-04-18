@@ -23,14 +23,6 @@
           "providers": []
         }
       }
-    },
-    "test": {
-      "v": {
-        "0.1.0": {
-          "artifacts": [],
-          "providers": []
-        }
-      }
     }
   }
 }
