@@ -1,10 +1,10 @@
 {
-  "name": "adblockify",
-  "description": "Disable ads and other annoying elements and enjoy few premium features in Spotify",
-  "authors": ["ririxi"],
-  "tags": ["ad", "block", "disable"],
+  "name": "adblock",
+  "description": "Disable ads",
+  "authors": ["veryboringhwl"],
+  "tags": ["extension", "adblock", "ads"],
   "version": "0.1.0",
-  "readme": "./README.md",
+  "readme": "./assets/README.md",
   "preview": "./assets/preview.png",
   "entries": {
     "js": "index.js",

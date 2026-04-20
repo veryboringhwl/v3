@@ -19,8 +19,8 @@
   },
   "tasks": {
     "cm:fetch": "cargo run --release --manifest-path build/Cargo.toml -- classmap-fetch",
-    "pw:build": "./scripts/build.ps1",
-    "pw:watch": "./scripts/watch.ps1",
+    "pw:build": "cargo run --release --manifest-path build/Cargo.toml -- build-release",
+    "pw:watch": "cargo run --release --manifest-path build/Cargo.toml --",
     "pw:enable": "./scripts/enable.ps1",
     "pw:disable": "./scripts/disable.ps1",
     "build:release": "cargo run --release --manifest-path build/Cargo.toml -- build-release",

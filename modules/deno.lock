@@ -10,6 +10,7 @@
     "jsr:@std/path@1.0.0-rc.2": "1.0.0-rc.2",
     "jsr:@std/path@1.1.4": "1.1.4",
     "jsr:@std/path@^1.1.3": "1.1.4",
+    "npm:@biomejs/biome@*": "2.4.10",
     "npm:@biomejs/biome@^2.4.10": "2.4.10",
     "npm:@swc/core@*": "1.15.24",
     "npm:@swc/core@1.15.24": "1.15.24",

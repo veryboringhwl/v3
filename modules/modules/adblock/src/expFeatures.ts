@@ -1,14 +1,20 @@
-import { localStorage } from "../mod.ts";
+import { Platform } from "/modules/stdlib/src/expose/Platform.ts";
+import { localStorageApi } from "../mod.ts";
 
-export const configureExpFeatures = () => {
-  const expFeatures = localStorage.getItem<{ [key: string]: unknown }>("remote-config-overrides");
+export const configureExpFeatures = async () => {
+  const expFeatures = localStorageApi.getItem("remote-config-overrides");
   if (!expFeatures) return;
 
   const overrides = {
     ...expFeatures,
-    enableEsperantoMigration: true,
-    enableInAppMessaging: false,
+    enableInAppMessaging: true,
     hideUpgradeCTA: true,
+    enablePremiumUserForMiniPlayer: true,
   };
-  localStorage.setItem("remote-config-overrides", overrides);
+  localStorageApi.setItem("remote-config-overrides", overrides);
+  const RemoteConfigDebugAPI = Platform.getRemoteConfigDebugAPI();
+
+  for (const [key, value] of Object.entries(overrides)) {
+    await RemoteConfigDebugAPI.setOverride({ source: "web", type: "boolean", name: key }, value);
+  }
 };

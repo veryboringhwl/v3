@@ -255,9 +255,10 @@ impl<'a> ModuleSpecifierRewriter<'a> {
         }
 
         if self.dev && rewritten.starts_with("/modules/") {
+            let import_path = trim_query_and_fragment(&rewritten);
             if let Some(resolver) = self.timestamp_resolver {
-                if let Some(ts) = resolver.resolve(&rewritten)? {
-                    rewritten = format!("{rewritten}?t={ts}");
+                if let Some(ts) = resolver.resolve(import_path)? {
+                    rewritten = format!("{import_path}?t={ts}");
                 }
             }
         }
@@ -268,6 +269,13 @@ impl<'a> ModuleSpecifierRewriter<'a> {
             Ok(Some(rewritten))
         }
     }
+}
+
+fn trim_query_and_fragment(specifier: &str) -> &str {
+    let query_index = specifier.find('?').unwrap_or(specifier.len());
+    let fragment_index = specifier.find('#').unwrap_or(specifier.len());
+    let end = query_index.min(fragment_index);
+    &specifier[..end]
 }
 
 impl VisitMut for ModuleSpecifierRewriter<'_> {

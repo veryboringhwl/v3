@@ -25,7 +25,6 @@ impl Default for Mapping {
 pub struct ClassmapInfo {
     pub mapping: Mapping,
     pub version: u64,
-    pub timestamp: u64,
 }
 
 pub fn load_mapping(path: Option<&Path>) -> Result<Mapping> {
@@ -72,36 +71,52 @@ pub fn reformat_mapping_for_css(mapping: &Mapping) -> Mapping {
 }
 
 pub fn fetch_classmap_info(url: &str) -> Result<ClassmapInfo> {
-    let url_re = Regex::new(
-        r"^https://raw\.githubusercontent\.com/[^/]+/[^/]+/[^/]+/(?P<version>\d{7})/classmap-(?P<timestamp>[0-9a-f]{11})\.json$",
+    let semver_re = Regex::new(
+        r"^https://raw\.githubusercontent\.com/[^/]+/[^/]+/[^/]+/classmaps/(?P<semver>\d+\.\d+\.\d+)/classmap\.json$",
     )?;
-    let caps = url_re
-        .captures(url)
-        .ok_or_else(|| anyhow!("Invalid classmap url: {url}"))?;
-    let version: u64 = caps
-        .name("version")
-        .ok_or_else(|| anyhow!("Missing classmap version in url: {url}"))?
-        .as_str()
-        .parse()
-        .with_context(|| format!("Invalid classmap version in url: {url}"))?;
-    let timestamp = u64::from_str_radix(
-        caps.name("timestamp")
-            .ok_or_else(|| anyhow!("Missing classmap timestamp in url: {url}"))?
-            .as_str(),
-        16,
-    )
-    .with_context(|| format!("Invalid classmap timestamp in url: {url}"))?;
+
+    let version = if let Some(caps) = semver_re.captures(url) {
+        let semver = caps
+            .name("semver")
+            .ok_or_else(|| anyhow!("Missing classmap semver in url: {url}"))?
+            .as_str();
+        let mut parts = semver.split('.').map(|part| part.parse::<u64>());
+        let major = parts
+            .next()
+            .ok_or_else(|| anyhow!("Invalid classmap semver in url: {url}"))?
+            .with_context(|| format!("Invalid classmap semver in url: {url}"))?;
+        let minor = parts
+            .next()
+            .ok_or_else(|| anyhow!("Invalid classmap semver in url: {url}"))?
+            .with_context(|| format!("Invalid classmap semver in url: {url}"))?;
+        let patch = parts
+            .next()
+            .ok_or_else(|| anyhow!("Invalid classmap semver in url: {url}"))?
+            .with_context(|| format!("Invalid classmap semver in url: {url}"))?;
+
+        if parts.next().is_some() {
+            return Err(anyhow!("Invalid classmap semver in url: {url}"));
+        }
+
+        // Keep this sortable and comparable to legacy numeric version stamps.
+        major * 1_000_000 + minor * 1_000 + patch
+    } else {
+        return Err(anyhow!(
+            "Invalid classmap url: {url}. Expected https://raw.githubusercontent.com/<owner>/<repo>/<ref>/classmaps/<major>.<minor>.<patch>/classmap.json"
+        ));
+    };
 
     let response = reqwest::blocking::get(url)
         .with_context(|| format!("Failed to fetch classmap from {url}"))?;
-    let mapping: Mapping = response
-        .json()
-        .with_context(|| format!("Failed to parse classmap from {url}"))?;
+    let body = response
+        .text()
+        .with_context(|| format!("Failed to read classmap from {url}"))?;
+    let mapping: Mapping =
+        serde_json::from_str(&body).with_context(|| format!("Failed to parse classmap from {url}"))?;
 
     Ok(ClassmapInfo {
         mapping,
         version,
-        timestamp,
     })
 }
 

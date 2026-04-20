@@ -949,11 +949,22 @@ export class RootModule extends ModuleBase<Module, never> {
     Object.freeze(this.instances);
 
     const spotifyModule = new Module(this, {}, "Spotify", SPOTIFY_VERSION);
+    const spotifyMetadata: Metadata = {
+      name: "Spotify",
+      tags: ["internal", "builtin"],
+      version: SPOTIFY_VERSION,
+      authors: ["Spotify"],
+      description: "Builtin Spotify runtime module for version dependency constraints.",
+      entries: {},
+      hasMixins: false,
+      hasVault: false,
+      dependencies: {},
+    };
 
     const spotifyModuleInstance = new ModuleInstance(
       spotifyModule,
       SPOTIFY_VERSION,
-      null,
+      spotifyMetadata,
       [],
       "",
       true,

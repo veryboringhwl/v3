@@ -1,9 +1,13 @@
 use std::{
-    fs, path::{Path, PathBuf}, time::{SystemTime, UNIX_EPOCH}
+    collections::{HashMap, HashSet, VecDeque},
+    fs,
+    path::{Path, PathBuf},
+    time::{SystemTime, UNIX_EPOCH},
 };
 
 use anyhow::{Context, Result};
 use serde::Deserialize;
+use serde_json::Value;
 use walkdir::WalkDir;
 
 use crate::{
@@ -22,6 +26,30 @@ pub struct Metadata {
     #[allow(dead_code)]
     pub version: Option<String>,
     pub entries: MetadataEntries,
+    #[serde(default)]
+    pub dependencies: MetadataDependencies,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(untagged)]
+pub enum MetadataDependencies {
+    List(Vec<String>),
+    Map(HashMap<String, Value>),
+}
+
+impl Default for MetadataDependencies {
+    fn default() -> Self {
+        Self::List(Vec::new())
+    }
+}
+
+impl MetadataDependencies {
+    fn dependency_ids(&self) -> Vec<&str> {
+        match self {
+            MetadataDependencies::List(list) => list.iter().map(String::as_str).collect(),
+            MetadataDependencies::Map(map) => map.keys().map(String::as_str).collect(),
+        }
+    }
 }
 
 pub struct BuilderOpts {
@@ -105,8 +133,11 @@ impl Builder {
 
         let mut did_work = false;
 
+        let mut did_build_js = false;
+
         if opts.js && self.scripts_input.is_some() {
             did_work = true;
+            did_build_js = true;
             self.js(&scripts_input, now)?;
         }
 
@@ -138,6 +169,10 @@ impl Builder {
                     });
                 }
             }
+        }
+
+        if self.transpiler.dev && did_build_js {
+            self.refresh_dev_dependents()?;
         }
 
         Ok(())
@@ -190,6 +225,142 @@ impl Builder {
         })?;
         Ok(())
     }
+
+    fn refresh_dev_dependents(&self) -> Result<()> {
+        let modules_root = match self.infer_modules_root() {
+            Some(path) => path,
+            None => return Ok(()),
+        };
+
+        let dependents = self.discover_transitive_dependents(&modules_root)?;
+        if dependents.is_empty() {
+            return Ok(());
+        }
+
+        println!(
+            "Refreshing {} dependent module(s) after {} changed...",
+            dependents.len(),
+            self.identifier
+        );
+
+        for module_id in dependents {
+            self.rebuild_module_js(&modules_root, &module_id)?;
+        }
+
+        Ok(())
+    }
+
+    fn infer_modules_root(&self) -> Option<PathBuf> {
+        let mut current = self.input_dir.parent()?.to_path_buf();
+
+        loop {
+            if contains_module_manifests(&current) {
+                return Some(current);
+            }
+
+            let nested = current.join("modules");
+            if contains_module_manifests(&nested) {
+                return Some(nested);
+            }
+
+            let parent = current.parent()?.to_path_buf();
+            if parent == current {
+                return None;
+            }
+            current = parent;
+        }
+    }
+
+    fn discover_transitive_dependents(&self, modules_root: &Path) -> Result<Vec<String>> {
+        let mut reverse_graph: HashMap<String, HashSet<String>> = HashMap::new();
+
+        for entry in fs::read_dir(modules_root)
+            .with_context(|| format!("Failed to read modules root: {}", modules_root.display()))?
+        {
+            let entry = entry?;
+            if !entry.file_type()?.is_dir() {
+                continue;
+            }
+
+            let module_id = entry.file_name().to_string_lossy().to_string();
+            let metadata_path = entry.path().join("metadata.json");
+            if !metadata_path.exists() {
+                continue;
+            }
+
+            let metadata: Metadata = crate::util::read_json(&metadata_path).with_context(|| {
+                format!("Failed to parse metadata for module {}", module_id)
+            })?;
+
+            for dep in metadata.dependencies.dependency_ids() {
+                reverse_graph
+                    .entry(dep.to_string())
+                    .or_default()
+                    .insert(module_id.clone());
+            }
+        }
+
+        let mut queue = VecDeque::new();
+        let mut visited = HashSet::new();
+        let mut ordered = Vec::new();
+
+        queue.push_back(self.identifier.clone());
+        visited.insert(self.identifier.clone());
+
+        while let Some(module) = queue.pop_front() {
+            if let Some(dependents) = reverse_graph.get(&module) {
+                let mut sorted_dependents: Vec<_> = dependents.iter().cloned().collect();
+                sorted_dependents.sort();
+                for dependent in sorted_dependents {
+                    if visited.insert(dependent.clone()) {
+                        ordered.push(dependent.clone());
+                        queue.push_back(dependent);
+                    }
+                }
+            }
+        }
+
+        Ok(ordered)
+    }
+
+    fn rebuild_module_js(&self, modules_root: &Path, module_id: &str) -> Result<()> {
+        let module_dir = modules_root.join(module_id);
+        let metadata_path = module_dir.join("metadata.json");
+        let metadata: Metadata = crate::util::read_json(&metadata_path)
+            .with_context(|| format!("Failed to read metadata: {}", metadata_path.display()))?;
+
+        if metadata.entries.js.is_none() {
+            return Ok(());
+        }
+
+        let timestamp = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_millis() as u64;
+
+        let inputs = collect_js_inputs(&module_dir);
+        for input in inputs {
+            let rel = input.strip_prefix(&module_dir).unwrap_or(&input).to_path_buf();
+            let mut rel_js = rel.clone();
+            rel_js.set_extension("js");
+            let output = module_dir.join(&rel_js);
+            let rel_js_str = normalize_slashes(&rel_js);
+            let filepath = format!("/modules/{}/{}", module_id, rel_js_str);
+            self.transpiler
+                .js(&input, &output, &module_dir, &filepath, timestamp)?;
+        }
+
+        let timestamp_file = module_dir.join("timestamp");
+        ensure_parent(&timestamp_file)?;
+        fs::write(&timestamp_file, format!("{timestamp}")).with_context(|| {
+            format!(
+                "Failed to write dependent timestamp: {}",
+                timestamp_file.display()
+            )
+        })?;
+
+        Ok(())
+    }
 }
 
 pub enum FileType {
@@ -232,4 +403,23 @@ fn collect_js_inputs(root: &Path) -> Vec<PathBuf> {
         }
     }
     inputs
+}
+
+fn contains_module_manifests(root: &Path) -> bool {
+    let entries = match fs::read_dir(root) {
+        Ok(entries) => entries,
+        Err(_) => return false,
+    };
+
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if !path.is_dir() {
+            continue;
+        }
+        if path.join("metadata.json").exists() {
+            return true;
+        }
+    }
+
+    false
 }

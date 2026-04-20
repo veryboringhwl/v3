@@ -1,17 +1,10 @@
-import {
-  adManagers,
-  logger,
-  productState,
-  settingsClient,
-  slotsClient,
-  testingClient,
-} from "../mod.ts";
+import { adManagers, logger, settingsClient, slotsClient, testingClient } from "../mod.ts";
 import { retryCounter } from "./utils/counter.ts";
 
-export const bindSlots = (slots: { slot_id: string }[]) => {
+export const bindSlots = (slots: { slotId: string }[]) => {
   for (const slot of slots) {
-    subToSlot(slot.slot_id);
-    handleAdSlot({ adSlotEvent: { slotId: slot.slot_id } });
+    subToSlot(slot.slotId);
+    setTimeout(() => handleAdSlot({ adSlotEvent: { slotId: slot.slotId } }), 50);
   }
 };
 
@@ -23,14 +16,27 @@ export const subToSlot = (slotId: string) => {
   }
 };
 
-const handleAdSlot = (data: { adSlotEvent: { slotId: string } }) => {
+const handleAdSlot = async (data: { adSlotEvent: { slotId: string } }) => {
   const slotId = data?.adSlotEvent?.slotId;
 
   try {
-    const adsCoreConnector = adManagers.audio?.inStreamApi?.adsCoreConnector;
-    if (typeof adsCoreConnector?.clearSlot === "function") adsCoreConnector.clearSlot(slotId);
-    if (slotsClient) slotsClient.clearAllAds({ slotId });
-    updateSlotSettings(slotId);
+    adManagers.audio.inStreamApi.adsCoreConnector.clearSlot(slotId, undefined);
+    if (!settingsClient || !slotsClient) return;
+
+    await slotsClient.clearAllAds({ slotId });
+    await settingsClient.updateSlotEnabled({ slotId, enabled: false });
+    await settingsClient.updateAdServerEndpoint({
+      slotIds: [slotId],
+      url: "http://localhost/no/thanks",
+    });
+    await settingsClient.updateStreamTimeInterval({
+      slotId,
+      timeInterval: 0n,
+    });
+    await settingsClient.updateDisplayTimeInterval({
+      slotId,
+      timeInterval: 0n,
+    });
   } catch (error: unknown) {
     logger.error("Failed inside `handleAdSlot` function. Retrying in 1 second...\n", error);
     retryCounter(slotId, "increment");
@@ -41,7 +47,7 @@ const handleAdSlot = (data: { adSlotEvent: { slotId: string } }) => {
       retryCounter(slotId, "clear");
       return;
     }
-    setTimeout(handleAdSlot, 1 * 1000, data);
+    setTimeout(handleAdSlot, 1000, data);
   }
   configureAdManagers();
 };
@@ -51,56 +57,16 @@ export const configureAdManagers = async () => {
     if (!testingClient) return;
 
     await testingClient.addPlaytime({ seconds: -100000000000 });
-    const { audio, billboard, leaderboard, sponsoredPlaylist } = adManagers;
 
-    await audio.disable();
-    audio.isNewAdsNpvEnabled = false;
-    await billboard.disable();
-    await leaderboard.disableLeaderboard();
-    await sponsoredPlaylist.disable();
-    adManagers?.inStreamApi && (await adManagers.inStreamApi.disable());
-    if (adManagers?.vto) {
-      await adManagers.vto.manager.disable();
-      adManagers.vto.isNewAdsNpvEnabled = false;
-    }
-    setTimeout(overridePremiumValues, 100);
+    await adManagers.audio.disable();
+    await adManagers.billboard.disable();
+    await adManagers.leaderboard.disableLeaderboard();
+    await adManagers.sponsoredPlaylist.disable();
+    await adManagers.inStreamApi.disable();
+    await adManagers.vto.manager.disable();
+    adManagers.audio.isNewAdsNpvEnabled = false;
+    adManagers.vto.isNewAdsNpvEnabled = false;
   } catch (error: unknown) {
     logger.error("Failed inside `configureAdManagers` function\n", error);
-  }
-};
-
-const overridePremiumValues = async () => {
-  try {
-    await productState.putOverridesValues({
-      pairs: {
-        ads: "0",
-        catalogue: "premium",
-        product: "premium",
-        type: "premium",
-      },
-    });
-  } catch (error: unknown) {
-    logger.error("Failed inside `disableAds` function\n", error);
-  }
-};
-
-const updateSlotSettings = async (slotId: string) => {
-  try {
-    if (!settingsClient) return;
-    await settingsClient.updateAdServerEndpoint({
-      slotIds: [slotId],
-      url: "http://localhost/no/thanks",
-    });
-    await settingsClient.updateStreamTimeInterval({
-      slotId,
-      timeInterval: "0",
-    });
-    await settingsClient.updateSlotEnabled({ slotId, enabled: false });
-    await settingsClient.updateDisplayTimeInterval({
-      slotId,
-      timeInterval: "0",
-    });
-  } catch (error: unknown) {
-    logger.error("Failed inside `updateSlotSettings` function\n", error);
   }
 };

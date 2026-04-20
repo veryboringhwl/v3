@@ -19,7 +19,7 @@ use transpile::Transpiler;
 use util::{read_json, write_text};
 
 const GH_RAW_CLASSMAP_URL: &str =
-    "https://raw.githubusercontent.com/spicetify/classmaps/main/1020045/classmap-191b119b48e.json";
+    "https://raw.githubusercontent.com/veryboringhwl/v3/main/classmaps/1.2.88/classmap.json";
 
 #[derive(Parser)]
 #[command(name = "tailor", version, about = "Rust build tool for v3 modules")]
@@ -215,12 +215,8 @@ fn build_release_with_classmap(
         .and_then(|value| value.as_str().map(|s| s.to_string()))
         .ok_or_else(|| anyhow!("metadata.version is missing"))?;
 
-    let new_version = format!(
-        "{}+cm-{}-{}",
-        version,
-        info.version,
-        to_base36(info.timestamp)
-    );
+    let classmap_semver = classmap_semver_from_packed(info.version);
+    let new_version = format!("{}+{}", version, classmap_semver);
     *metadata_out
         .get_mut("version")
         .ok_or_else(|| anyhow!("metadata.version is missing"))? =
@@ -275,17 +271,9 @@ fn build_release_with_classmap(
     Ok(())
 }
 
-fn to_base36(mut value: u64) -> String {
-    const DIGITS: &[u8] = b"0123456789abcdefghijklmnopqrstuvwxyz";
-    if value == 0 {
-        return "0".to_string();
-    }
-
-    let mut out = Vec::new();
-    while value > 0 {
-        let idx = (value % 36) as usize;
-        out.push(DIGITS[idx] as char);
-        value /= 36;
-    }
-    out.iter().rev().collect()
+fn classmap_semver_from_packed(version: u64) -> String {
+    let major = version / 1_000_000;
+    let minor = (version / 1_000) % 1_000;
+    let patch = version % 1_000;
+    format!("{}.{}.{}", major, minor, patch)
 }
