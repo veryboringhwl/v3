@@ -1,57 +1,43 @@
+import { Platform } from "/modules/stdlib/src/expose/Platform.ts";
+import { exportedFunctions } from "/modules/stdlib/src/webpack/index.js";
 import { logger } from "../../mod.ts";
+
+export const EsperantoTransport = Platform.getEsperantoTransport();
 
 export interface SettingsClient {
   updateAdServerEndpoint(params: { slotIds: string[]; url: string }): Promise<void>;
   updateSlotEnabled(params: { slotId: string; enabled: boolean }): Promise<void>;
   updateDisplayTimeInterval(params: { slotId: string; timeInterval: bigint }): Promise<void>;
   updateStreamTimeInterval(params: { slotId: string; timeInterval: bigint }): Promise<void>;
+  updateExpiryTimeInterval(params: { slotId: string; timeInterval: bigint }): Promise<void>;
 }
 
-export const getSettingsClient = (
-  functionModules: any[],
-  transport: any,
-): SettingsClient | undefined => {
-  try {
-    const settings = functionModules.find(
-      (m) => m.SERVICE_ID === "spotify.ads.esperanto.proto.Settings",
-    );
-    return new settings(transport);
-  } catch (error) {
-    logger.error("Failed to get settings client", error);
-    return undefined;
-  }
-};
-
 export interface SlotsClient {
+  subSlot(params: { slotId: string }, callback: (data: any) => void): { cancel: () => void };
   clearAllAds(params: { slotId: string }): Promise<void>;
   getSlots(): Promise<{ adSlots: { slotId: string }[] }>;
 }
-
-export const getSlotsClient = (functionModules: any[], transport: any): SlotsClient | undefined => {
-  try {
-    const slots = functionModules.find((m) => m.SERVICE_ID === "spotify.ads.esperanto.proto.Slots");
-    return new slots(transport);
-  } catch (error) {
-    logger.error("Failed to get slots client", error);
-    return undefined;
-  }
-};
 
 export interface TestingClient {
   addPlaytime(params: { seconds: number }): Promise<void>;
 }
 
-export const getTestingClient = (
-  functionModules: any[],
-  transport: any,
-): TestingClient | undefined => {
+export interface InStreamClient {
+  subInStream(params: { request: {} }, callback: (data: any) => void): { cancel: () => void };
+}
+
+export function getEsperantoClient<T>(serviceId: string): T | undefined {
   try {
-    const testing = functionModules.find(
-      (m) => m.SERVICE_ID === "spotify.ads.esperanto.proto.Testing",
-    );
-    return new testing(transport);
+    const Client = exportedFunctions.find((m: any) => m.SERVICE_ID === serviceId);
+
+    if (!Client) {
+      logger.error(`No Esperanto client found for: ${serviceId}`);
+      return undefined;
+    }
+
+    return new Client(EsperantoTransport) as T;
   } catch (error) {
-    logger.error("Failed to get testing client", error);
+    logger.error(`Failed to create Esperanto client: ${serviceId}`, error);
     return undefined;
   }
-};
+}
