@@ -1,7 +1,7 @@
 import { findBy } from "/hooks/util.ts";
 import { exported, exportedFunctions } from "./index.ts";
 
-await CHUNKS.xpui.promise;
+await globalThis.CHUNKS.xpui.promise;
 
 export const Color: Function & {
   Format: any;

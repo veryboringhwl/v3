@@ -2,7 +2,7 @@ import type { ModuleInstance } from "/hooks/module.ts";
 import { createLogger } from "/modules/stdlib/mod.ts";
 import { Platform } from "/modules/stdlib/src/expose/Platform.ts";
 import { configureExpFeatures } from "./src/expFeatures.ts";
-import { bindSlots, inStreamSubscription, slotSubscriptions } from "./src/slot.ts";
+import { bindSlots, inStreamSubscription, pauseAds, slotSubscriptions } from "./src/slot.ts";
 import type {
   InStreamClient,
   SettingsClient,
@@ -35,7 +35,7 @@ export default async function (mod: ModuleInstance) {
 
   configureExpFeatures();
   bindSlots(adSlots);
-  // pauseAds();
+  pauseAds();
 
   logger.info("Loaded successfully");
 

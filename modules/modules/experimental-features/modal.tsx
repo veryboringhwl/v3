@@ -1,6 +1,10 @@
 import { UI } from "/modules/stdlib/src/webpack/ComponentLibrary.xpui.ts";
 
-export const Menu = ({ onClose }) => {
+type MenuProps = {
+  onClose: () => void;
+};
+
+export const Menu = ({ onClose }: MenuProps) => {
   return (
     <div
       className={MAP.modal.widget_generator.container}
@@ -16,7 +20,7 @@ export const Menu = ({ onClose }) => {
           </UI.Icon>
         </button>
       </div>
-      <div className={MAP.modal.widget_generator.content.container}>{"The MENU STUFF"}</div>
+      <div className={MAP.modal.widget_generator.content.container}>{"MENU STUFF"}</div>
     </div>
   );
 };

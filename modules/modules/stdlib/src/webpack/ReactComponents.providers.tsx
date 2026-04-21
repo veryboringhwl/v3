@@ -3,7 +3,7 @@ import { Platform } from "../expose/Platform.ts";
 import type { React } from "../expose/React.ts";
 import { exportedFunctions } from "./index.ts";
 
-await CHUNKS.xpui.promise;
+await globalThis.CHUNKS.xpui.promise;
 
 export const RemoteConfigProviderComponent = findBy(
   "resolveSuspense",

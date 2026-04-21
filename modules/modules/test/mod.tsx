@@ -15,7 +15,6 @@ import {
 
 export let module: ModuleInstance;
 export let hash: { state: string; event: string } | undefined;
-
 export default function (mod: ModuleInstance) {
   module = mod;
   const registrar = createRegistrar(mod);

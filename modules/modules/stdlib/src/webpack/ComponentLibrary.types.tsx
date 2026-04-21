@@ -46,7 +46,7 @@ export interface ButtonPrimaryProps extends React.ComponentPropsWithoutRef<"butt
   fullWidth?: boolean;
   iconLeading?: React.ReactNode;
   iconTrailing?: React.ReactNode;
-  iconOnly?: React.ReactNode;
+  iconOnly?: React.ComponentType;
   "aria-label"?: string;
   "aria-labelledby"?: string;
   "aria-hidden"?: boolean;
@@ -63,7 +63,7 @@ export interface ButtonSecondaryProps extends React.ComponentPropsWithoutRef<"bu
   fullWidth?: boolean;
   iconLeading?: React.ReactNode;
   iconTrailing?: React.ReactNode;
-  iconOnly?: React.ReactNode;
+  iconOnly?: React.ComponentType;
   "aria-label"?: string;
   "aria-labelledby"?: string;
   "aria-hidden"?: boolean;

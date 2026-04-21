@@ -16,7 +16,7 @@ const Icon = () => (
   </UI.Icon>
 );
 
-export const TopbarButton = () => {
+const TopbarButton = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const handleClose = () => setIsOpen(false);
 

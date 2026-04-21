@@ -1,9 +1,10 @@
 import { fnStr } from "/hooks/util.ts";
 
-import { webpackRequire } from "../wpunpk.mix.ts";
+import { webpackRequire, webpackRequireReady } from "../wpunpk.mix.ts";
 import { analyzeWebpackRequire } from "./index.ts";
 
 await (CHUNKS["/dwp-full-screen-mode-container.js"] ??= Promise.withResolvers()).promise;
+await webpackRequireReady;
 
 const { exportedFunctions } = analyzeWebpackRequire(webpackRequire);
 

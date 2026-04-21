@@ -1,6 +1,6 @@
 {
-  "name": "test",
-  "tags": ["test"],
+  "name": "Experimental Features",
+  "tags": ["extension", "Experiments"],
   "preview": "./assets/PREVIEW.png",
   "version": "0.1.0",
   "authors": ["veryboringhwl"],

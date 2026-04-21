@@ -1,4 +1,4 @@
 [data-testid="hpto-parent-container"],
-div:has(> [data-testid="test-ref-div"]) {
+div:has(> div > [data-testid="test-ref-div"]) {
   display: none !important;
 }

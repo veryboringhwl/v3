@@ -1,10 +1,10 @@
 import { React } from "/modules/stdlib/src/expose/React.ts";
 import {
   future,
+  SettingsRow,
+  SettingsRowEnd,
+  SettingsRowStart,
   SettingsSection,
-  SettingsSectionControl,
-  SettingsSectionLabel,
-  SettingsSectionRow,
 } from "/modules/stdlib/src/expose/SettingsSection.ts";
 import { UI } from "/modules/stdlib/src/webpack/ComponentLibrary.ts";
 import { Toggle } from "/modules/stdlib/src/webpack/ReactComponents.ts";
@@ -22,13 +22,13 @@ export const TestSettingsSection = () => {
       <UI.Text as="h2" semanticColor="textBase" variant="bodyMediumBold">
         Settings Section Title
       </UI.Text>
-      <SettingsSectionRow>
-        <SettingsSectionLabel>
+      <SettingsRow>
+        <SettingsRowStart>
           <UI.Text as="label" semanticColor="textSubdued" variant="bodySmall">
             Settings Section Example
           </UI.Text>
-        </SettingsSectionLabel>
-        <SettingsSectionControl>
+        </SettingsRowStart>
+        <SettingsRowEnd>
           <Toggle
             id="toggle-probe"
             onSelected={(newValue) => {
@@ -36,8 +36,8 @@ export const TestSettingsSection = () => {
             }}
             value={isChecked}
           />
-        </SettingsSectionControl>
-      </SettingsSectionRow>
+        </SettingsRowEnd>
+      </SettingsRow>
     </SettingsSection>
   );
 };

@@ -4,7 +4,7 @@
 	--navlink-size: 48px;
 }
 
-.custom-navlinks-scrollable_container {
+.navlinks-scrollable_container {
 	max-width: calc(var(--navlink-size) * var(--max-custom-navlink-count) + 8px * (var(--max-custom-navlink-count) - 1));
 	-webkit-app-region: no-drag;
 
@@ -14,16 +14,11 @@
 	}
 
 	div[role="presentation"] {
+				display: flex;
+		flex-direction: row;
+		
 		&>* {
 			z-index: 1;
-
-			&:not(:last-child) {
-				margin-inline-end: 8px;
-			}
 		}
 	}
-}
-
-.custom-navlink {
-	-webkit-app-region: unset;
 }

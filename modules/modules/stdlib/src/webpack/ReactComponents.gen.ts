@@ -1,9 +1,3 @@
-import type * as ReactComponents_desktop_ts from "./ReactComponents.desktop.ts";
-export let Settings: typeof ReactComponents_desktop_ts.Settings;
-import("./ReactComponents.desktop.ts").then((m) => {
-  Settings = m.Settings;
-});
-
 import type * as ReactComponents_panel_ts from "./ReactComponents.panel.ts";
 export let PanelContainer: typeof ReactComponents_panel_ts.PanelContainer;
 export let PanelContent: typeof ReactComponents_panel_ts.PanelContent;

@@ -2,7 +2,7 @@ import { findBy } from "/hooks/util.ts";
 import { Platform } from "../expose/Platform.ts";
 import { exported, exportedFunctions } from "./index.ts";
 
-await CHUNKS.xpui.promise;
+await globalThis.CHUNKS.xpui.promise;
 
 export const DragHandler: Function = findBy("dataTransfer", "data-dragging")(exportedFunctions);
 

@@ -5,7 +5,7 @@ import { matchWebpackModule } from "../wpunpk.ts";
 
 import { exportedFunctions, exportedMemoForwardRefs, exportedMemos, modules } from "./index.ts";
 
-await CHUNKS.xpui.promise;
+await globalThis.CHUNKS.xpui.promise;
 
 export const Menus: any = Object.fromEntries(
   exportedMemos.flatMap((m) => {

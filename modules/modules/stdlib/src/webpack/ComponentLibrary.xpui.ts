@@ -40,7 +40,7 @@ import {
   exportedMemos,
 } from "./index.ts";
 
-await CHUNKS.xpui.promise;
+await globalThis.CHUNKS.xpui.promise;
 
 const componentPairs = [
   exportedFunctions.map((f) => [f, f]),

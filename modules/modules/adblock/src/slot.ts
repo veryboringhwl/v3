@@ -27,11 +27,11 @@ const overrideSlot = async ({ slotId }: { slotId: string }) => {
       await settingsClient.updateExpiryTimeInterval({ slotId, timeInterval: 0n });
     }
   } catch (error: unknown) {
-    logger.error("Failed inside `handleAdSlot` function. Retrying in 1 second...\n", error);
+    logger.error("Failed inside `overrideSlot` function. Retrying in 1 second...\n", error);
     retryCounter(slotId, "increment");
     if (retryCounter(slotId, "get") > 5) {
       logger.error(
-        `Failed inside \`handleAdSlot\` function for 5th time. Giving up...\nSlot id: ${slotId}.`,
+        `Failed inside \`overrideSlot\` function for 5th time. Giving up...\nSlot id: ${slotId}.`,
       );
       retryCounter(slotId, "clear");
       return;
@@ -41,9 +41,10 @@ const overrideSlot = async ({ slotId }: { slotId: string }) => {
 };
 
 export const slotSubscriptions: Array<{ cancel: () => void }> = [];
-export const bindSlots = (adSlots: { slotId: string }[]) => {
+export const bindSlots = async (adSlots: { slotId: string }[]) => {
   for (const { slotId } of adSlots) {
     if (!slotsClient) return;
+    await overrideSlot({ slotId });
     slotSubscriptions.push(
       slotsClient.subSlot({ slotId }, ({ adSlotEvent }) => overrideSlot(adSlotEvent)),
     );
@@ -51,6 +52,8 @@ export const bindSlots = (adSlots: { slotId: string }[]) => {
 };
 
 export let inStreamSubscription: { cancel: () => void };
+// idk what this even does tbh 
+// todo: find out what inStream ads are?
 export const pauseAds = async () => {
   if (testingClient) {
     await testingClient.addPlaytime({ seconds: -100000000000 });
@@ -62,7 +65,7 @@ export const pauseAds = async () => {
       }
     });
   }
-  
+
   // idk if this even does anything
   // await adManagers.audio.disable();
   // await adManagers.billboard.disable();

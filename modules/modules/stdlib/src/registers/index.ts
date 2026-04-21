@@ -1,7 +1,6 @@
 import type { ModuleInstance } from "/hooks/module.ts";
 import menu from "./menu.tsx";
 import navlink from "./navlink.tsx";
-import panel from "./panel.ts";
 import playbarButton from "./playbarButton.tsx";
 import playbarWidget from "./playbarWidget.tsx";
 import type { Registry } from "./registry.ts";
@@ -16,7 +15,8 @@ const registers = {
   menu,
   navlink,
   // panel doesnt work as for some reason __Machine is undefined
-  panel,
+  // regex is also slow so commented out for now
+  // panel,
   playbarButton,
   playbarWidget,
   rootChild,

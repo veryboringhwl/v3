@@ -3,7 +3,7 @@ import { findBy, fnStr } from "/hooks/util.ts";
 import { webpackRequire } from "../wpunpk.mix.ts";
 import { exportedFunctions, modules } from "./index.ts";
 
-await CHUNKS.xpui.promise;
+await globalThis.CHUNKS.xpui.promise;
 
 const [ReactRouterModuleID] = modules.find(([_, v]) => fnStr(v).includes("React Router"))!;
 const ReactRouterModule = Object.values(webpackRequire(ReactRouterModuleID));
@@ -14,3 +14,4 @@ export const useMatch: typeof useMatchT = ReactRouterModule.find(
 );
 
 export const useLocation: typeof useLocationT = findBy("location", "useContext")(exportedFunctions);
+await globalThis.CHUNKS.xpui.promise;

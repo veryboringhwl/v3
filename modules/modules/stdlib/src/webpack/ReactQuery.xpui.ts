@@ -12,7 +12,8 @@ import { findBy, fnStr } from "/hooks/util.ts";
 import { webpackRequire } from "../wpunpk.mix.ts";
 import { exported, exportedFunctions, modules } from "./index.ts";
 
-await CHUNKS.xpui.promise;
+await globalThis.CHUNKS.xpui.promise;
+// await (CHUNKS["/dwp-panel-section.js"] ??= Promise.withResolvers()).promise;
 
 export const QueryClient: typeof QueryClientT = findBy("defaultMutationOptions")(exportedFunctions);
 export const PersistQueryClientProvider = findBy("persistOptions")(exportedFunctions);

@@ -1,13 +1,14 @@
 {
   "name": "test",
-  "tags": ["test"],
+  "tags": ["app", "test"],
   "preview": "./assets/PREVIEW.png",
   "version": "0.1.0",
   "authors": ["veryboringhwl"],
   "description": "test",
   "readme": "./assets/README.md",
   "entries": {
-    "js": "index.js"
+    "js": "index.js",
+    "css": "index.css"
   },
   "dependencies": {
     "stdlib": "0.1.0"

@@ -50,7 +50,7 @@ type Create = {
   UserToplist: any;
 };
 
-await CHUNKS.xpui.promise;
+await globalThis.CHUNKS.xpui.promise;
 
 const [URIModuleID] = modules.find(
   ([id, v]) =>

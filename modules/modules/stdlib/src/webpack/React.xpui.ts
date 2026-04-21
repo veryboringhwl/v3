@@ -2,7 +2,7 @@ import type ReactDOMT from "npm:@types/react-dom";
 import type ReactDOMServerT from "npm:@types/react-dom/server";
 import { exports } from "./index.ts";
 
-await CHUNKS.xpui.promise;
+await globalThis.CHUNKS.xpui.promise;
 
 export const React: any = exports.find((m) => m.createElement)!;
 export const ReactJSX: any = exports.find((m) => m.jsx)!;

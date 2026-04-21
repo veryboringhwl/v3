@@ -11,5 +11,7 @@
     "css": "index.css"
   },
   "hasMixins": true,
-  "dependencies": []
+  "dependencies": {
+    "Spotify": ">=1.2.87"
+  }
 }
