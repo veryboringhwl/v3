@@ -1,5 +1,5 @@
 cli/target/
 hooks/node_modules/
-modules/build/target/
-modules/build/bin/
+creator/target/
+modules/bin/
 modules/dist/
