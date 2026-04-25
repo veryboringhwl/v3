@@ -1,11 +1,11 @@
 {
   "name": "stdlib",
   "tags": ["lib"],
-  "preview": "./assets/PREVIEW.png",
   "version": "0.1.0",
   "authors": ["spicetify", "Delusoire"],
   "description": "The standard library",
   "readme": "./assets/README.md",
+  "preview": "./assets/PREVIEW.png",
   "entries": {
     "js": "index.js",
     "css": "index.css"

@@ -5,7 +5,7 @@ export let enqueueImageSnackbar: any;
 // TODO: replace with a custom enqueueCustomSnackbar wrapper
 transformer(
   (emit) => (str) => {
-    str = str.replace(/(\(\({[^}]*,\s*imageSrc)/, "__enqueueImageSnackbar=$1");
+    str = str.replace(/(=)(\(\({[^}]*,\s*imageSrc)/, "$1__enqueueImageSnackbar=$2");
     Object.defineProperty(globalThis, "__enqueueImageSnackbar", {
       set: emit,
     });

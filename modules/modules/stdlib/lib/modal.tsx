@@ -4,6 +4,8 @@ import { UI } from "../src/webpack/ComponentLibrary.ts";
 import { Locale } from "../src/webpack/misc.ts";
 import { Dialog } from "../src/webpack/ReactComponents.ts";
 
+//template options for nothing in modal
+
 const [RootChildrenRegistry, _RootProvidersRegistry] = RootRegistry;
 
 let ref: React.ReactElement | undefined;

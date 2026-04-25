@@ -6,11 +6,19 @@ import type {
 import { findBy } from "/hooks/util.ts";
 import { exportedFunctions } from "./index.ts";
 
-await CHUNKS.xpui.Promise;
+await globalThis.CHUNKS.xpui.promise;
 
 export const useSnackbar: typeof useSnackbarT = findBy(
   /^function\(\)\{return\(0,[a-zA-Z_$][\w$]*\.useContext\)\([a-zA-Z_$][\w$]*\)\}$/,
 )(exportedFunctions);
+
+type FN_enqueueSnackbar_OPTS =
+  | (Omit<OptionsObjectT, "key"> & { keyPrefix: string })
+  | (OptionsObjectT & { identifier: string });
+export const enqueueSnackbar: (
+  element: React.ReactElement,
+  opts: FN_enqueueSnackbar_OPTS,
+) => ReturnType<EnqueueSnackbarT> = findBy("enqueueSnackbar", "default")(exportedFunctions);
 
 type FN_enqueueCustomSnackbar_OPTS =
   | (Omit<OptionsObjectT, "key"> & { keyPrefix: string })

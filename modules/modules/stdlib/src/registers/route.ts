@@ -24,3 +24,16 @@ transformer(
     glob: /^\/xpui-snapshot\.js/,
   },
 );
+
+// use spicetify route to not have the topbar
+transformer(
+  (emit) => (str) => {
+    str = str.replace('["","/","/home/",', '["","/","/home/","/spicetify/*",');
+
+    emit();
+    return str;
+  },
+  {
+    glob: /^\/dwp-top-bar\.js/,
+  },
+);

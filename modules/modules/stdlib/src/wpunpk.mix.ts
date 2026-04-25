@@ -15,7 +15,49 @@ export type WebpackChunk = [Array<keyof any>, WebpackModules, (wpr: WebpackRequi
 
 export let webpackRequire: WebpackRequire;
 
-export let postWebpackRequireHooks: ((wpr: WebpackRequire) => void)[] = [];
+const queuedWebpackRequireHooks: ((wpr: WebpackRequire) => void)[] = [];
+queuedWebpackRequireHooks.push = (...hooks: ((wpr: WebpackRequire) => void)[]) => {
+  if (webpackRequire) {
+    for (const hook of hooks) {
+      hook(webpackRequire);
+    }
+    return queuedWebpackRequireHooks.length;
+  }
+
+  return Array.prototype.push.apply(queuedWebpackRequireHooks, hooks);
+};
+
+export const postWebpackRequireHooks = queuedWebpackRequireHooks;
+
+const webpackRequireResolvers = Promise.withResolvers<WebpackRequire>();
+export const webpackRequireReady = webpackRequireResolvers.promise;
+
+function flushWebpackRequireHooks(wpr: WebpackRequire) {
+  if (postWebpackRequireHooks.length === 0) {
+    return;
+  }
+
+  const hooks = postWebpackRequireHooks.splice(0, postWebpackRequireHooks.length);
+  for (const hook of hooks) {
+    hook(wpr);
+  }
+}
+
+function setWebpackRequire(wpr: WebpackRequire) {
+  webpackRequire = wpr;
+  globalThis.__webpack_require__ = wpr;
+  webpackRequireResolvers.resolve(wpr);
+  flushWebpackRequireHooks(wpr);
+}
+
+export function onWebpackRequireReady(hook: (wpr: WebpackRequire) => void) {
+  if (webpackRequire) {
+    hook(webpackRequire);
+    return;
+  }
+
+  postWebpackRequireHooks.push(hook);
+}
 
 declare global {
   var __webpack_require__: WebpackRequire;
@@ -27,15 +69,14 @@ const webpackChunkclient_web = [
     [Symbol.for("spicetify.webpack.chunk.id")],
     {},
     ($: WebpackRequire) => {
-      globalThis.__webpack_require__ = webpackRequire = $;
-      for (const hook of postWebpackRequireHooks) {
-        hook($);
-      }
-      // @ts-expect-error
-      postWebpackRequireHooks = undefined;
+      setWebpackRequire($);
     },
   ] as WebpackChunk,
 ];
+
+if (globalThis.__webpack_require__) {
+  setWebpackRequire(globalThis.__webpack_require__);
+}
 
 globalThis.webpackChunkclient_web = webpackChunkclient_web;
 
@@ -47,7 +88,7 @@ import { Subject } from "../deps.ts";
 
 type ChunkModulesPair = [WebpackChunk, WebpackModules];
 export const chunkLoadedSubjectPre = new Subject<WebpackChunk>();
-export const moduleLoadedSubject = new Subject<[typeof any, WebpackModule]>();
+export const moduleLoadedSubject = new Subject<[keyof any, WebpackModule]>();
 export const chunkLoadedSubjectPost = new Subject<ChunkModulesPair>();
 
 function trap(fn: (chunk: WebpackChunk) => void) {

@@ -20,23 +20,23 @@ export type SettingsSectionProps = {
 export type SettingsSection = React.FC<SettingsSectionProps>;
 export let SettingsSection: SettingsSection;
 
-export type SettingsSectionRowProps = {
+export type SettingsRowProps = {
   /**
    * The string used by the search functionality to filter and find this section.
    */
   filterMatchQuery?: string;
   children?: React.ReactNode;
 };
-export type SettingsSectionRow = React.FC<SettingsSectionRowProps>;
-export let SettingsSectionRow: SettingsSectionRow;
+export type SettingsRow = React.FC<SettingsRowProps>;
+export let SettingsRow: SettingsRow;
 
-export type SettingsSectionLabelProps = { children?: React.ReactNode };
-export type SettingsSectionLabel = React.FC<SettingsSectionLabelProps>;
-export let SettingsSectionLabel: SettingsSectionLabel;
+export type SettingsRowStartProps = { children?: React.ReactNode };
+export type SettingsRowStart = React.FC<SettingsRowStartProps>;
+export let SettingsRowStart: SettingsRowStart;
 
-export type SettingsSectionControlProps = { children?: React.ReactNode };
-export type SettingsSectionControl = React.FC<SettingsSectionControlProps>;
-export let SettingsSectionControl: SettingsSectionControl;
+export type SettingsRowEndProps = { children?: React.ReactNode };
+export type SettingsRowEnd = React.FC<SettingsRowEndProps>;
+export let SettingsRowEnd: SettingsRowEnd;
 
 transformer<SettingsSection>(
   (emit) => (str) => {
@@ -56,7 +56,7 @@ transformer<SettingsSection>(
   future.push();
 });
 
-transformer<SettingsSectionRow>(
+transformer<SettingsRow>(
   (emit) => (str) => {
     str = str.replace(
       /(\.jsxs\)\()([a-zA-Z_$][\w$]*)([^=]*"desktop.settings.enableHardwareAcceleration")/,
@@ -72,10 +72,10 @@ transformer<SettingsSectionRow>(
     wait: false,
   },
 ).then(($) => {
-  SettingsSectionRow = $;
+  SettingsRow = $;
 });
 
-transformer<SettingsSectionLabel>(
+transformer<SettingsRowStart>(
   (emit) => (str) => {
     str = str.replace(
       /(\(\d+,\s*[a-zA-Z_$][\w$]*\.jsx\)\()([a-zA-Z_$][\w$]*)(\s*,\s*\{\s*children:\s*\(\d+,\s*[a-zA-Z_$][\w$]*\.jsx\)\([a-zA-Z_$][\w$.]*\s*,\s*\{\s*htmlFor:\s*"desktop\.settings\.enableHardwareAcceleration")/,
@@ -89,10 +89,10 @@ transformer<SettingsSectionLabel>(
     wait: false,
   },
 ).then(($) => {
-  SettingsSectionLabel = $;
+  SettingsRowStart = $;
 });
 
-transformer<SettingsSectionControl>(
+transformer<SettingsRowEnd>(
   (emit) => (str) => {
     str = str.replace(
       /(\(\d+,\s*[a-zA-Z_$][\w$]*\.jsx\)\()([a-zA-Z_$][\w$]*)(\s*,\s*\{\s*children:\s*\(\d+,\s*[a-zA-Z_$][\w$]*\.jsx\)\([a-zA-Z_$][\w$.]*\s*,\s*\{\s*id:\s*"desktop\.settings\.enableHardwareAcceleration")/,
@@ -108,5 +108,5 @@ transformer<SettingsSectionControl>(
     wait: false,
   },
 ).then(($) => {
-  SettingsSectionControl = $;
+  SettingsRowEnd = $;
 });

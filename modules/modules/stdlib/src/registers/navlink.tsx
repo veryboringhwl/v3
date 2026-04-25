@@ -50,17 +50,6 @@ transformer(
     glob: /^\/xpui-snapshot\.js/,
   },
 );
-transformer(
-  (emit) => (str) => {
-    str = str.replace('["","/","/home/",', '["","/","/home/","/bespoke/*",');
-
-    emit();
-    return str;
-  },
-  {
-    glob: /^\/dwp-top-bar\.js/,
-  },
-);
 
 export type NavLinkProps = {
   localizedApp: string;

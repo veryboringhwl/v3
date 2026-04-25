@@ -389,8 +389,20 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
 
   private mixinsLoaded = false;
   private loaded = false;
-  _jsIndex: JSIndex | null = null;
+    _jsIndex: JSIndex | null = null;
   _cssIndex: CSSIndex | null = null;
+  private _jsIndexPromise: Promise<void> | null = null;
+  private _cssIndexPromise: Promise<void> | null = null;
+
+  private resetJsIndex() {
+    this._jsIndex = null;
+    this._jsIndexPromise = null;
+  }
+
+  private resetCssIndex() {
+    this._cssIndex = null;
+    this._cssIndexPromise = null;
+  }
 
   public transition = new Transition();
   private dependants = new Set<ModuleInstance>();
@@ -488,11 +500,13 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
         }),
       );
       await index.disposableStack.disposeAsync();
+      this.resetJsIndex();
     }
     console.timeEnd(`${this.getModuleIdentifier()}#preloadJs`);
   }
 
   async #loadJs() {
+    await this.#loadJsIndex();
     const index = this._jsIndex;
     if (!index || index.disposableStack.disposed) {
       return;
@@ -510,6 +524,7 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
         new Error(`Error loading javascript for \`${this.getModuleIdentifier()}\``, { cause: e }),
       );
       await index.disposableStack.disposeAsync();
+      this.resetJsIndex();
     }
     console.timeEnd(`${this.getModuleIdentifier()}#loadJs`);
   }
@@ -517,7 +532,7 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
   async #loadCss() {
     await this.#loadCssIndex();
     const index = this._cssIndex;
-    if (!index) {
+    if (!index || index.disposableStack.disposed) {
       return;
     }
 
@@ -537,36 +552,61 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
         }),
       );
       await index.disposableStack.disposeAsync();
+      this.resetCssIndex();
     }
     console.timeEnd(`${this.getModuleIdentifier()}#loadCss`);
   }
 
   async #loadJsIndex() {
-    this._jsIndex = null;
-    const { js } = this.metadata?.entries ?? {};
-    if (!js) {
-      return;
+    if (this._jsIndex?.disposableStack.disposed) {
+      this.resetJsIndex();
     }
 
-    const now = Date.now();
-    const uniqueEntry = `${this.getRelPath(js)!}?t=${now}`;
-    this._jsIndex = Object.assign({}, await import(uniqueEntry), {
-      disposableStack: new AsyncDisposableStack(),
-    });
+    if (this._jsIndexPromise) {
+      return this._jsIndexPromise;
+    }
+
+    this._jsIndexPromise = (async () => {
+      const { js } = this.metadata?.entries ?? {};
+      if (!js) {
+        this._jsIndex = null;
+        return;
+      }
+
+      const now = Date.now();
+      const uniqueEntry = `${this.getRelPath(js)!}?t=${now}`;
+      this._jsIndex = Object.assign({}, await import(uniqueEntry), {
+        disposableStack: new AsyncDisposableStack(),
+      });
+    })();
+
+    return this._jsIndexPromise;
   }
 
   async #loadCssIndex() {
-    this._cssIndex = null;
-    const { css } = this.metadata?.entries ?? {};
-    if (!css) {
-      return;
+    if (this._cssIndex?.disposableStack.disposed) {
+      this.resetCssIndex();
     }
 
-    const now = Date.now();
-    const uniqueEntry = `${this.getRelPath(css)!}?t=${now}`;
-    this._cssIndex = Object.assign({}, await import(uniqueEntry, { with: { type: "css" } }), {
-      disposableStack: new AsyncDisposableStack(),
-    });
+    if (this._cssIndexPromise) {
+      return this._cssIndexPromise;
+    }
+
+    this._cssIndexPromise = (async () => {
+      const { css } = this.metadata?.entries ?? {};
+      if (!css) {
+        this._cssIndex = null;
+        return;
+      }
+
+      const now = Date.now();
+      const uniqueEntry = `${this.getRelPath(css)!}?t=${now}`;
+      this._cssIndex = Object.assign({}, await import(uniqueEntry, { with: { type: "css" } }), {
+        disposableStack: new AsyncDisposableStack(),
+      });
+    })();
+
+    return this._cssIndexPromise;
   }
 
   private canLoadMixinsRecur() {
@@ -583,13 +623,17 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
     }
 
     if (!this.metadata) {
-      throw `can't load \`${this.getModuleIdentifier()}\` because it has no metadata`;
+      throw new Error(`can't load \`${this.getModuleIdentifier()}\` because it has no metadata`);
     }
     if (!isPreload && !this.mixinsLoaded && this.metadata.hasMixins) {
-      throw `can't load \`${this.getModuleIdentifier()}\` because it has unloaded mixins`;
+      throw new Error(
+        `can't load \`${this.getModuleIdentifier()}\` because it has unloaded mixins`,
+      );
     }
     if (!this.canLoad() || (range && !satisfies(parse(this.version), parseRange(range)))) {
-      throw `can't load \`${this.getModuleIdentifier()}\` because it is not enabled, installed, or satisfies the range \`${range}\``;
+      throw new Error(
+        `can't load \`${this.getModuleIdentifier()}\` because it is not enabled, installed, or satisfies the range \`${range}\``,
+      );
     }
 
     for (const [dependency, range] of Object.entries(this.metadata.dependencies)) {
@@ -637,11 +681,12 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
   }
 
   private async loadRecur() {
-    if (this.loaded) {
-      return this.transition.block();
-    }
+    if (this.loaded) return this.transition.block();
     this.forceLoad();
     const resolve = this.transition.extend();
+
+    const fetchCssPromise = this.#loadCssIndex();
+    const fetchJsPromise = this.#loadJsIndex();
 
     await Promise.all(
       Object.keys(this.metadata?.dependencies ?? {}).map((dependency) => {
@@ -650,11 +695,11 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
         return module.loadRecur();
       }),
     );
-
-    await this.#loadCss();
     await Promise.all(this.awaitedMixins);
-    await this.#loadJs();
 
+    await fetchCssPromise;
+    await fetchJsPromise;
+    await Promise.all([this.#loadCss(), this.#loadJs()]);
     resolve();
   }
 
@@ -673,6 +718,8 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
 
     await this._jsIndex?.disposableStack.disposeAsync();
     await this._cssIndex?.disposableStack.disposeAsync();
+    this.resetJsIndex();
+    this.resetCssIndex();
 
     resolve();
   }
@@ -1003,14 +1050,12 @@ export async function loadLocalModules() {
 }
 
 export async function loadRemoteModules() {
-  const remoteModules = [
-    await fetchJson<_Vault>(
-      "https://raw.githubusercontent.com/veryboringhwl/v3/main/modules/vault.json",
-    ),
-    await fetchJson<_Vault>(
-      "https://raw.githubusercontent.com/veryboringhwl/v3/main/pkgs/vault.json",
-    ),
-  ]
+  const [vaultA, vaultB] = await Promise.all([
+    fetchJson<_Vault>("https://raw.githubusercontent.com/veryboringhwl/v3/main/modules/vault.json"),
+    fetchJson<_Vault>("https://raw.githubusercontent.com/veryboringhwl/v3/main/pkgs/vault.json"),
+  ]);
+
+  const remoteModules = [vaultA, vaultB]
     .filter(Boolean)
     .reduceRight<_Vault["modules"]>(
       (acc, vault) => deepMerge(acc, vault?.modules, { arrays: "merge" }),

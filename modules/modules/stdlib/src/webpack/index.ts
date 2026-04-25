@@ -1,4 +1,9 @@
-import { type WebpackModule, type WebpackRequire, webpackRequire } from "../wpunpk.mix.ts";
+import {
+  type WebpackModule,
+  type WebpackRequire,
+  webpackRequire,
+  webpackRequireReady,
+} from "../wpunpk.mix.ts";
 
 export let modules: Array<[number, WebpackModule]>;
 export let exports: Array<Record<string, any>>;
@@ -30,15 +35,12 @@ export const analyzeWebpackRequire = (webpackRequire: WebpackRequire) => {
   const exportedFunctions = exported.filter(isFunction);
 
   const exportedReactObjects = Object.groupBy(exported, (x) => x.$$typeof);
-  const exportedContexts = exportedReactObjects[Symbol.for("react.context") as any]! as Array<
-    React.Context<any>
-  >;
-  const exportedForwardRefs = exportedReactObjects[
-    Symbol.for("react.forward_ref") as any
-  ]! as Array<React.ForwardRefExoticComponent<any>>;
-  const exportedMemos = exportedReactObjects[
-    Symbol.for("react.memo") as any
-  ]! as React.NamedExoticComponent[];
+  const exportedContexts = (exportedReactObjects[Symbol.for("react.context") as any] ??
+    []) as Array<React.Context<any>>;
+  const exportedForwardRefs = (exportedReactObjects[Symbol.for("react.forward_ref") as any] ??
+    []) as Array<React.ForwardRefExoticComponent<any>>;
+  const exportedMemos = (exportedReactObjects[Symbol.for("react.memo") as any] ??
+    []) as React.NamedExoticComponent[];
   const exportedMemoForwardRefs = exportedMemos.filter(
     (m) => m.type?.$$typeof === Symbol.for("react.forward_ref"),
   ) as Array<React.NamedExoticComponent & { type: React.ForwardRefExoticComponent<any> }>;
@@ -68,7 +70,9 @@ Object.assign(CHUNKS, {
   },
 });
 
-CHUNKS.xpui.promise.then(() => {
+export const ready = (async () => {
+  await globalThis.CHUNKS.xpui.promise;
+  await webpackRequireReady;
   const analysis = analyzeWebpackRequire(webpackRequire);
   modules = analysis.modules;
   exports = analysis.exports;
@@ -79,4 +83,7 @@ CHUNKS.xpui.promise.then(() => {
   exportedForwardRefs = analysis.exportedForwardRefs;
   exportedMemos = analysis.exportedMemos;
   exportedMemoForwardRefs = analysis.exportedMemoForwardRefs;
-});
+  return analysis;
+})();
+
+await ready;
