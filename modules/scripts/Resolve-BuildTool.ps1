@@ -5,11 +5,16 @@ function Get-BuildToolPath {
 		[switch]$ForceRebuild
 	)
 
-	$manifestPath = "./build/Cargo.toml"
-	$releasePath = Join-Path (Get-Location) "build/target/release/spicetify-build.exe"
-	$binDir = Join-Path (Get-Location) "build/bin"
-	$binPath = Join-Path $binDir "spicetify-build.exe"
-	$srcDir = Join-Path (Get-Location) "build/src"
+	$moduleRoot = Split-Path -Parent $PSScriptRoot
+	$creatorRoot = Join-Path $moduleRoot "../creator"
+	$manifestPath = Join-Path $creatorRoot "Cargo.toml"
+	$releasePath = Join-Path $creatorRoot "target/release/creator.exe"
+	$srcDir = Join-Path $creatorRoot "src"
+	$templatesDir = Join-Path $creatorRoot "templates"
+
+	if (-not (Test-Path $manifestPath)) {
+		throw "Creator manifest not found at $manifestPath"
+	}
 
 	$needsBuild = $ForceRebuild -or -not (Test-Path $releasePath)
 	if (-not $needsBuild) {
@@ -17,38 +22,30 @@ function Get-BuildToolPath {
 		$manifestTime = (Get-Item $manifestPath).LastWriteTimeUtc
 		if ($manifestTime -gt $releaseTime) {
 			$needsBuild = $true
-		} elseif (Test-Path $srcDir) {
+		}
+
+		if ((-not $needsBuild) -and (Test-Path $srcDir)) {
 			$latestSrc = Get-ChildItem -Path $srcDir -Recurse -File | Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 1
 			if ($latestSrc -and $latestSrc.LastWriteTimeUtc -gt $releaseTime) {
+				$needsBuild = $true
+			}
+		}
+
+		if ((-not $needsBuild) -and (Test-Path $templatesDir)) {
+			$latestTemplate = Get-ChildItem -Path $templatesDir -Recurse -File | Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 1
+			if ($latestTemplate -and $latestTemplate.LastWriteTimeUtc -gt $releaseTime) {
 				$needsBuild = $true
 			}
 		}
 	}
 
 	if ($needsBuild) {
-		Write-Host "Building release build tool..."
+		Write-Host "Building creator tool..."
 		& cargo build --release --manifest-path $manifestPath
 		if ($LASTEXITCODE -ne 0) {
-			throw "Failed to build release build tool"
+			throw "Failed to build creator tool"
 		}
 	}
 
-	if (-not (Test-Path $binDir)) {
-		New-Item -ItemType Directory -Path $binDir | Out-Null
-	}
-
-	if (
-		$ForceRebuild -or
-		-not (Test-Path $binPath) -or
-		((Get-Item $releasePath).LastWriteTimeUtc -gt (Get-Item $binPath).LastWriteTimeUtc)
-	) {
-		try {
-			Copy-Item -Path $releasePath -Destination $binPath -Force -ErrorAction Stop
-		} catch {
-			Write-Host "Warning: build/bin tool is locked; using release binary directly for this run."
-			return $releasePath
-		}
-	}
-
-	return $binPath
+	return $releasePath
 }

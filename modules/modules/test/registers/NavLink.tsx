@@ -65,7 +65,7 @@ const ActiveIcon = () => (
 export const TestNavLink = () => (
   <NavLink
     activeIcon={<ActiveIcon />}
-    appRoutePath="/test/"
+    appRoutePath="/spicetify/test/"
     icon={<Icon />}
     localizedApp="Stdlib Test"
   />

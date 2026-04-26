@@ -6,17 +6,24 @@ param (
 	[string[]]$Dirs
 )
 
+$ModuleRoot = Split-Path -Parent $PSScriptRoot
+Push-Location $ModuleRoot
+try {
+
 if ($Dirs.Count -eq 0) {
 	$Dirs = Get-ChildItem -Directory modules
 }
 
-. .\scripts\VARS.ps1
+. "$PSScriptRoot\VARS.ps1"
 
 foreach ($Dir in $Dirs) {
 	$Module = Split-Path -Leaf $Dir
 	$Id = Get-Id $Module
 	$Fid = Get-FullId $Module
 	Write-Host "Disabling $Fid"
-	spicetify pkg enable $Id@
+	spicetify pkg disable $Id@
 	spicetify pkg delete $Fid
+}
+} finally {
+	Pop-Location
 }

@@ -2,7 +2,7 @@
   "name": "test",
   "tags": ["app", "test"],
   "preview": "./assets/PREVIEW.png",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "authors": ["veryboringhwl"],
   "description": "test",
   "readme": "./assets/README.md",
