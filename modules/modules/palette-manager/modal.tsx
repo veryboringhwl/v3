@@ -1,7 +1,3 @@
-/* Copyright (C) 2024 harbassan, and Delusoire
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
-
 import type { ChangeEvent } from "npm:@types/react";
 import { startCase } from "/modules/stdlib/deps.ts";
 import { useSearchBar } from "/modules/stdlib/lib/components/index.tsx";
@@ -10,7 +6,7 @@ import { Platform } from "/modules/stdlib/src/expose/Platform.ts";
 import { React } from "/modules/stdlib/src/expose/React.ts";
 import { Color } from "/modules/stdlib/src/webpack/misc.ts";
 import { MenuItem } from "/modules/stdlib/src/webpack/ReactComponents.ts";
-import { Palette, PaletteManager } from "./palette.ts";
+import { Palette, PaletteManager } from "./preload.ts";
 
 export default function () {
   const setCurrentPalette = (_: Palette, palette: Palette) =>

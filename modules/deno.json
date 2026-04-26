@@ -2,36 +2,23 @@
   "imports": {
     "custom-react/jsx-runtime": "/Users/Darren/Desktop/GitHub/v3/modules/modules/stdlib/src/expose/jsx-runtime.ts",
     "/hooks/": "/Users/Darren/Desktop/GitHub/v3/hooks/",
-    "/modules/": "/Users/Darren/Desktop/GitHub/v3/modules/modules/",
-    "@biomejs/biome": "npm:@biomejs/biome@^2.4.10",
-    "@std/fs": "jsr:@std/fs@1.0.20",
-    "@std/path": "jsr:@std/path@1.1.4",
-    "@swc/core": "npm:@swc/core@1.15.24",
-    "@types/yargs": "npm:@types/yargs@17.0.35",
-    "autoprefixer": "npm:autoprefixer@10.4.27",
-    "open": "npm:open@11.0.0",
-    "postcss": "npm:postcss@8.5.8",
-    "postcss-import": "npm:postcss-import@16.1.1",
-    "postcss-selector-parser": "npm:postcss-selector-parser@7.1.1",
-    "tailwindcss": "npm:tailwindcss@3.4.19",
-    "tailwindcss/nesting": "npm:tailwindcss@3.4.19/nesting/index.js",
-    "yargs": "npm:yargs@18.0.0"
+    "/modules/": "/Users/Darren/Desktop/GitHub/v3/modules/modules/"
   },
   "tasks": {
-    "cm:fetch": "cargo run --release --manifest-path build/Cargo.toml --classmap-fetch",
+    "cm:fetch": "./scripts/fetch.ps1",
     "pw:build": "./scripts/build.ps1",
     "pw:watch": "./scripts/watch.ps1",
     "pw:enable": "./scripts/enable.ps1",
     "pw:disable": "./scripts/disable.ps1",
-    "build:release": "cargo run --release --manifest-path build/Cargo.toml -- build-release",
-    "ci:build:release": "cargo run --release --manifest-path build/Cargo.toml -- build-release modules/*",
+    "build:release": "cargo run --release --manifest-path ../creator/Cargo.toml -- build-release",
+    "ci:build:release": "cargo run --release --manifest-path ../creator/Cargo.toml -- build-release modules/*",
     "check": "deno run -A @biomejs/biome check --write --unsafe"
   },
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "custom-react",
     "noImplicitOverride": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"]
+    "lib": ["deno.ns", "DOM", "DOM.Iterable", "ESNext"]
   },
   "lint": {
     "exclude": ["**/*"]

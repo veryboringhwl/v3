@@ -5,7 +5,7 @@ export const MarketplaceNavLink = () => {
   return (
     <NavLink
       activeIcon={<MarketplaceActiveIcon />}
-      appRoutePath="/bespoke/marketplace/"
+      appRoutePath="/spicetify/marketplace/"
       icon={<MarketplaceIcon />}
       localizedApp="Marketplace"
     />

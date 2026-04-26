@@ -5,9 +5,9 @@ import {
   settingsClient,
   slotsClient,
   testingClient,
-} from "../mod.ts";
+} from "../load.ts";
 
-import { retryCounter } from "./utils/counter.ts";
+import { retryCounter } from "../preload.ts";
 
 const overrideSlot = async ({ slotId }: { slotId: string }) => {
   try {
@@ -52,7 +52,7 @@ export const bindSlots = async (adSlots: { slotId: string }[]) => {
 };
 
 export let inStreamSubscription: { cancel: () => void };
-// idk what this even does tbh 
+// idk what this even does tbh
 // todo: find out what inStream ads are?
 export const pauseAds = async () => {
   if (testingClient) {

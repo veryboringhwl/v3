@@ -1,4 +1,4 @@
-import { storage } from "../../mod.tsx";
+import { storage } from "../../load.tsx";
 
 const HIDE_CORE_MODULES_KEY = "hideCoreModules";
 const HIDE_CORE_MODULES_EVENT = "marketplace:hideCoreModulesChanged";

@@ -1,6 +1,6 @@
 import { Platform } from "/modules/stdlib/src/expose/Platform.ts";
 import { exportedFunctions } from "/modules/stdlib/src/webpack/index.js";
-import { logger } from "../../mod.ts";
+import { logger } from "../../load.ts";
 
 export const EsperantoTransport = Platform.getEsperantoTransport();
 

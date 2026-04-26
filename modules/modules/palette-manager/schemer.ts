@@ -1,9 +1,5 @@
-/* Copyright (C) 2024 harbassan, and Delusoire
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
-
 import type { ModuleInstance } from "/hooks/module.ts";
-import { Palette, PaletteManager } from "./palette.ts";
+import { Palette, PaletteManager } from "./preload.ts";
 
 class Schemer {
   constructor(private mod: ModuleInstance) {

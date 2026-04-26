@@ -1,5 +1,5 @@
 import { Platform } from "/modules/stdlib/src/expose/Platform.ts";
-import { localStorageApi } from "../mod.ts";
+import { localStorageApi } from "../load.ts";
 
 export const configureExpFeatures = async () => {
   const expFeatures = localStorageApi.getItem("remote-config-overrides");
