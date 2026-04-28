@@ -131,6 +131,9 @@ impl Builder {
             }
         }
 
+        scripts_input.sort();
+        unknown_files.sort();
+
         let mut did_work = false;
 
         let mut did_build_js = false;
@@ -199,7 +202,7 @@ impl Builder {
             rel_js.set_extension("js");
             let output = self.get_output_path(&rel_js);
             let rel_js_str = normalize_slashes(&rel_js);
-            let filepath = format!("/modules{}/{}", self.identifier, rel_js_str);
+            let filepath = format!("/modules/{}/{}", self.identifier, rel_js_str);
             self.transpiler
                 .js(input, &output, &self.input_dir, &filepath, timestamp)?;
         }
@@ -402,6 +405,7 @@ fn collect_js_inputs(root: &Path) -> Vec<PathBuf> {
             }
         }
     }
+    inputs.sort();
     inputs
 }
 
