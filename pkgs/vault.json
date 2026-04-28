@@ -1,10 +1,46 @@
 {
   "modules": {
+    "stdlib": {
+      "v": {
+        "0.1.0": {
+          "artifacts": [
+            "https://github.com/veryboringhwl/v3/releases/download/v0.2/stdlib@0.1.0+1.2.88.zip"
+          ]
+        }
+      }
+    },
+    "marketplace": {
+      "v": {
+        "0.1.0": {
+          "artifacts": [
+            "https://github.com/veryboringhwl/v3/releases/download/v0.2/Marketplace@0.1.0+1.2.88.zip"
+          ]
+        }
+      }
+    },
+    "palette-manager": {
+      "v": {
+        "0.1.0": {
+          "artifacts": [
+            "https://github.com/veryboringhwl/v3/releases/download/v0.2/palette-manager@0.1.0+1.2.88.zip"
+          ]
+        }
+      }
+    },
+    "experimental-features": {
+      "v": {
+        "0.1.0": {
+          "artifacts": [
+            "https://github.com/veryboringhwl/v3/releases/download/v0.2/Experimental.Features@0.1.0+1.2.88.zip"
+          ]
+        }
+      }
+    },
     "test": {
       "v": {
         "0.1.0": {
           "artifacts": [
-            "https://github.com/veryboringhwl/v3/releases/download/v0.2/test@0.1.0.zip"
+            "https://github.com/veryboringhwl/v3/releases/download/v0.2/test@0.1.0+1.2.88.zip"
           ]
         }
       }
