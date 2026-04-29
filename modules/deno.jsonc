@@ -1,6 +1,7 @@
 {
   "imports": {
-    "custom-react/jsx-runtime": "/Users/Darren/Desktop/GitHub/v3/modules/modules/stdlib/src/expose/jsx-runtime.ts",
+    //just to keep deno happy creator handles this
+    "react/jsx-runtime": "npm:react/jsx-runtime",
     "/hooks/": "/Users/Darren/Desktop/GitHub/v3/hooks/",
     "/modules/": "/Users/Darren/Desktop/GitHub/v3/modules/modules/"
   },
@@ -16,7 +17,6 @@
   },
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "custom-react",
     "noImplicitOverride": true,
     "lib": ["deno.ns", "DOM", "DOM.Iterable", "ESNext"]
   },
@@ -27,3 +27,4 @@
     "exclude": ["**/*"]
   }
 }
+

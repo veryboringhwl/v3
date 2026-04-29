@@ -4,7 +4,6 @@ const en = {
       settings: {
         heading: "Marketplace",
         hideCore: "Hide core modules (stdlib, marketplace, ...)",
-        showLibraries: "Show library modules",
         description:
           "Use Marketplace to install and enable modules. Enabling also loads modules automatically.",
       },

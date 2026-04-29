@@ -10,6 +10,6 @@
     "js": "index.js"
   },
   "dependencies": {
-    "stdlib": "0.1.0"
+    "stdlib": ">=0.1.0"
   }
 }

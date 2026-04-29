@@ -11,9 +11,7 @@ import { React } from "/modules/stdlib/src/expose/React.ts";
 import { t } from "../../../shared/i18n.ts";
 import {
   getHideCoreModules,
-  getShowLibraries,
   subscribeHideCoreModules,
-  subscribeShowLibraries,
 } from "../../../shared/marketplaceSettings.ts";
 import { useMarketplaceCatalog } from "../hooks/useMarketplaceCatalog.ts";
 import { getCatalogKey } from "../services/catalogService.ts";
@@ -48,10 +46,6 @@ const SortFns: Record<
 
 const hasTag = (item: MarketplaceCatalogItem, tag: string) =>
   item.metadata?.tags.includes(tag) ?? false;
-
-const libTags = new Set(["lib", "npm", "internal"]);
-const isLibraryItem = (item: MarketplaceCatalogItem) =>
-  (item.metadata?.tags ?? []).some((tag) => libTags.has(tag));
 
 const coreModuleNames = new Set(["stdlib", "marketplace"]);
 const isCoreModuleItem = (item: MarketplaceCatalogItem) => {
@@ -96,15 +90,10 @@ export const MarketplacePage = () => {
 
   const lastSelectedKeyRef = React.useRef<string | null>(null);
   const [hideCoreModules, setHideCoreModules] = React.useState(() => getHideCoreModules());
-  const [showLibraries, setShowLibraries] = React.useState(() => getShowLibraries());
   const [isVersionDialogOpen, setVersionDialogOpen] = React.useState(false);
 
   React.useEffect(() => {
     return subscribeHideCoreModules(setHideCoreModules);
-  }, []);
-
-  React.useEffect(() => {
-    return subscribeShowLibraries(setShowLibraries);
   }, []);
 
   const availableFilters = React.useMemo(
@@ -114,22 +103,15 @@ export const MarketplacePage = () => {
       extensions: { [TreeNodeVal]: t("marketplace.filters.extensions"), ...enabledFilterLabels },
       apps: { [TreeNodeVal]: t("marketplace.filters.apps"), ...enabledFilterLabels },
       snippets: { [TreeNodeVal]: t("marketplace.filters.snippets"), ...enabledFilterLabels },
-      libs: {
-        [TreeNodeVal]: showLibraries ? t("marketplace.filters.libs") : null,
-        ...enabledFilterLabels,
-      },
+      libs: { [TreeNodeVal]: t("marketplace.filters.libs"), ...enabledFilterLabels },
     }),
-    [showLibraries],
+    [],
   );
 
   const filterFns = React.useMemo<RTree<(item: MarketplaceCatalogItem) => boolean>>(
     () => ({
       [TreeNodeVal]: (item) => {
         if (hideCoreModules && isCoreModuleItem(item)) {
-          return false;
-        }
-
-        if (!showLibraries && isLibraryItem(item)) {
           return false;
         }
 
@@ -152,13 +134,11 @@ export const MarketplacePage = () => {
         ...enabledFilterFns,
       },
       libs: {
-        [TreeNodeVal]: (item) => isLibraryItem(item),
-        enabled: {
-          [TreeNodeVal]: (item) => item.instance.isLoaded(),
-        },
+        [TreeNodeVal]: (item) => hasTag(item, "lib"),
+        ...enabledFilterFns,
       },
     }),
-    [hideCoreModules, showLibraries],
+    [hideCoreModules],
   );
 
   const [searchbar, search] = useSearchBar({

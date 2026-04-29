@@ -22,9 +22,9 @@ export const RemoteConfigProvider = ({
   </RemoteConfigProviderComponent>
 );
 
-export const SnackbarProvider = findBy("enqueueSnackbar called with invalid argument")(
-  exportedFunctions,
-);
+export const SnackbarProvider: React.FC<any> = findBy(
+  "enqueueSnackbar called with invalid argument",
+)(exportedFunctions);
 
 export const StoreProvider: React.FC<any> = findBy(
   "notifyNestedSubs",

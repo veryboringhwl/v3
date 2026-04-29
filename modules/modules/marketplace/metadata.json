@@ -3,7 +3,7 @@
   "tags": ["app", "marketplace"],
   "version": "0.1.0",
   "authors": ["veryboringhwl"],
-  "description": " marketplace for Spicetify v3.",
+  "description": "marketplace for Spicetify v3.",
   "readme": "./assets/README.md",
   "preview": "./assets/PREVIEW.png",
   "entries": {
@@ -11,6 +11,6 @@
     "css": "index.css"
   },
   "dependencies": {
-    "stdlib": "0.1.0"
+    "stdlib": ">=0.1.0"
   }
 }

@@ -4,9 +4,7 @@ import { UI } from "../src/webpack/ComponentLibrary.ts";
 import { Locale } from "../src/webpack/misc.ts";
 import { Dialog } from "../src/webpack/ReactComponents.ts";
 
-//template options for nothing in modal
-
-const [RootChildrenRegistry, _RootProvidersRegistry] = RootRegistry;
+const [RootChildrenRegistry] = RootRegistry;
 
 let ref: React.ReactElement | undefined;
 
@@ -14,22 +12,23 @@ export function display({
   title,
   content,
   isLarge,
+  template = true,
 }: {
   title: string;
   content: React.ReactElement;
   isLarge: boolean;
+  template?: boolean;
 }) {
   hide();
 
-  RootChildrenRegistry.add(
-    (ref = (
-      <PopupModal
-        children={content}
-        contentLabel={title}
-        isEmbedWidgetGeneratorOrTrackCreditsModal={isLarge}
-      />
-    )),
+  const element = (
+    <PopupModal contentLabel={title} isEmbedWidgetGenerator={isLarge} template={template}>
+      {content}
+    </PopupModal>
   );
+
+  ref = element as React.ReactElement;
+  RootChildrenRegistry.add(element as React.ReactElement);
 }
 
 export function hide() {
@@ -42,12 +41,22 @@ export function hide() {
 interface PopupModalProps {
   contentLabel: string;
   children: React.ReactNode;
-  isEmbedWidgetGeneratorOrTrackCreditsModal: boolean;
+  isEmbedWidgetGenerator: boolean;
+  template?: boolean;
 }
+
 const PopupModal = (props: PopupModalProps) => {
   const isOpen = true;
 
-  if (props.isEmbedWidgetGeneratorOrTrackCreditsModal) {
+  if (!props.template) {
+    return (
+      <Dialog animated={true} isOpen={isOpen} onClose={hide} shouldCloseOnBackdropClick={true}>
+        {props.children}
+      </Dialog>
+    );
+  }
+
+  if (props.isEmbedWidgetGenerator) {
     return (
       <Dialog animated={true} isOpen={isOpen} onClose={hide} shouldCloseOnBackdropClick={true}>
         <div

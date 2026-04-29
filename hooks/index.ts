@@ -2,7 +2,6 @@
 import mixin, { applyTransforms } from "./mixins.js";
 // @deno-types="./module.ts"
 import {
-  awaitAllLoadableMixins,
   enableAllLoadable,
   enableAllLoadableMixins,
   INTERNAL_MIXIN_LOADER,
@@ -29,7 +28,6 @@ console.timeEnd("onSpotifyInit");
 
 console.time("onSpotifyPostInit");
 await Promise.all(INTERNAL_MIXIN_LOADER.awaitedMixins);
-await awaitAllLoadableMixins();
 await enableAllLoadable();
 console.timeEnd("onSpotifyPostInit");
 requestIdleCallback(loadRemoteModules);

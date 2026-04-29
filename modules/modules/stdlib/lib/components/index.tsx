@@ -1,22 +1,3 @@
-/* Copyright © 2024
- *      Delusoire <deluso7re@outlook.com>
- *
- * This file is part of bespoke/modules/stdlib.
- *
- * bespoke/modules/stdlib is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * bespoke/modules/stdlib is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with bespoke/modules/stdlib. If not, see <https://www.gnu.org/licenses/>.
- */
-
 import { get } from "../../deps.ts";
 import { React } from "../../src/expose/React.ts";
 import { FilterContext } from "../../src/webpack/FilterContext.xpui.ts";
@@ -24,7 +5,7 @@ import { FilterBox } from "../../src/webpack/ReactComponents.xpui.ts";
 import { ChipFilter } from "./ChipFilter.tsx";
 import Dropdown, { type DropdownOptions } from "./Dropdown.tsx";
 
-// * Who doesn't love some Fixed Point (Functional) Programming?
+// Who doesn't love some Fixed Point (Functional) Programming?
 const Bluebird =
   <A, B>(a: (b: B) => A) =>
   <C,>(b: (c: C) => B) =>

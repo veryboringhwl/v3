@@ -42,6 +42,10 @@ import {
 
 await globalThis.CHUNKS.xpui.promise;
 
+// instead of doing this
+// instead do it manually as some components arent exported
+// instead i would do data-encore-id=t.k.ChipGroup
+// and then also add type for each
 const componentPairs = [
   exportedFunctions.map((f) => [f, f]),
   exportedForwardRefs.map((f) => [(f as any).render, f]),
@@ -55,10 +59,6 @@ const componentPairs = [
   })
   .filter(Boolean);
 
-/**
- * The Compiled UI Library.
- * Access components via UI.ComponentName (e.g., UI.Text, UI.ButtonPrimary).
- */
 export const UI: {
   AdaptiveTitle: React.ForwardRefExoticComponent<
     AdaptiveTitleProps & React.RefAttributes<HTMLElement>

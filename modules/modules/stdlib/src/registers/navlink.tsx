@@ -58,35 +58,32 @@ export type NavLinkProps = {
   activeIcon: React.ReactNode;
 };
 
-export const NavLink: React.FC<NavLinkProps> = (props) => {
-  const isActive = Platform.getHistory().location.pathname?.startsWith(props.appRoutePath);
-
-  return (
-    <_NavLink
-      appRoutePath={props.appRoutePath}
-      icon={isActive ? props.activeIcon : props.icon}
-      isActive={isActive}
-      localizedApp={props.localizedApp}
-    />
-  );
-};
-
-interface NavLinkFactoryProps {
-  localizedApp: string;
-  appRoutePath: string;
-  icon: React.ReactNode;
-  isActive: boolean;
-}
-
-const _NavLink: React.FC<NavLinkFactoryProps> = ({
+export const NavLink: React.FC<NavLinkProps> = ({
   localizedApp,
   appRoutePath,
   icon,
-  isActive,
-}: NavLinkFactoryProps) => {
+  activeIcon,
+}) => {
+  const History = Platform.getHistory();
+  const [currentPathname, setCurrentPathname] = React.useState(History.location.pathname);
+
+  // We want active navlink for routes like "/test/settings"
+  // but also dont want "/test" from matching "/testing"
+  const isActive =
+    currentPathname === appRoutePath || currentPathname.startsWith(`${appRoutePath}/`);
+
+  React.useEffect(() => {
+    const unlisten = History.listen(({ pathname }: { pathname: string }) => {
+      setCurrentPathname(pathname);
+    }) as () => void;
+
+    return unlisten;
+  }, [History]);
+
   const IconComponent = React.useMemo(() => {
-    return () => <>{icon}</>;
-  }, [icon]);
+    const currentIcon = isActive ? activeIcon : icon;
+    return () => <>{currentIcon}</>;
+  }, [isActive, activeIcon, icon]);
 
   return (
     <Tooltip label={localizedApp}>
@@ -96,11 +93,9 @@ const _NavLink: React.FC<NavLinkFactoryProps> = ({
           kxv3By32Og8yDEXy: isActive,
         })}
         iconOnly={IconComponent}
-        onClick={() => {
-          Platform.getHistory().push(appRoutePath);
-        }}
+        onClick={() => History.push(appRoutePath, undefined)}
         size="medium"
-      ></UI.ButtonTertiary>
+      />
     </Tooltip>
   );
 };

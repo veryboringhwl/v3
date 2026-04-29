@@ -2,7 +2,7 @@
   "name": "stdlib",
   "tags": ["lib"],
   "version": "0.1.0",
-  "authors": ["spicetify", "Delusoire"],
+  "authors": ["spicetify"],
   "description": "The standard library",
   "readme": "./assets/README.md",
   "preview": "./assets/PREVIEW.png",

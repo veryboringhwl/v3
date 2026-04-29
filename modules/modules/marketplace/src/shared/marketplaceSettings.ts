@@ -2,8 +2,6 @@ import { storage } from "../../load.tsx";
 
 const HIDE_CORE_MODULES_KEY = "hideCoreModules";
 const HIDE_CORE_MODULES_EVENT = "marketplace:hideCoreModulesChanged";
-const SHOW_LIBRARIES_KEY = "showLibraries";
-const SHOW_LIBRARIES_EVENT = "marketplace:showLibrariesChanged";
 
 const parseBoolean = (raw: string | null, fallback: boolean) => {
   if (raw === null) {
@@ -49,29 +47,3 @@ export const subscribeHideCoreModules = (listener: (value: boolean) => void) => 
   return () => globalThis.removeEventListener(HIDE_CORE_MODULES_EVENT, handleChange);
 };
 
-export const getShowLibraries = () =>
-  parseBoolean(storage?.getItem(SHOW_LIBRARIES_KEY) ?? null, false);
-
-export const setShowLibraries = (value: boolean) => {
-  storage?.setItem(SHOW_LIBRARIES_KEY, JSON.stringify(value));
-  globalThis.dispatchEvent(
-    new CustomEvent<boolean>(SHOW_LIBRARIES_EVENT, {
-      detail: value,
-    }),
-  );
-};
-
-export const subscribeShowLibraries = (listener: (value: boolean) => void) => {
-  const handleChange = (event: Event) => {
-    const customEvent = event as CustomEvent<boolean>;
-    if (typeof customEvent.detail === "boolean") {
-      listener(customEvent.detail);
-      return;
-    }
-
-    listener(getShowLibraries());
-  };
-
-  globalThis.addEventListener(SHOW_LIBRARIES_EVENT, handleChange);
-  return () => globalThis.removeEventListener(SHOW_LIBRARIES_EVENT, handleChange);
-};
