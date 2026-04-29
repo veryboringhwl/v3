@@ -361,14 +361,13 @@ export const ReactComponentPage = () => {
         <Card title="Snackbar">
           <button
             className="test-page-btn"
-            type="button"
             onClick={() => enqueueSnackbar(<span>Hello!</span>, { variant: "default" })}
+            type="button"
           >
             Show Toast
           </button>
           <button
             className="test-page-btn"
-            type="button"
             onClick={() => {
               enqueueCustomSnackbar(
                 <div style={{ background: "purple", padding: "10px", color: "white" }}>
@@ -381,6 +380,7 @@ export const ReactComponentPage = () => {
                 },
               );
             }}
+            type="button"
           >
             Show Custom Toast
           </button>

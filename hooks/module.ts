@@ -389,7 +389,7 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
 
   private mixinsLoaded = false;
   private loaded = false;
-    _jsIndex: JSIndex | null = null;
+  _jsIndex: JSIndex | null = null;
   _cssIndex: CSSIndex | null = null;
   private _jsIndexPromise: Promise<void> | null = null;
   private _cssIndexPromise: Promise<void> | null = null;

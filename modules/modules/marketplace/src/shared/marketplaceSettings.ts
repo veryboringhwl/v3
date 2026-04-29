@@ -46,4 +46,3 @@ export const subscribeHideCoreModules = (listener: (value: boolean) => void) => 
   globalThis.addEventListener(HIDE_CORE_MODULES_EVENT, handleChange);
   return () => globalThis.removeEventListener(HIDE_CORE_MODULES_EVENT, handleChange);
 };
-
