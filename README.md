@@ -94,12 +94,5 @@ spicetify apply
 ## Notes
 
 > [!IMPORTANT]
-> Do not run `spicetify fetch`. V3 relies on the newer hooks implementation, and `spicetify fetch` uses the hooks from the Spicetify repository which are oudated.
+> Do not run `spicetify sync`. V3 relies on the newer hooks implementation, and `spicetify sync` uses the hooks from the Spicetify repository which are oudated.
 
-### `TypeError: Cannot read properties of undefined (reading 'getPlayerAPI')`
-
-If you see this error, reload Spotify and try again. It usually fixes after a reload.
-
-Run `spicetify` in terminal to open the TUI.
-
-If developing modules just run `pw:build` and the close and reopen Spotify

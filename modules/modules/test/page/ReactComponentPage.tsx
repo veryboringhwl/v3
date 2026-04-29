@@ -16,7 +16,7 @@ import {
   Toggle,
   Tooltip,
 } from "/modules/stdlib/src/webpack/ReactComponents.ts";
-import { enqueueCustomSnackbar, enqueueSnackbar } from "/modules/stdlib/src/webpack/Snackbar.js";
+import { useCustomSnackbar, useSnackbar } from "/modules/stdlib/src/webpack/Snackbar.js";
 import { Card, type CardPropDoc } from "./Components/Card.tsx";
 import { Section } from "./Components/Section.tsx";
 
@@ -231,23 +231,14 @@ const GenericModalDemo = () => {
 };
 
 export const ReactComponentPage = () => {
+  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueCustomSnackbar } = useCustomSnackbar();
   return (
     <div className="test-showcase-page test-showcase-page--react">
       <Section
         description="Reference + live playground for every React component currently exposed through ReactComponents.ts in this page."
         title="Stdlib React Components"
       >
-        <Card title="Snackbar">
-          <button onClick={() => enqueueSnackbar(<span>Hello!</span>, { variant: "default" })}>
-            Show Toast
-          </button>
-          <button
-            onClick={() => enqueueCustomSnackbar(<span>Hello!</span>, { variant: "default" })}
-          >
-            Show Custom Toast
-          </button>
-        </Card>
-
         <Card
           props={[
             { name: "Preview", type: "Live component output", required: true },
@@ -365,6 +356,34 @@ export const ReactComponentPage = () => {
               </button>
             </ScrollableContainer>
           </div>
+        </Card>
+
+        <Card title="Snackbar">
+          <button
+            className="test-page-btn"
+            type="button"
+            onClick={() => enqueueSnackbar(<span>Hello!</span>, { variant: "default" })}
+          >
+            Show Toast
+          </button>
+          <button
+            className="test-page-btn"
+            type="button"
+            onClick={() => {
+              enqueueCustomSnackbar(
+                <div style={{ background: "purple", padding: "10px", color: "white" }}>
+                  <span>Custom Headless Hello!</span>
+                </div>,
+                {
+                  identifier: "my-unique-toast-id",
+                  autoHideDuration: 3000,
+                  anchorOrigin: { vertical: "top", horizontal: "right" },
+                },
+              );
+            }}
+          >
+            Show Custom Toast
+          </button>
         </Card>
       </Section>
 

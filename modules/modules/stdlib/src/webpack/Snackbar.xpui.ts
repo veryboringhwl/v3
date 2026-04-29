@@ -12,18 +12,10 @@ export const useSnackbar: typeof useSnackbarT = findBy(
   /^function\(\)\{return\(0,[a-zA-Z_$][\w$]*\.useContext\)\([a-zA-Z_$][\w$]*\)\}$/,
 )(exportedFunctions);
 
-type FN_enqueueSnackbar_OPTS =
+type FN_useCustomSnackbar_OPTS =
   | (Omit<OptionsObjectT, "key"> & { keyPrefix: string })
   | (OptionsObjectT & { identifier: string });
-export const enqueueSnackbar: (
+export const useCustomSnackbar: (
   element: React.ReactElement,
-  opts: FN_enqueueSnackbar_OPTS,
-) => ReturnType<EnqueueSnackbarT> = findBy("enqueueSnackbar", "default")(exportedFunctions);
-
-type FN_enqueueCustomSnackbar_OPTS =
-  | (Omit<OptionsObjectT, "key"> & { keyPrefix: string })
-  | (OptionsObjectT & { identifier: string });
-export const enqueueCustomSnackbar: (
-  element: React.ReactElement,
-  opts: FN_enqueueCustomSnackbar_OPTS,
+  opts: FN_useCustomSnackbar_OPTS,
 ) => ReturnType<EnqueueSnackbarT> = findBy("enqueueCustomSnackbar", "headless")(exportedFunctions);
