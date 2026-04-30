@@ -2,7 +2,7 @@ type Predicate<A> = (input: A) => boolean;
 
 export const fnStr = (f: unknown): string => {
   try {
-    return (f as Function).toString();
+    return (f as (...args: never) => unknown).toString();
   } catch {
     try {
       return Function.prototype.toString.call(f);
@@ -23,7 +23,7 @@ export function findBy(...tests: Array<string | RegExp | Predicate<any>>) {
     }
   });
   const testFn = (x: any) => testFns.map((t) => t(x)).every(Boolean);
-  return <A>(xs: A[]) => xs.find(testFn)!;
+  return <A>(xs: A[]) => xs.find(testFn) ?? (undefined as never);
 }
 
 // assumption: str[start] === pair[0]
@@ -49,7 +49,7 @@ export const findMatchingPos = (
 
 export const matchLast = (str: string, pattern: RegExp) => {
   const matches = str.matchAll(pattern);
-  return Array.from(matches).at(-1)!;
+  return Array.from(matches).at(-1) ?? (undefined as never);
 };
 
 export function stringifyUrlSearchParams(params: Record<string, string | string[]>) {

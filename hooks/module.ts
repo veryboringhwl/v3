@@ -143,7 +143,7 @@ export abstract class ModuleBase<
     const i: Array<ModuleBase<ModuleBase<any>>> = [this];
 
     while (i.length) {
-      const e = i.shift()!;
+      const e = i.shift() ?? (undefined as never);
       // @ts-expect-error
       yield* e.getChildren();
       i.push(...e.getChildren());
@@ -303,7 +303,8 @@ export class Module extends ModuleBase<Module, ModuleInstance> {
   }
 
   public getEnabledInstance(): ModuleInstance | null {
-    return this.getEnabledVersion() ? this.instances.get(this.getEnabledVersion()!)! : null;
+    const version = this.getEnabledVersion();
+    return version ? (this.instances.get(version) ?? null) : null;
   }
 }
 
@@ -368,7 +369,9 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
       return;
     }
 
-    const vault = await fetchJson<_Vault>(this.getRelPath("vault.json")!).catch(() => null);
+    const relPath = this.getRelPath("vault.json");
+    if (!relPath) return;
+    const vault = await fetchJson<_Vault>(relPath).catch(() => null);
     const provider = vault?.modules ?? {};
 
     Object.keys(provider)
@@ -376,7 +379,9 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
       .filter((i) => i.startsWith(this.getModuleIdentifier()))
       .forEach(async (identifier) => {
         const module = await this.module.getDescendantOrNew(identifier);
-        await module.init(provider[identifier].v, false);
+        const store = provider[identifier];
+        if (!store) return;
+        await module.init(store.v, false);
       });
   }
 
@@ -574,7 +579,9 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
       }
 
       const now = Date.now();
-      const uniqueEntry = `${this.getRelPath(js)!}?t=${now}`;
+      const jsPath = this.getRelPath(js);
+      if (!jsPath) return;
+      const uniqueEntry = `${jsPath}?t=${now}`;
       this._jsIndex = Object.assign({}, await import(uniqueEntry), {
         disposableStack: new AsyncDisposableStack(),
       });
@@ -600,7 +607,9 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
       }
 
       const now = Date.now();
-      const uniqueEntry = `${this.getRelPath(css)!}?t=${now}`;
+      const cssPath = this.getRelPath(css);
+      if (!cssPath) return;
+      const uniqueEntry = `${cssPath}?t=${now}`;
       this._cssIndex = Object.assign({}, await import(uniqueEntry, { with: { type: "css" } }), {
         disposableStack: new AsyncDisposableStack(),
       });
@@ -659,7 +668,8 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
 
     await Promise.all(
       Object.keys(this.metadata?.dependencies ?? {}).map((dependency) => {
-        const module = RootModule.INSTANCE.getDescendant(dependency)?.getEnabledInstance()!;
+        const module = RootModule.INSTANCE.getDescendant(dependency)?.getEnabledInstance();
+        if (!module) return undefined;
         return module.loadMixinsRecur();
       }),
     );
@@ -672,7 +682,8 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
   private async awaitMixinsRecur() {
     await Promise.all(
       Object.keys(this.metadata?.dependencies ?? {}).map((dependency) => {
-        const module = RootModule.INSTANCE.getDescendant(dependency)?.getEnabledInstance()!;
+        const module = RootModule.INSTANCE.getDescendant(dependency)?.getEnabledInstance();
+        if (!module) return undefined;
         return module.awaitMixinsRecur();
       }),
     );
@@ -690,7 +701,8 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
 
     await Promise.all(
       Object.keys(this.metadata?.dependencies ?? {}).map((dependency) => {
-        const module = RootModule.INSTANCE.getDescendant(dependency)?.getEnabledInstance()!;
+        const module = RootModule.INSTANCE.getDescendant(dependency)?.getEnabledInstance();
+        if (!module) return undefined;
         module.dependants.add(this);
         return module.loadRecur();
       }),
@@ -711,7 +723,8 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
     const resolve = this.transition.extend();
 
     for (const dependency of Object.keys(this.metadata?.dependencies ?? {})) {
-      const module = RootModule.INSTANCE.getDescendant(dependency)?.getEnabledInstance()!;
+      const module = RootModule.INSTANCE.getDescendant(dependency)?.getEnabledInstance();
+      if (!module) continue;
       module.dependants.delete(this);
     }
     await Promise.all(Array.from(this.dependants).map((dependant) => dependant.unloadRecur()));
@@ -970,12 +983,13 @@ export class ModuleInstance extends ModuleInstanceBase<Module> implements MixinL
   public async ensureMetadata() {
     if (!this.metadata) {
       try {
-        const storeUrl = this.getMetadataURL()!;
+        const storeUrl = this.getMetadataURL();
+        if (!storeUrl) throw new Error(`no metadata URL for module '${this.getIdentifier()}'`);
         const metadata = await fetchJson<Metadata>(storeUrl);
         if (!metadata) {
           throw new Error(`metadata is null`);
         }
-        this.updateMetadata(metadata!);
+        this.updateMetadata(metadata);
       } catch (e) {
         throw new Error(`couldn't load metadata for module '${this.getIdentifier()}'`, {
           cause: e,
@@ -1044,7 +1058,11 @@ export async function loadLocalModules() {
 
   return Promise.all(
     Object.keys(localModules).map((identifier) =>
-      RootModule.INSTANCE.newDescendant(identifier, localModules[identifier], true),
+      RootModule.INSTANCE.newDescendant(
+        identifier,
+        localModules[identifier] ?? (undefined as never),
+        true,
+      ),
     ),
   );
 }
@@ -1065,7 +1083,9 @@ export async function loadRemoteModules() {
   await Promise.all(
     Object.keys(remoteModules).map(async (identifier) => {
       const module = await RootModule.INSTANCE.getDescendantOrNew(identifier);
-      await module.init(remoteModules[identifier].v, false);
+      const store = remoteModules[identifier];
+      if (!store) return;
+      await module.init(store.v, false);
     }),
   );
 }

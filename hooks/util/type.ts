@@ -404,7 +404,7 @@ class TypeGenerator {
     }
 
     if (unique.length === 0) return { kind: "primitive", type: "unknown" };
-    if (unique.length === 1) return unique[0];
+    if (unique.length === 1) return unique[0] ?? (undefined as never);
 
     unique.sort((a, b) => {
       const getCmpName = (node: TypeNode) => {

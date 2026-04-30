@@ -12,13 +12,12 @@
     "pw:enable": "./scripts/enable.ps1",
     "pw:disable": "./scripts/disable.ps1",
     "build:release": "cargo run --release --manifest-path ../creator/Cargo.toml -- build-release",
-    "ci:build:release": "cargo run --release --manifest-path ../creator/Cargo.toml -- build-release modules/*",
-    "check": "deno run -A @biomejs/biome check --write --unsafe"
+    "ci:build:release": "cargo run --release --manifest-path ../creator/Cargo.toml -- build-release modules/*"
   },
   "compilerOptions": {
     "jsx": "react-jsx",
     "noImplicitOverride": true,
-    "lib": ["deno.ns", "DOM", "DOM.Iterable", "ESNext"]
+    "lib": ["DOM", "ESNext"]
   },
   "lint": {
     "exclude": ["**/*"]

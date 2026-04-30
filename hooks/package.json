@@ -1,6 +1,7 @@
 {
-  "dependencies": {
-    "ts": "^0.2.2",
-    "typescript": "^6.0.2"
+  "type": "module",
+  "dependencies": {},
+  "devDependencies": {
+    "@typescript/native-preview": "^7.0.0-dev.20260421.2"
   }
 }

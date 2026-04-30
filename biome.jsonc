@@ -19,9 +19,6 @@
       "react": "all"
     },
     "rules": {
-      "complexity": {
-        "noImportantStyles": "off"
-      },
       // "performance": "warn",
       "recommended": true,
       "suspicious": {

@@ -30,7 +30,7 @@ export class SourceFile {
     if (content == null) {
       throw new Error(`Failed to fetch transform source: ${this.path}`);
     }
-    const modifiedContent = trs.reduce((p, [, transform]) => transform(p, this.path), content!);
+    const modifiedContent = trs.reduce((p, [, transform]) => transform(p, this.path), content);
     const ext = this.path.slice(this.path.lastIndexOf("."));
     // @ts-expect-error
     const type: string | undefined = MimeTypes[ext];

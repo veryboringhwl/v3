@@ -28,14 +28,13 @@ cd hooks && bunx tsc
 ### DevTools (React + Vite)
 
 ```sh
-cd devtools && npm run dev
+cd devtools && npm run build
 ```
 
 ### Linting
 
 ```sh
-biome check --write --unsafe  # Root-level JS/TS
-deno task check              # In modules/
+deno run -A npm:@biomejs/biome --write --unsafe
 ```
 
 ## Architecture
@@ -59,15 +58,3 @@ deno task check              # In modules/
 - Requires Spotify desktop client `1.2.86` or newer
 - Build order: CLI → hooks compilation → modules fetch/build
 - Run `spicetify` for TUI
-
-### Hooks Development
-
-- `hooks/dist/` is **symlinked** to `%LOCALAPPDATA%\Spicetify\hooks`. After `bunx tsc`, just reload Spotify.
-- Module types import from canonical paths:
-  - Types → `/hooks/module.ts`
-  - `hotwire`, `hotwired` → `/hooks/core/hotwire.ts`
-  - `RootModule` → `/hooks/core/tree.ts`
-  - `loadRemoteModules` → `/hooks/module.ts` (orchestration)
-  - Utilities → `/hooks/util.ts`, `/hooks/util/semver.ts`
-  - `proxy` → `/hooks/io/proxy.js`
-- JSX is **entirely handled by creator** (SWC). `deno.json` has no `jsxImportSource` — it's just an optional type-resolution map.

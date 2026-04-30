@@ -121,6 +121,7 @@ export const remoteProxyB = (
     ["X-User-Agent", "User-Agent"],
     ["X-X-Real-Ip", "X-Real-Ip"],
   ]) {
+    if (!k || !kp) continue;
     const v = headers.get(k);
     if (v) {
       _headers.set(kp, v);
