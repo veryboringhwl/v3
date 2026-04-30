@@ -16,6 +16,7 @@ import {
   Toggle,
   Tooltip,
 } from "/modules/stdlib/src/webpack/ReactComponents.ts";
+import { usePanelStateMachine } from "/modules/stdlib/src/webpack/ReactHooks.ts";
 import { useCustomSnackbar, useSnackbar } from "/modules/stdlib/src/webpack/Snackbar.js";
 import { Card, type CardPropDoc } from "./Components/Card.tsx";
 import { Section } from "./Components/Section.tsx";
@@ -233,6 +234,11 @@ const GenericModalDemo = () => {
 export const ReactComponentPage = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { enqueueCustomSnackbar } = useCustomSnackbar();
+  const [panelState, panelService, panelMachine] = usePanelStateMachine();
+  console.log("panelState", panelState);
+  console.log("panelService", panelService);
+  console.log("panelMachine", panelMachine);
+
   return (
     <div className="test-showcase-page test-showcase-page--react">
       <Section

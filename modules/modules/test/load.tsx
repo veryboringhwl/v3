@@ -1,11 +1,12 @@
 import type { ModuleInstance } from "/hooks/module.ts";
 import { createRegistrar } from "/modules/stdlib/mod.ts";
-// import { panelReg } from "/modules/stdlib/src/registers/panel.ts";
 import { React } from "/modules/stdlib/src/expose/React.ts";
+// import panelReg from "/modules/stdlib/src/registers/panel.ts";
 import { Route } from "/modules/stdlib/src/webpack/ReactComponents.ts";
 import {
   TestMenu,
   TestNavLink,
+  // TestPanel,
   TestPlaybarButton,
   TestPlaybarWidget,
   TestSettingsSection,
@@ -34,7 +35,6 @@ export default function (mod: ModuleInstance) {
   registrar.register("navlink", <TestNavLink />);
   registrar.register("menu", <TestMenu />);
   registrar.register("settingsSection", <TestSettingsSection />);
-
   // registrar.register("panel", <TestPanel />);
   // hash = panelReg.getHash(<TestPanel />)!;
 }

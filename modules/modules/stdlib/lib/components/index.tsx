@@ -151,8 +151,15 @@ export const useChipFilter = (filters: Tree<React.ReactNode>) => {
   }
 
   const toggleFilter = React.useCallback(
-    (filter: RFilterOpt) =>
-      setSelectedFilterFullKey(filter.key === selectedFilterFullKey ? "" : filter.key),
+    (filter: RFilterOpt) => {
+      if (filter.key === selectedFilterFullKey) {
+        const parts = selectedFilterFullKey.split(".");
+        parts.pop();
+        setSelectedFilterFullKey(parts.join("."));
+      } else {
+        setSelectedFilterFullKey(filter.key);
+      }
+    },
     [selectedFilterFullKey],
   );
   const treeNodeHasVal = (n: FilterOpt): n is RFilterOpt => !!n.filter[TreeNodeVal];

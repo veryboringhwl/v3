@@ -3,7 +3,7 @@
     "target": "ESNext",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "lib": ["DOM", "ESNext", "DOM.Iterable"],
+    "lib": ["DOM", "ESNext"],
     "moduleDetection": "force",
 
     "noUncheckedIndexedAccess": true,

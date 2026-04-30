@@ -57,12 +57,7 @@ export default function <O extends DropdownOptions>({
 
   if (Object.keys(options).length === 1) {
     return (
-      <button
-        aria-expanded="false"
-        className={MAP.sort_box.list.button}
-        role="combobox"
-        type="button"
-      >
+      <button aria-expanded="false" className={MAP.dropdown.wrapper} role="combobox" type="button">
         <UI.Type semanticColor="textSubdued" variant="mesto">
           <SelectedOption preview />
         </UI.Type>

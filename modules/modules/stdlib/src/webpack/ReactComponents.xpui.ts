@@ -83,7 +83,6 @@ export const NavTo: React.FC<any> = exportedMemoForwardRefs.find((m) =>
 
 // 1. Set a default category (e.g., /tracks) when the user hits the root path.
 // 2. Prevent a "back button loop" by replacing the history entry instead of adding a new one.
-// 3. Attach a unique InteractionID to the redirect for internal analytics and tracking.
 export let InstrumentedRedirect: React.FC<any>;
 matchWebpackModule(
   (_id, module) => {

@@ -14,8 +14,7 @@ const [rootChild, rootProvider] = root;
 const registers = {
   menu,
   navlink,
-  // panel doesnt work as for some reason __Machine is undefined
-  // regex is also slow so commented out for now
+  // panel doesnt work just like snackbar and react flip toolkit for some reason
   // panel,
   playbarButton,
   playbarWidget,

@@ -95,7 +95,8 @@ const ACTIONS: Record<string, any> = {};
 transformer(
   (emit) => (str) => {
     emit();
-
+    // seems like the same?
+    // usePanelStateMachine();
     str = str.replace(
       /(=\(0,[a-zA-Z_$][\w$]*\.[a-zA-Z_$][\w$]*\)\(\{id:"RightPanelState)/,
       "=__Machine$1",
