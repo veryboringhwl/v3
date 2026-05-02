@@ -1,13 +1,13 @@
-let panelWindow: Window | null = null
+let panelWindow: Window | null = null;
 
 chrome.devtools.panels.create("Mapped Elements", "", "panel.html", (panel) => {
   panel.onShown.addListener((pw) => {
-    panelWindow = pw
-  })
+    panelWindow = pw;
+  });
 
   panel.onHidden.addListener(() => {
-    panelWindow = null
-  })
+    panelWindow = null;
+  });
 
   panel.onSearch.addListener((action, queryString) => {
     if (panelWindow) {
@@ -17,8 +17,8 @@ chrome.devtools.panels.create("Mapped Elements", "", "panel.html", (panel) => {
           action,
           query: queryString || "",
         },
-        "*"
-      )
+        "*",
+      );
     }
-  })
-})
+  });
+});

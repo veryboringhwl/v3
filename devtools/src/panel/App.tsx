@@ -1,265 +1,265 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { TreeViewNode, type ClassMapResult, type TreeNode } from "./components/TreeView"
-import { Settings } from "./components/Settings"
-import { RefreshCw, SettingsIcon, XIcon } from "./components/Icons"
-import { BACKEND_SCRIPT } from "../backend/backend"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { BACKEND_SCRIPT } from "../backend/backend";
+import { RefreshCw, SettingsIcon, XIcon } from "./components/Icons";
+import { Settings } from "./components/Settings";
+import { type ClassMapResult, type TreeNode, TreeViewNode } from "./components/TreeView";
 
 export const App = () => {
-  const tabId = chrome.devtools.inspectedWindow.tabId
+  const tabId = chrome.devtools.inspectedWindow.tabId;
 
-  const [domData, setDomData] = useState<TreeNode | null>(null)
-  const [jsonStr, setJsonStr] = useState("")
-  const [selectedId, setSelectedId] = useState<number | null>(null)
-  const [showSettings, setShowSettings] = useState(false)
-  const [tooltip, setTooltip] = useState<{ text: string; x: number; y: number } | null>(null)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [searchResults, setSearchResults] = useState<number[]>([])
-  const [searchIndex, setSearchIndex] = useState(0)
+  const [domData, setDomData] = useState<TreeNode | null>(null);
+  const [jsonStr, setJsonStr] = useState("");
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
+  const [tooltip, setTooltip] = useState<{ text: string; x: number; y: number } | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<number[]>([]);
+  const [searchIndex, setSearchIndex] = useState(0);
 
-  const selectedIdRef = useRef(selectedId)
-  const nextSearchRef = useRef<() => void>(() => {})
-  const prevSearchRef = useRef<() => void>(() => {})
+  const selectedIdRef = useRef(selectedId);
+  const nextSearchRef = useRef<() => void>(() => {});
+  const prevSearchRef = useRef<() => void>(() => {});
 
   useEffect(() => {
-    selectedIdRef.current = selectedId
-  }, [selectedId])
+    selectedIdRef.current = selectedId;
+  }, [selectedId]);
 
   const refreshDOM = useCallback(() => {
     chrome.devtools.inspectedWindow.eval(
       "window.__EXT_DEVTOOLS__ ? window.__EXT_DEVTOOLS__.getDOM() : null",
       (result, isException) => {
-        if (isException || !result) return
-        setDomData(result as unknown as TreeNode)
-      }
-    )
-  }, [])
+        if (isException || !result) return;
+        setDomData(result as unknown as TreeNode);
+      },
+    );
+  }, []);
 
   const injectBackend = useCallback((callback?: () => void) => {
     chrome.devtools.inspectedWindow.eval(BACKEND_SCRIPT, (_res, isException) => {
-      if (!isException) callback?.()
-    })
-  }, [])
+      if (!isException) callback?.();
+    });
+  }, []);
 
   const highlightNode = useCallback((nodeId: number) => {
     chrome.devtools.inspectedWindow.eval(
-      "window.__EXT_DEVTOOLS__ && window.__EXT_DEVTOOLS__.highlightNode(" + nodeId + ")",
-      () => {}
-    )
-  }, [])
+      `window.__EXT_DEVTOOLS__ && window.__EXT_DEVTOOLS__.highlightNode(${nodeId})`,
+      () => {},
+    );
+  }, []);
 
   const clearHighlight = useCallback(() => {
     chrome.devtools.inspectedWindow.eval(
       "window.__EXT_DEVTOOLS__ && window.__EXT_DEVTOOLS__.clearHighlight()",
-      () => {}
-    )
-  }, [])
+      () => {},
+    );
+  }, []);
 
   const loadClassmap = useCallback(() => {
     chrome.storage.local.get(["classmapJson"], (res) => {
-      if (res.classmapJson) setJsonStr(res.classmapJson as string)
-    })
-  }, [])
+      if (res.classmapJson) setJsonStr(res.classmapJson as string);
+    });
+  }, []);
 
   const saveClassmap = useCallback(
     (json: string) => {
       chrome.storage.local.set({ classmapJson: json }, () => {
-        setJsonStr(json)
-        setShowSettings(false)
-        refreshDOM()
-      })
+        setJsonStr(json);
+        setShowSettings(false);
+        refreshDOM();
+      });
     },
-    [refreshDOM]
-  )
+    [refreshDOM],
+  );
 
   const classMapper = useMemo(() => {
     try {
-      const rawMap = JSON.parse(jsonStr || "{}")
-      if (!rawMap || typeof rawMap !== "object") throw new Error("Invalid format")
+      const rawMap = JSON.parse(jsonStr || "{}");
+      if (!rawMap || typeof rawMap !== "object") throw new Error("Invalid format");
 
-      const flatMap: Record<string, string> = {}
+      const flatMap: Record<string, string> = {};
       const traverse = (obj: Record<string, unknown>, path: string[] = []) => {
         for (const [key, val] of Object.entries(obj)) {
           if (val && typeof val === "object" && !Array.isArray(val)) {
-            traverse(val as Record<string, unknown>, [...path, key])
+            traverse(val as Record<string, unknown>, [...path, key]);
           } else {
-            flatMap[String(val)] = [...path, key].map((s) => s.replaceAll("_", "-")).join("__")
+            flatMap[String(val)] = [...path, key].map((s) => s.replaceAll("_", "-")).join("__");
           }
         }
-      }
-      traverse(rawMap)
+      };
+      traverse(rawMap);
 
       return (className: string): ClassMapResult => {
         if (!className || typeof className !== "string") {
-          return { displayStr: className || "", tokens: [] }
+          return { displayStr: className || "", tokens: [] };
         }
         const tokens = className
           .split(/\s+/)
           .filter(Boolean)
           .map((p) => {
             if (flatMap[p]) {
-              return { original: p, mapped: `MAP__${flatMap[p]}`, isMapped: true }
+              return { original: p, mapped: `MAP__${flatMap[p]}`, isMapped: true };
             }
-            return { original: p, mapped: p, isMapped: false }
-          })
-        return { displayStr: tokens.map((t) => t.mapped).join(" "), tokens }
-      }
+            return { original: p, mapped: p, isMapped: false };
+          });
+        return { displayStr: tokens.map((t) => t.mapped).join(" "), tokens };
+      };
     } catch {
       return (className: string): ClassMapResult => {
         const tokens = (className || "")
           .split(/\s+/)
           .filter(Boolean)
-          .map((p) => ({ original: p, mapped: p, isMapped: false }))
-        return { displayStr: className || "", tokens }
-      }
+          .map((p) => ({ original: p, mapped: p, isMapped: false }));
+        return { displayStr: className || "", tokens };
+      };
     }
-  }, [jsonStr])
+  }, [jsonStr]);
 
   const nextSearch = useCallback(() => {
-    if (searchResults.length === 0) return
+    if (searchResults.length === 0) return;
     setSearchIndex((idx) => {
-      const nextIdx = (idx + 1) % searchResults.length
-      setSelectedId(searchResults[nextIdx])
-      return nextIdx
-    })
-  }, [searchResults])
+      const nextIdx = (idx + 1) % searchResults.length;
+      setSelectedId(searchResults[nextIdx]);
+      return nextIdx;
+    });
+  }, [searchResults]);
 
   const prevSearch = useCallback(() => {
-    if (searchResults.length === 0) return
+    if (searchResults.length === 0) return;
     setSearchIndex((idx) => {
-      const nextIdx = (idx - 1 + searchResults.length) % searchResults.length
-      setSelectedId(searchResults[nextIdx])
-      return nextIdx
-    })
-  }, [searchResults])
+      const nextIdx = (idx - 1 + searchResults.length) % searchResults.length;
+      setSelectedId(searchResults[nextIdx]);
+      return nextIdx;
+    });
+  }, [searchResults]);
 
   useEffect(() => {
-    nextSearchRef.current = nextSearch
-    prevSearchRef.current = prevSearch
-  })
+    nextSearchRef.current = nextSearch;
+    prevSearchRef.current = prevSearch;
+  });
 
   useEffect(() => {
-    if (!tabId) return
+    if (!tabId) return;
 
-    injectBackend(() => refreshDOM())
+    injectBackend(() => refreshDOM());
 
     const intervalId = setInterval(() => {
       chrome.devtools.inspectedWindow.eval(
         "window.__EXT_DEVTOOLS__ && window.__EXT_DEVTOOLS__.checkMutations()",
         (hasMutations, isException) => {
-          if (hasMutations && !isException) refreshDOM()
-        }
-      )
-    }, 500)
+          if (hasMutations && !isException) refreshDOM();
+        },
+      );
+    }, 500);
 
-    const onNavigated = () => injectBackend(() => refreshDOM())
-    chrome.devtools.network.onNavigated.addListener(onNavigated)
+    const onNavigated = () => injectBackend(() => refreshDOM());
+    chrome.devtools.network.onNavigated.addListener(onNavigated);
 
     return () => {
-      clearInterval(intervalId)
-      chrome.devtools.network.onNavigated.removeListener(onNavigated)
-    }
-  }, [tabId, injectBackend, refreshDOM])
+      clearInterval(intervalId);
+      chrome.devtools.network.onNavigated.removeListener(onNavigated);
+    };
+  }, [tabId, injectBackend, refreshDOM]);
 
   useEffect(() => {
-    if (!chrome.devtools?.panels?.elements) return
+    if (!chrome.devtools?.panels?.elements) return;
 
     const handleSelection = () => {
       chrome.devtools.inspectedWindow.eval(
         "window.__EXT_DEVTOOLS__ ? window.__EXT_DEVTOOLS__.getId($0) : null",
         (id, isException) => {
-          if (!isException && typeof id === "number") setSelectedId(id)
-        }
-      )
-    }
+          if (!isException && typeof id === "number") setSelectedId(id);
+        },
+      );
+    };
 
-    chrome.devtools.panels.elements.onSelectionChanged.addListener(handleSelection)
-    handleSelection()
+    chrome.devtools.panels.elements.onSelectionChanged.addListener(handleSelection);
+    handleSelection();
 
     return () => {
-      chrome.devtools.panels.elements.onSelectionChanged.removeListener(handleSelection)
-    }
-  }, [])
+      chrome.devtools.panels.elements.onSelectionChanged.removeListener(handleSelection);
+    };
+  }, []);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.data?.source !== "devtools-command") return
-      const { action, query } = event.data
-      if (action === "performSearch") setSearchQuery(query || "")
-      if (action === "nextSearchResult") nextSearchRef.current()
-      if (action === "previousSearchResult") prevSearchRef.current()
+      if (event.data?.source !== "devtools-command") return;
+      const { action, query } = event.data;
+      if (action === "performSearch") setSearchQuery(query || "");
+      if (action === "nextSearchResult") nextSearchRef.current();
+      if (action === "previousSearchResult") prevSearchRef.current();
       if (action === "cancelSearch") {
-        setSearchQuery("")
-        setSearchResults([])
+        setSearchQuery("");
+        setSearchResults([]);
       }
-    }
-    window.addEventListener("message", handleMessage)
-    return () => window.removeEventListener("message", handleMessage)
-  }, [])
+    };
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
   useEffect(() => {
-    loadClassmap()
-  }, [loadClassmap])
+    loadClassmap();
+  }, [loadClassmap]);
 
   useEffect(() => {
     if (!searchQuery || !domData) {
-      setSearchResults([])
-      return
+      setSearchResults([]);
+      return;
     }
-    const matches: number[] = []
-    const lowerQuery = searchQuery.toLowerCase()
+    const matches: number[] = [];
+    const lowerQuery = searchQuery.toLowerCase();
 
     const walk = (node: TreeNode) => {
-      let isMatch = false
+      let isMatch = false;
 
-      if (node.type === "text" && node.val?.toLowerCase().includes(lowerQuery)) isMatch = true
-      if (node.type === "comment" && node.val?.toLowerCase().includes(lowerQuery)) isMatch = true
-      if (node.type === "doctype" && node.name?.toLowerCase().includes(lowerQuery)) isMatch = true
+      if (node.type === "text" && node.val?.toLowerCase().includes(lowerQuery)) isMatch = true;
+      if (node.type === "comment" && node.val?.toLowerCase().includes(lowerQuery)) isMatch = true;
+      if (node.type === "doctype" && node.name?.toLowerCase().includes(lowerQuery)) isMatch = true;
       if (node.type === "pseudo" && node.pseudoType?.toLowerCase().includes(lowerQuery))
-        isMatch = true
-      if (node.tag?.toLowerCase().includes(lowerQuery)) isMatch = true
+        isMatch = true;
+      if (node.tag?.toLowerCase().includes(lowerQuery)) isMatch = true;
 
       if (node.attrs) {
         for (const [k, v] of Object.entries(node.attrs)) {
-          const val = k === "class" ? classMapper(v).displayStr : v
+          const val = k === "class" ? classMapper(v).displayStr : v;
           if (String(val).toLowerCase().includes(lowerQuery)) {
-            isMatch = true
-            break
+            isMatch = true;
+            break;
           }
         }
       }
 
-      if (isMatch) matches.push(node.id)
-      if (node.children) node.children.forEach(walk)
-    }
+      if (isMatch) matches.push(node.id);
+      if (node.children) node.children.forEach(walk);
+    };
 
-    walk(domData)
-    setSearchResults(matches)
+    walk(domData);
+    setSearchResults(matches);
 
-    const currSelected = selectedIdRef.current
+    const currSelected = selectedIdRef.current;
     if (matches.length > 0) {
-      const idx = matches.indexOf(currSelected ?? -1)
+      const idx = matches.indexOf(currSelected ?? -1);
       if (idx !== -1) {
-        setSearchIndex(idx)
+        setSearchIndex(idx);
       } else {
-        setSearchIndex(0)
-        setSelectedId(matches[0])
+        setSearchIndex(0);
+        setSelectedId(matches[0]);
       }
     } else {
-      setSearchIndex(0)
-      setSelectedId(null)
+      setSearchIndex(0);
+      setSelectedId(null);
     }
-  }, [searchQuery, domData, classMapper])
+  }, [searchQuery, domData, classMapper]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "F3") {
-        e.preventDefault()
-        e.shiftKey ? prevSearchRef.current() : nextSearchRef.current()
+        e.preventDefault();
+        e.shiftKey ? prevSearchRef.current() : nextSearchRef.current();
       }
-    }
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [])
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <div
@@ -325,10 +325,10 @@ export const App = () => {
           jsonStr={jsonStr}
           onChangeJson={setJsonStr}
           onClose={() => setShowSettings(false)}
-          onSave={() => saveClassmap(jsonStr)}
           onRefresh={refreshDOM}
+          onSave={() => saveClassmap(jsonStr)}
         />
       )}
     </div>
-  )
-}
+  );
+};

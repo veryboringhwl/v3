@@ -1,27 +1,30 @@
-import { useEffect, useRef } from "react"
-import { RefreshCw, SaveIcon } from "./Icons"
+import { useEffect, useRef } from "react";
+import { RefreshCw, SaveIcon } from "./Icons";
 
 interface SettingsProps {
-  jsonStr: string
-  onChangeJson: (val: string) => void
-  onSave: () => void
-  onClose: () => void
-  onRefresh: () => void
+  jsonStr: string;
+  onChangeJson: (val: string) => void;
+  onSave: () => void;
+  onClose: () => void;
+  onRefresh: () => void;
 }
 
 export const Settings = ({ jsonStr, onChangeJson, onSave, onClose, onRefresh }: SettingsProps) => {
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    textareaRef.current?.focus()
-  }, [])
+    textareaRef.current?.focus();
+  }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") onClose()
-  }
+    if (e.key === "Escape") onClose();
+  };
 
   return (
-    <div className="absolute inset-0 bg-[#282828]/98 z-40 p-6 flex flex-col gap-4" onKeyDown={handleKeyDown}>
+    <div
+      className="absolute inset-0 bg-[#282828]/98 z-40 p-6 flex flex-col gap-4"
+      onKeyDown={handleKeyDown}
+    >
       <div className="flex justify-between items-center border-b border-[#3c4043] pb-3">
         <h2 className="text-white font-bold text-sm tracking-wide">CLASSMAP CONFIGURATION</h2>
         <button
@@ -32,10 +35,10 @@ export const Settings = ({ jsonStr, onChangeJson, onSave, onClose, onRefresh }: 
         </button>
       </div>
       <textarea
-        ref={textareaRef}
         className="flex-1 bg-[#1e1e1e] border border-[#3c4043] rounded p-4 text-blue-300 text-[11px] resize-none outline-none focus:ring-1 focus:ring-blue-500 font-mono shadow-inner"
         onChange={(e) => onChangeJson(e.target.value)}
         placeholder='{ "original-class": "mapped-class" }'
+        ref={textareaRef}
         spellCheck={false}
         value={jsonStr}
       />
@@ -54,5 +57,5 @@ export const Settings = ({ jsonStr, onChangeJson, onSave, onClose, onRefresh }: 
         </button>
       </div>
     </div>
-  )
-}
+  );
+};

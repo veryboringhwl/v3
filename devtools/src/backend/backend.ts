@@ -105,4 +105,4 @@ export const BACKEND_SCRIPT = `;(function () {
       if (existing) existing.remove()
     },
   }
-})()`
+})()`;

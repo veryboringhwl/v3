@@ -1,58 +1,58 @@
-import { useEffect, useMemo, useRef, useState } from "react"
-import { ChevronDown, ChevronRight } from "./Icons"
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ChevronDown, ChevronRight } from "./Icons";
 
 export interface TreeNode {
-  id: number
-  type: string
-  tag?: string
-  val?: string
-  name?: string
-  pseudoType?: string
-  attrs?: Record<string, string>
-  children?: TreeNode[]
+  id: number;
+  type: string;
+  tag?: string;
+  val?: string;
+  name?: string;
+  pseudoType?: string;
+  attrs?: Record<string, string>;
+  children?: TreeNode[];
 }
 
 export interface ClassToken {
-  original: string
-  mapped: string
-  isMapped: boolean
+  original: string;
+  mapped: string;
+  isMapped: boolean;
 }
 
 export interface ClassMapResult {
-  displayStr: string
-  tokens: ClassToken[]
+  displayStr: string;
+  tokens: ClassToken[];
 }
 
 interface TreeViewNodeProps {
-  node: TreeNode
-  mapClass: (className: string) => ClassMapResult
-  selectedId: number | null
-  onSelect: (id: number) => void
-  searchResults: number[]
-  searchIndex: number
-  searchQuery: string
-  onHoverNode: (id: number) => void
-  onShowTooltip: (tooltip: { text: string; x: number; y: number }) => void
-  onHideTooltip: () => void
+  node: TreeNode;
+  mapClass: (className: string) => ClassMapResult;
+  selectedId: number | null;
+  onSelect: (id: number) => void;
+  searchResults: number[];
+  searchIndex: number;
+  searchQuery: string;
+  onHoverNode: (id: number) => void;
+  onShowTooltip: (tooltip: { text: string; x: number; y: number }) => void;
+  onHideTooltip: () => void;
 }
 
 const HighlightText = ({ text, query }: { text: string | undefined; query: string }) => {
-  if (!query || !text) return <>{text}</>
-  const parts = String(text).split(new RegExp(`(${query})`, "gi"))
+  if (!query || !text) return <>{text}</>;
+  const parts = String(text).split(new RegExp(`(${query})`, "gi"));
   return (
     <>
       {parts.map((part, i) =>
         part.toLowerCase() === query.toLowerCase() ? (
-          <span key={i} className="bg-[#5c4300] text-white px-0.5 rounded-sm">
+          <span className="bg-[#5c4300] text-white px-0.5 rounded-sm" key={i}>
             {part}
           </span>
         ) : (
-          <>{part}</>
-        )
+          part
+        ),
       )}
     </>
-  )
-}
+  );
+};
 
 export const TreeViewNode = ({
   node,
@@ -66,113 +66,140 @@ export const TreeViewNode = ({
   onShowTooltip,
   onHideTooltip,
 }: TreeViewNodeProps) => {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const elementRef = useRef<HTMLLIElement | HTMLDivElement>(null)
-  const isSelected = selectedId === node.id
-  const isSearchResult = searchResults?.includes(node.id)
-  const isCurrentMatch = isSearchResult && searchResults[searchIndex] === node.id
-  const hasChildren = node.children && node.children.length > 0
+  const [isExpanded, setIsExpanded] = useState(false);
+  const elementRef = useRef<HTMLLIElement | HTMLDivElement>(null);
+  const isSelected = selectedId === node.id;
+  const isSearchResult = searchResults?.includes(node.id);
+  const isCurrentMatch = isSearchResult && searchResults[searchIndex] === node.id;
+  const hasChildren = node.children && node.children.length > 0;
 
   const hasDescendantSelected = useMemo(() => {
     const check = (children?: TreeNode[]): boolean => {
-      if (!children) return false
+      if (!children) return false;
       for (const c of children) {
-        if (c.id === selectedId) return true
-        if (check(c.children)) return true
+        if (c.id === selectedId) return true;
+        if (check(c.children)) return true;
       }
-      return false
-    }
-    return check(node.children)
-  }, [selectedId, node.children])
+      return false;
+    };
+    return check(node.children);
+  }, [selectedId, node.children]);
 
   useEffect(() => {
-    if (hasDescendantSelected) setIsExpanded(true)
-  }, [hasDescendantSelected])
+    if (hasDescendantSelected) setIsExpanded(true);
+  }, [hasDescendantSelected]);
 
   useEffect(() => {
     if (isSelected && elementRef.current) {
       const timer = setTimeout(() => {
-        elementRef.current?.scrollIntoView({ block: "center", behavior: "auto" })
-      }, 50)
-      return () => clearTimeout(timer)
+        elementRef.current?.scrollIntoView({ block: "center", behavior: "auto" });
+      }, 50);
+      return () => clearTimeout(timer);
     }
-  }, [isSelected])
+  }, [isSelected]);
 
   const handleToggle = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    if (!hasChildren) return
-    if (isExpanded && hasDescendantSelected) onSelect(node.id)
-    setIsExpanded(!isExpanded)
-  }
+    e.stopPropagation();
+    if (!hasChildren) return;
+    if (isExpanded && hasDescendantSelected) onSelect(node.id);
+    setIsExpanded(!isExpanded);
+  };
 
   const getRowClass = () => {
-    let cls = "flex items-start group cursor-default rounded-sm transition-colors duration-75 max-w-full min-w-0"
-    if (isSelected) cls += " bg-[#004a77] text-white"
-    else if (isCurrentMatch) cls += " bg-[#3d3d3d] ring-1 ring-inset ring-gray-500"
-    else if (isSearchResult) cls += " bg-[#35363a]"
-    else cls += " hover:bg-[#3d3d3d]"
-    return cls
-  }
+    let cls =
+      "flex items-start group cursor-default rounded-sm transition-colors duration-75 max-w-full min-w-0";
+    if (isSelected) cls += " bg-[#004a77] text-white";
+    else if (isCurrentMatch) cls += " bg-[#3d3d3d] ring-1 ring-inset ring-gray-500";
+    else if (isSearchResult) cls += " bg-[#35363a]";
+    else cls += " hover:bg-[#3d3d3d]";
+    return cls;
+  };
 
   const renderTextNode = () => (
     <li
-      className={getRowClass() + " pl-8 break-all whitespace-normal"}
-      onClick={(e) => { e.stopPropagation(); onSelect(node.id) }}
-      onMouseEnter={(e) => { e.stopPropagation(); onHoverNode(node.id) }}
+      className={`${getRowClass()} pl-8 break-all whitespace-normal`}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect(node.id);
+      }}
+      onMouseEnter={(e) => {
+        e.stopPropagation();
+        onHoverNode(node.id);
+      }}
       ref={elementRef as React.Ref<HTMLLIElement>}
     >
       <span className={isSelected ? "text-white" : "text-[#eeeeee]"}>
         "<HighlightText query={searchQuery} text={node.val} />"
       </span>
     </li>
-  )
+  );
 
   const renderCommentNode = () => (
     <li
-      className={getRowClass() + " pl-8"}
-      onClick={(e) => { e.stopPropagation(); onSelect(node.id) }}
-      onMouseEnter={(e) => { e.stopPropagation(); onHoverNode(node.id) }}
+      className={`${getRowClass()} pl-8`}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect(node.id);
+      }}
+      onMouseEnter={(e) => {
+        e.stopPropagation();
+        onHoverNode(node.id);
+      }}
       ref={elementRef as React.Ref<HTMLLIElement>}
     >
       <span className={isSelected ? "text-white" : "text-[#89b482]"}>
         &lt;!-- <HighlightText query={searchQuery} text={node.val} /> --&gt;
       </span>
     </li>
-  )
+  );
 
   const renderDocTypeNode = () => (
     <li
-      className={getRowClass() + " pl-8"}
-      onClick={(e) => { e.stopPropagation(); onSelect(node.id) }}
-      onMouseEnter={(e) => { e.stopPropagation(); onHoverNode(node.id) }}
+      className={`${getRowClass()} pl-8`}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect(node.id);
+      }}
+      onMouseEnter={(e) => {
+        e.stopPropagation();
+        onHoverNode(node.id);
+      }}
       ref={elementRef as React.Ref<HTMLLIElement>}
     >
       <span className={isSelected ? "text-white" : "text-gray-400"}>
-        &lt;!DOCTYPE <HighlightText query={searchQuery} text={node.name} />&gt;
+        &lt;!DOCTYPE <HighlightText query={searchQuery} text={node.name} />
+        &gt;
       </span>
     </li>
-  )
+  );
 
   const renderPseudoNode = () => (
     <li
-      className={getRowClass() + " pl-8"}
-      onClick={(e) => { e.stopPropagation(); onSelect(node.id) }}
-      onMouseEnter={(e) => { e.stopPropagation(); onHoverNode(node.id) }}
+      className={`${getRowClass()} pl-8`}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect(node.id);
+      }}
+      onMouseEnter={(e) => {
+        e.stopPropagation();
+        onHoverNode(node.id);
+      }}
       ref={elementRef as React.Ref<HTMLLIElement>}
     >
       <span className={isSelected ? "text-white" : "text-[#e293ca]"}>
-        ::<HighlightText query={searchQuery} text={node.pseudoType} />
+        ::
+        <HighlightText query={searchQuery} text={node.pseudoType} />
       </span>
     </li>
-  )
+  );
 
   const renderAttributes = () => {
-    if (!node.attrs) return null
+    if (!node.attrs) return null;
     return Object.entries(node.attrs).map(([key, val]) => {
       if (key === "class") {
-        const mapResult = mapClass(val)
+        const mapResult = mapClass(val);
         return (
-          <span key={key} className="ml-1.5 inline-block">
+          <span className="ml-1.5 inline-block" key={key}>
             <span className="text-[#a8c7fa]">
               <HighlightText query={searchQuery} text={key} />
             </span>
@@ -185,8 +212,8 @@ export const TreeViewNode = ({
                     <span
                       className="cursor-default"
                       onMouseEnter={(e: React.MouseEvent) => {
-                        const rect = e.currentTarget.getBoundingClientRect()
-                        onShowTooltip({ text: token.original, x: rect.left, y: rect.top - 24 })
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        onShowTooltip({ text: token.original, x: rect.left, y: rect.top - 24 });
                       }}
                       onMouseLeave={onHideTooltip}
                     >
@@ -201,11 +228,11 @@ export const TreeViewNode = ({
               "
             </span>
           </span>
-        )
+        );
       }
 
       return (
-        <span key={key} className="ml-1.5 inline-block">
+        <span className="ml-1.5 inline-block" key={key}>
           <span className="text-[#a8c7fa]">
             <HighlightText query={searchQuery} text={key} />
           </span>
@@ -214,16 +241,22 @@ export const TreeViewNode = ({
             "<HighlightText query={searchQuery} text={val} />"
           </span>
         </span>
-      )
-    })
-  }
+      );
+    });
+  };
 
   const renderElementNode = () => (
     <li className="list-none max-w-full min-w-0">
       <div
         className={getRowClass()}
-        onClick={(e) => { e.stopPropagation(); onSelect(node.id) }}
-        onMouseEnter={(e) => { e.stopPropagation(); onHoverNode(node.id) }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect(node.id);
+        }}
+        onMouseEnter={(e) => {
+          e.stopPropagation();
+          onHoverNode(node.id);
+        }}
         ref={elementRef as React.Ref<HTMLDivElement>}
       >
         <div
@@ -291,9 +324,15 @@ export const TreeViewNode = ({
           </ul>
 
           <div
-            className={getRowClass() + " pl-5"}
-            onClick={(e) => { e.stopPropagation(); onSelect(node.id) }}
-            onMouseEnter={(e) => { e.stopPropagation(); onHoverNode(node.id) }}
+            className={`${getRowClass()} pl-5`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(node.id);
+            }}
+            onMouseEnter={(e) => {
+              e.stopPropagation();
+              onHoverNode(node.id);
+            }}
           >
             <div className="w-5 h-5 shrink-0 select-none" />
             <div className="flex items-center leading-5">
@@ -307,18 +346,18 @@ export const TreeViewNode = ({
         </>
       )}
     </li>
-  )
+  );
 
   switch (node.type) {
     case "text":
-      return renderTextNode()
+      return renderTextNode();
     case "comment":
-      return renderCommentNode()
+      return renderCommentNode();
     case "doctype":
-      return renderDocTypeNode()
+      return renderDocTypeNode();
     case "pseudo":
-      return renderPseudoNode()
+      return renderPseudoNode();
     default:
-      return renderElementNode()
+      return renderElementNode();
   }
-}
+};
