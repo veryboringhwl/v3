@@ -1,8 +1,8 @@
 import { createRoot } from "react-dom/client";
-import { DevToolsPanel } from "./App.tsx";
+import { App } from "./App";
+import "./style.css";
 
 const container = document.getElementById("root");
 if (container) {
-  const root = createRoot(container);
-  root.render(<DevToolsPanel />);
+  createRoot(container).render(<App />);
 }
