@@ -1,13 +1,6 @@
-import {
-  adManagers,
-  inStreamClient,
-  logger,
-  settingsClient,
-  slotsClient,
-  testingClient,
-} from "../load.ts";
-
-import { retryCounter } from "../preload.ts";
+import { ReduxStore } from "/modules/stdlib/src/expose/ReduxStore.ts";
+import { logger, prefsClient, settingsClient, slotsClient, testingClient } from "../load.ts";
+import { retryCounter } from "./utils/counter.ts";
 
 const overrideSlot = async ({ slotId }: { slotId: string }) => {
   try {
@@ -20,7 +13,6 @@ const overrideSlot = async ({ slotId }: { slotId: string }) => {
         slotIds: [slotId],
         url: "http://localhost/no/thanks",
       });
-
       await settingsClient.updateSlotEnabled({ slotId, enabled: false });
       await settingsClient.updateStreamTimeInterval({ slotId, timeInterval: 0n });
       await settingsClient.updateDisplayTimeInterval({ slotId, timeInterval: 0n });
@@ -51,28 +43,36 @@ export const bindSlots = async (adSlots: { slotId: string }[]) => {
   }
 };
 
-export let inStreamSubscription: { cancel: () => void };
-// idk what this even does tbh
-// todo: find out what inStream ads are?
+export let reduxStoreSubscription: () => void;
+export let prefsSubscription: { cancel: () => void };
 export const pauseAds = async () => {
+  reduxStoreSubscription = ReduxStore.subscribe(() => {
+    // disables: audio, billboard, inStreamApi, leaderboard, sponsoredPlaylist, and vto
+    if (ReduxStore.getState().ads.root.adsEnabled === true) {
+      ReduxStore.getState().ads.root.adsEnabled = false;
+      ReduxStore.dispatch({ type: "ADS_DISABLED" });
+      logger.log("Dispatched ADS_DISABLED");
+    }
+  });
+
   if (testingClient) {
     await testingClient.addPlaytime({ seconds: -100000000000 });
   }
-  if (inStreamClient) {
-    inStreamSubscription = inStreamClient.subInStream({}, ({ ad }) => {
-      if (ad) {
-        adManagers.inStreamApi.disable();
+
+  if (prefsClient) {
+    const client = prefsClient;
+    // triggered when hiding ad on home page
+    await client.set({
+      entries: { "ui.hide_hpto": { bool: true } },
+    });
+
+    prefsSubscription = prefsClient.sub({ key: "ui.hide_hpto" }, async ({ entries }) => {
+      const current = entries["ui.hide_hpto"];
+      if (current.bool === false) {
+        await client.set({
+          entries: { "ui.hide_hpto": { bool: true } },
+        });
       }
     });
   }
-
-  // idk if this even does anything
-  // await adManagers.audio.disable();
-  // await adManagers.billboard.disable();
-  // await adManagers.leaderboard.disableLeaderboard();
-  // await adManagers.sponsoredPlaylist.disable();
-  // await adManagers.inStreamApi.disable();
-  // await adManagers.vto.manager.disable();
-  // adManagers.audio.isNewAdsNpvEnabled = false;
-  // adManagers.vto.isNewAdsNpvEnabled = false;
 };

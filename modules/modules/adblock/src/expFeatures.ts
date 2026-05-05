@@ -1,20 +1,26 @@
 import { Platform } from "/modules/stdlib/src/expose/Platform.ts";
-import { localStorageApi } from "../load.ts";
+
+// "spotify.desktop.remote_config_esperanto.proto.DesktopRemoteConfig";
+// if spotify ever removes RemoteConfigDebugAPI i can use this
+// it is the same thing but lower level
 
 export const configureExpFeatures = async () => {
-  const expFeatures = localStorageApi.getItem("remote-config-overrides");
-  if (!expFeatures) return;
-
   const overrides = {
-    ...expFeatures,
-    enableInAppMessaging: true,
+    enableInAppMessaging: false,
     hideUpgradeCTA: true,
     enablePremiumUserForMiniPlayer: true,
+    enableHpto: false,
+    enableSponsoredPlaylistV2: false,
   };
-  localStorageApi.setItem("remote-config-overrides", overrides);
+
+  // localstorage doesnt update spotify instantly
+  // so prefer the Platform API
+  // localStorageApi.setItem("remote-config-overrides", overrides);
+
   const RemoteConfigDebugAPI = Platform.getRemoteConfigDebugAPI();
 
   for (const [key, value] of Object.entries(overrides)) {
+    // This updates localstorage as well
     await RemoteConfigDebugAPI.setOverride({ source: "web", type: "boolean", name: key }, value);
   }
 };

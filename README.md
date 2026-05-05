@@ -108,6 +108,7 @@ This will give you the dom but with mapped elements and the classmap entry it is
 ## Notes
 
 > [!IMPORTANT]
+> run `deno run -A npm:@biomejs/biome check --write --unsafe --diagnostic-level=info` to format the entire codebase.
 > If updating hooks run `bunx tsgo` and then reload spotify and it will update
 > Do not run `spicetify sync`. This currently doesnt have a github release yet and will remove your hooks
 > If building modules run `deno task pw:build` after every change and reload or use `deno task pw:watch` and it will hot-reload for you.

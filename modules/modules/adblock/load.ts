@@ -1,30 +1,30 @@
 import type { ModuleInstance } from "/hooks/module.ts";
 import { createLogger } from "/modules/stdlib/mod.ts";
-import { Platform } from "/modules/stdlib/src/expose/Platform.ts";
 import { configureExpFeatures } from "./src/expFeatures.ts";
-import { bindSlots, inStreamSubscription, pauseAds, slotSubscriptions } from "./src/slot.ts";
+import {
+  bindSlots,
+  pauseAds,
+  prefsSubscription,
+  reduxStoreSubscription,
+  slotSubscriptions,
+} from "./src/slot.ts";
 import type {
-  InStreamClient,
+  PrefsClient,
   SettingsClient,
   SlotsClient,
   TestingClient,
 } from "./src/utils/clients.ts";
 import { getEsperantoClient } from "./src/utils/clients.ts";
 
-export const localStorageApi = Platform.getLocalStorageAPI();
-export const adManagers = Platform.getAdManagers();
-export const productStateApi = Platform.getProductStateAPI().productStateApi;
-
 const SETTINGS_SERVICE_ID = "spotify.ads.esperanto.proto.Settings";
 const SLOTS_SERVICE_ID = "spotify.ads.esperanto.proto.Slots";
 const TESTING_SERVICE_ID = "spotify.ads.esperanto.proto.Testing";
-const INSTREAM_SERVICE_ID = "spotify.ads.esperanto.proto.InStream";
+const PREFS_SERVICE_ID = "spotify.prefs.esperanto.proto.Prefs";
 
 export const settingsClient = getEsperantoClient<SettingsClient>(SETTINGS_SERVICE_ID);
 export const slotsClient = getEsperantoClient<SlotsClient>(SLOTS_SERVICE_ID);
 export const testingClient = getEsperantoClient<TestingClient>(TESTING_SERVICE_ID);
-export const inStreamClient = getEsperantoClient<InStreamClient>(INSTREAM_SERVICE_ID);
-
+export const prefsClient = getEsperantoClient<PrefsClient>(PREFS_SERVICE_ID);
 export let logger: Console;
 
 export default async function (mod: ModuleInstance) {
@@ -32,10 +32,9 @@ export default async function (mod: ModuleInstance) {
 
   let adSlots: { slotId: string }[] = [];
   if (slotsClient) adSlots = (await slotsClient.getSlots()).adSlots;
-
-  configureExpFeatures();
   bindSlots(adSlots);
   pauseAds();
+  configureExpFeatures();
 
   logger.info("Loaded successfully");
 
@@ -44,6 +43,7 @@ export default async function (mod: ModuleInstance) {
     for (const slotSubscription of slotSubscriptions) {
       slotSubscription.cancel();
     }
-    inStreamSubscription.cancel();
+    reduxStoreSubscription();
+    prefsSubscription.cancel();
   };
 }

@@ -1,5 +1,6 @@
 import type { ModuleInstance } from "/hooks/module.ts";
 import { createRegistrar } from "/modules/stdlib/mod.ts";
+import { Platform } from "/modules/stdlib/src/expose/Platform.ts";
 import { React } from "/modules/stdlib/src/expose/React.ts";
 // import panelReg from "/modules/stdlib/src/registers/panel.ts";
 import { Route } from "/modules/stdlib/src/webpack/ReactComponents.ts";
@@ -37,4 +38,19 @@ export default function (mod: ModuleInstance) {
   registrar.register("settingsSection", <TestSettingsSection />);
   // registrar.register("panel", <TestPanel />);
   // hash = panelReg.getHash(<TestPanel />)!;
+
+  // cool experimental features ive found
+  configureExpFeatures();
 }
+
+const configureExpFeatures = async () => {
+  const overrides = {
+    enableShareDialog: true,
+    enableYlxMultiSelect: true,
+  };
+
+  const RemoteConfigDebugAPI = Platform.getRemoteConfigDebugAPI();
+  for (const [key, value] of Object.entries(overrides)) {
+    await RemoteConfigDebugAPI.setOverride({ source: "web", type: "boolean", name: key }, value);
+  }
+};

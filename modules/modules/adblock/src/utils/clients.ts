@@ -22,8 +22,9 @@ export interface TestingClient {
   addPlaytime(params: { seconds: number }): Promise<void>;
 }
 
-export interface InStreamClient {
-  subInStream(params: { request: {} }, callback: (data: any) => void): { cancel: () => void };
+export interface PrefsClient {
+  set(params: { entries: any }): Promise<void> | void;
+  sub(params: { key: string }, callback: (data: { entries: any }) => void): { cancel: () => void };
 }
 
 export function getEsperantoClient<T>(serviceId: string): T | undefined {

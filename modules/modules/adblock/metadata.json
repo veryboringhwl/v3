@@ -7,8 +7,7 @@
   "readme": "./assets/README.md",
   "preview": "./assets/preview.png",
   "entries": {
-    "js": "index.js",
-    "css": "index.css"
+    "js": "index.js"
   },
   "dependencies": {
     "stdlib": ">=0.1.0"
