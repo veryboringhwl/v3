@@ -8,7 +8,7 @@ fi
 
 for DIR in "${DIRS[@]}"; do
    echo "Building $DIR"
-   creator build -i "$DIR" -o "$DIR" -c classmap.json &
+   deno run -A jsr:@veryboringhwl/creator@0.0.2 build -i "$DIR" -o "$DIR" -c classmap.json &
 done
 
 wait

@@ -13,7 +13,7 @@ $jobs = @()
 
 foreach ($Dir in $Dirs) {
    Write-Host "Building $Dir"
-   $jobs += Start-Process -FilePath "creator" -ArgumentList "build -i $Dir -o $Dir -c classmap.json" -NoNewWindow -PassThru
+   $jobs += Start-Process -FilePath "deno" -ArgumentList "run -A jsr:@veryboringhwl/creator@0.0.2 build -i $Dir -o $Dir -c classmap.json" -NoNewWindow -PassThru
 }
 
 $jobs | Wait-Process

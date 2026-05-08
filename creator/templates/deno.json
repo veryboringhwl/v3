@@ -4,9 +4,9 @@
     "/modules/": "./modules/"
   },
   "tasks": {
-    "build": "creator build -i modules -o modules -c classmap.json",
-    "watch": "creator build -i modules -o modules -c classmap.json -w --dev",
-    "release": "creator release",
+    "build": "deno run -A jsr:@veryboringhwl/creator@0.0.2 build -i modules -o modules -c classmap.json",
+    "watch": "deno run -A jsr:@veryboringhwl/creator@0.0.2 build -i modules -o modules -c classmap.json -w --dev",
+    "release": "deno run -A jsr:@veryboringhwl/creator@0.0.2 release",
     "lint": "deno run -A npm:@biomejs/biome check --write .",
     "format": "deno run -A npm:@biomejs/biome format --write ."
   },
