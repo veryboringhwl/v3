@@ -1,14 +1,15 @@
-#!/bin/sh
+#!/usr/bin/env bash
+set -euo pipefail
 
-if [ $# -eq 0 ]; then
-   set -- modules/*
+DIRS=("${@}")
+if [ ${#DIRS[@]} -eq 0 ]; then
+   DIRS=(modules/*)
 fi
 
-for DIR; do
-   echo "Building ${DIR}"
-   deno run -A jsr:@delu/tailor/cli -i "${DIR}" -o "${DIR}" -c classmap.json -b &
+for DIR in "${DIRS[@]}"; do
+   echo "Building $DIR"
+   creator build -i "$DIR" -o "$DIR" -c classmap.json &
 done
 
 wait
-
 echo "Done"

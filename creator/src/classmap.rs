@@ -89,7 +89,6 @@ pub fn fetch_classmap_info(url: &str) -> Result<ClassmapInfo> {
             return Err(anyhow!("Invalid classmap semver in url: {url}"));
         }
 
-        // Keep this sortable and comparable to legacy numeric version stamps.
         major * 1_000_000 + minor * 1_000 + patch
     } else {
         return Err(anyhow!(
@@ -102,13 +101,10 @@ pub fn fetch_classmap_info(url: &str) -> Result<ClassmapInfo> {
     let body = response
         .text()
         .with_context(|| format!("Failed to read classmap from {url}"))?;
-    let mapping: Mapping =
-        serde_json::from_str(&body).with_context(|| format!("Failed to parse classmap from {url}"))?;
+    let mapping: Mapping = serde_json::from_str(&body)
+        .with_context(|| format!("Failed to parse classmap from {url}"))?;
 
-    Ok(ClassmapInfo {
-        mapping,
-        version,
-    })
+    Ok(ClassmapInfo { mapping, version })
 }
 
 pub fn discover_module_dirs(modules_dir: &Path) -> Result<Vec<PathBuf>> {

@@ -1,11 +1,11 @@
 use std::{
     fs,
-    io::{self, Write},
     path::{Path, PathBuf},
 };
 
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result};
 use clap::ValueEnum;
+use dialoguer::{Confirm, Input, Select};
 
 use crate::util::write_text;
 
@@ -17,294 +17,289 @@ pub enum ModuleTemplate {
     Extension,
 }
 
-#[derive(Debug)]
-pub struct CreateCommandInput {
-    pub name: Option<String>,
-    pub dir: PathBuf,
-    pub author: Option<String>,
-    pub description: String,
-    pub force: bool,
-    pub interactive: bool,
-    pub tsx: bool,
-    pub template: Option<ModuleTemplate>,
-}
+impl ModuleTemplate {
+    const ALL: &[Self] = &[Self::CustomApp, Self::Extension];
 
-#[derive(Debug)]
-pub struct InitCommandInput {
-    pub name: String,
-    pub dir: PathBuf,
-    pub author: Option<String>,
-    pub description: String,
-    pub force: bool,
-    pub template: ModuleTemplate,
-}
-
-#[derive(Debug)]
-struct CreateOpts {
-    name: String,
-    dir: PathBuf,
-    author: Option<String>,
-    description: String,
-    force: bool,
-    template: ModuleTemplate,
-}
-
-pub fn run_create(command: CreateCommandInput) -> Result<()> {
-    let cwd = std::env::current_dir().context("Failed to get current directory")?;
-    let in_modules_repo = detect_spicetify_modules_repo(&cwd);
-
-    let opts = if !in_modules_repo {
-        collect_interactive_create_opts(command, true)?
-    } else if command.interactive {
-        collect_interactive_create_opts(command, false)?
-    } else {
-        let name = command
-            .name
-            .ok_or_else(|| anyhow!("--name is required unless --interactive is set"))?;
-        let chosen_template = command.template.unwrap_or_else(|| {
-            if command.tsx {
-                ModuleTemplate::CustomApp
-            } else {
-                ModuleTemplate::Extension
-            }
-        });
-
-        CreateOpts {
-            name,
-            dir: command.dir,
-            author: command.author,
-            description: command.description,
-            force: command.force,
-            template: chosen_template,
+    fn label(&self) -> &'static str {
+        match self {
+            Self::CustomApp => "custom-app    (TSX + React, .tsx)",
+            Self::Extension => "extension     (plain TypeScript, .ts)",
         }
+    }
+}
+
+#[derive(Debug)]
+pub struct CliNewOpts {
+    pub name: Option<String>,
+    pub author: Option<String>,
+    pub description: Option<String>,
+    pub template: Option<ModuleTemplate>,
+    pub biome: Option<bool>,
+    pub dir: Option<PathBuf>,
+    pub force: bool,
+}
+
+#[derive(Debug)]
+struct ProjectOpts {
+    name: String,
+    author: String,
+    description: String,
+    template: ModuleTemplate,
+    biome: bool,
+    dir: PathBuf,
+    force: bool,
+}
+
+pub fn run_new(opts: CliNewOpts) -> Result<()> {
+    let cwd = std::env::current_dir().context("Failed to get current directory")?;
+    let in_modules_repo = is_modules_repo(&cwd);
+
+    let project = if has_required_cli_args(&opts) {
+        build_from_cli(opts)?
+    } else {
+        run_wizard(&cwd, in_modules_repo)?
     };
 
     if in_modules_repo {
-        run_init(InitCommandInput {
-            name: opts.name,
-            dir: opts.dir,
-            author: opts.author,
-            description: opts.description,
-            force: opts.force,
-            template: opts.template,
-        })
+        scaffold_module(&project)
     } else {
-        run_bootstrap_project(&opts)
+        scaffold_project(&project)
     }
 }
 
-pub fn run_init(command: InitCommandInput) -> Result<()> {
-    if command.name.trim().is_empty() {
-        return Err(anyhow!("--name must not be empty"));
-    }
+fn is_modules_repo(cwd: &Path) -> bool {
+    cwd.join("deno.json").exists() && cwd.join("modules").is_dir()
+        || cwd.join("modules").join("deno.json").exists()
+}
 
-    let module_dir = command.dir.join(&command.name);
-    if module_dir.exists() {
-        if !command.force {
-            return Err(anyhow!(
-                "Module directory already exists: {} (use --force to overwrite template files)",
-                module_dir.display()
-            ));
-        }
+fn has_required_cli_args(opts: &CliNewOpts) -> bool {
+    opts.name.is_some()
+        && opts.author.is_some()
+        && opts.template.is_some()
+        && opts.biome.is_some()
+}
+
+fn build_from_cli(opts: CliNewOpts) -> Result<ProjectOpts> {
+    let name = opts
+        .name
+        .ok_or_else(|| anyhow::anyhow!("--name is required in non-interactive mode"))?;
+    let author = opts.author.unwrap_or_else(|| guess_author());
+    let template = opts
+        .template
+        .ok_or_else(|| anyhow::anyhow!("--template is required in non-interactive mode"))?;
+    let biome = opts.biome.unwrap_or(true);
+    let dir = opts.dir.unwrap_or_else(|| PathBuf::from("modules"));
+    let description = opts.description.unwrap_or_default();
+
+    Ok(ProjectOpts {
+        name,
+        author,
+        description,
+        template,
+        biome,
+        dir,
+        force: opts.force,
+    })
+}
+
+fn run_wizard(cwd: &Path, in_modules_repo: bool) -> Result<ProjectOpts> {
+    println!();
+    println!("  create-spicetify-module");
+    println!();
+
+    let default_name = cwd
+        .file_name()
+        .and_then(|n| n.to_str())
+        .unwrap_or("my-module");
+
+    let name: String = Input::new()
+        .with_prompt("Module name")
+        .default(default_name.to_string())
+        .interact_text()?;
+
+    let description: String = Input::new()
+        .with_prompt("Description")
+        .default("A Spicetify v3 module".to_string())
+        .allow_empty(true)
+        .interact_text()?;
+
+    let author: String = Input::new()
+        .with_prompt("Author")
+        .default(guess_author())
+        .interact_text()?;
+
+    let template_idx = Select::new()
+        .with_prompt("Template")
+        .items(&ModuleTemplate::ALL.iter().map(|t| t.label()).collect::<Vec<_>>())
+        .default(0)
+        .interact()?;
+    let template = ModuleTemplate::ALL[template_idx];
+
+    let biome = if in_modules_repo {
+        false
     } else {
-        fs::create_dir_all(&module_dir)
-            .with_context(|| format!("Failed to create module dir: {}", module_dir.display()))?;
+        Confirm::new()
+            .with_prompt("Include Biome config?")
+            .default(true)
+            .interact()?
+    };
+
+    let dir = if in_modules_repo {
+        PathBuf::from("modules")
+    } else {
+        let input: String = Input::new()
+            .with_prompt("Modules directory")
+            .default("modules".to_string())
+            .interact_text()?;
+        PathBuf::from(input)
+    };
+
+    Ok(ProjectOpts {
+        name,
+        author,
+        description,
+        template,
+        biome,
+        dir,
+        force: false,
+    })
+}
+
+fn guess_author() -> String {
+    std::env::var("USERNAME")
+        .or_else(|_| std::env::var("USER"))
+        .unwrap_or_else(|_| "author".to_string())
+}
+
+fn scaffold_module(opts: &ProjectOpts) -> Result<()> {
+    let module_dir = opts.dir.join(&opts.name);
+
+    if module_dir.exists() && !opts.force {
+        return Err(anyhow::anyhow!(
+            "Module directory already exists: {} (use --force to overwrite)",
+            module_dir.display()
+        ));
     }
 
-    let author = command
-        .author
-        .or_else(|| std::env::var("USERNAME").ok())
-        .unwrap_or_else(|| "author".to_string());
+    fs::create_dir_all(&module_dir)
+        .with_context(|| format!("Failed to create {}", module_dir.display()))?;
 
-    let files = render_module_files(
-        command.template,
-        &command.name,
-        &author,
-        if command.description.trim().is_empty() {
-            "A Spicetify v3 module"
-        } else {
-            command.description.as_str()
-        },
-    )?;
+    let files = render_module_files(opts.template, &opts.name, &opts.author, &opts.description);
 
-    for (rel, contents) in files {
-        write_text(&module_dir.join(rel), &contents)?;
+    for (rel, contents) in &files {
+        let dest = module_dir.join(rel);
+        write_text(&dest, contents)?;
+        println!("  + {}", dest.display());
     }
 
-    println!("Initialized module template at {}", module_dir.display());
+    println!();
     println!(
-        "Template: {}",
-        match command.template {
-            ModuleTemplate::CustomApp => "custom-app (TSX)",
-            ModuleTemplate::Extension => "extension (TS)",
-        }
+        "Module \"{}\" created ({})",
+        opts.name,
+        opts.template.label()
     );
 
     Ok(())
 }
 
-fn collect_interactive_create_opts(command: CreateCommandInput, force_prompts: bool) -> Result<CreateOpts> {
-    println!("create-spicetify-module wizard");
+fn scaffold_project(opts: &ProjectOpts) -> Result<()> {
+    let root = PathBuf::from(&opts.name);
 
-    let module_name = match command.name {
-        Some(value) if !value.trim().is_empty() => value,
-        _ => prompt_required("Module name")?,
-    };
-
-    let module_description = if command.description.trim().is_empty() {
-        prompt_default("Description", "A Spicetify v3 module")?
-    } else {
-        command.description
-    };
-
-    let module_author = match command.author {
-        Some(value) if !value.trim().is_empty() => Some(value),
-        _ => {
-            let guessed = std::env::var("USERNAME").unwrap_or_else(|_| "author".to_string());
-            Some(prompt_default("Author", &guessed)?)
-        }
-    };
-
-    let selected_template = if let Some(value) = command.template {
-        value
-    } else if command.tsx {
-        ModuleTemplate::CustomApp
-    } else {
-        prompt_template()?
-    };
-
-    let use_force = if command.force {
-        true
-    } else if force_prompts {
-        prompt_yes_no("Overwrite existing files if present?", false)?
-    } else {
-        false
-    };
-
-    Ok(CreateOpts {
-        name: module_name,
-        dir: command.dir,
-        author: module_author,
-        description: module_description,
-        force: use_force,
-        template: selected_template,
-    })
-}
-
-fn detect_spicetify_modules_repo(cwd: &Path) -> bool {
-    (cwd.join("deno.json").exists() && cwd.join("modules").is_dir())
-        || cwd.join("modules").join("deno.json").exists()
-}
-
-fn run_bootstrap_project(opts: &CreateOpts) -> Result<()> {
-    let project_root = PathBuf::from(&opts.name);
-
-    if project_root.exists() {
-        if !opts.force {
-            return Err(anyhow!(
-                "Project directory already exists: {} (use --force to overwrite files)",
-                project_root.display()
-            ));
-        }
-    } else {
-        fs::create_dir_all(&project_root)
-            .with_context(|| format!("Failed to create project dir: {}", project_root.display()))?;
+    if root.exists() && !opts.force {
+        return Err(anyhow::anyhow!(
+            "Project directory already exists: {} (use --force to overwrite)",
+            root.display()
+        ));
     }
 
-    for (rel, contents) in render_project_files() {
-        write_text(&project_root.join(rel), &contents)?;
+    fs::create_dir_all(&root)
+        .with_context(|| format!("Failed to create {}", root.display()))?;
+
+    // Root-level config files
+    let project_files = render_project_files(opts);
+    for (rel, contents) in project_files {
+        let dest = root.join(&rel);
+        if let Some(parent) = dest.parent() {
+            fs::create_dir_all(parent).ok();
+        }
+        write_text(&dest, &contents)?;
+        println!("  + {}", dest.display());
     }
 
-    run_init(InitCommandInput {
-        name: opts.name.clone(),
-        dir: project_root.join("modules"),
-        author: opts.author.clone(),
-        description: opts.description.clone(),
-        force: true,
-        template: opts.template,
-    })?;
+    // Module inside the project
+    let module_dir = root.join(&opts.dir).join(&opts.name);
+    fs::create_dir_all(&module_dir)
+        .with_context(|| format!("Failed to create {}", module_dir.display()))?;
 
-    println!("\nNow run deno task win:build");
+    let module_files = render_module_files(opts.template, &opts.name, &opts.author, &opts.description);
+    for (rel, contents) in &module_files {
+        let dest = module_dir.join(rel);
+        write_text(&dest, contents)?;
+        println!("  + {}", dest.display());
+    }
+
+    println!();
+    println!("Project \"{}\" created!", opts.name);
+    println!();
+    println!("  cd {}", opts.name);
+    println!("  deno task build");
 
     Ok(())
 }
 
+fn apply_tokens(content: &str, tokens: &[(&str, &str)]) -> String {
+    let mut out = content.to_string();
+    for (key, val) in tokens {
+        out = out.replace(&format!("{{{{{key}}}}}"), val);
+    }
+    out
+}
+
 fn render_module_files(
     template: ModuleTemplate,
-    module_name: &str,
+    name: &str,
     author: &str,
     description: &str,
-) -> Result<Vec<(PathBuf, String)>> {
+) -> Vec<(PathBuf, String)> {
     let base = match template {
         ModuleTemplate::CustomApp => module_files_custom_app(),
         ModuleTemplate::Extension => module_files_extension(),
     };
 
-    Ok(base
-        .into_iter()
-        .map(|(rel, raw)| {
-            (
-                rel,
-                apply_tokens(
-                    raw,
-                    &[
-                        ("MODULE_NAME", module_name),
-                        ("AUTHOR", author),
-                        ("DESCRIPTION", description),
-                    ],
-                ),
-            )
-        })
-        .collect())
+    let tokens: &[(&str, &str)] = &[
+        ("MODULE_NAME", name),
+        ("AUTHOR", author),
+        ("DESCRIPTION", description),
+    ];
+
+    base.into_iter()
+        .map(|(rel, raw)| (rel, apply_tokens(raw, tokens)))
+        .collect()
 }
 
-fn render_project_files() -> Vec<(PathBuf, String)> {
-    vec![
+fn render_project_files(opts: &ProjectOpts) -> Vec<(PathBuf, String)> {
+    let mut files = vec![
         (PathBuf::from("deno.json"), PROJECT_DENO_JSON.to_string()),
-        (
-            PathBuf::from("classmap.json"),
-            PROJECT_CLASSMAP_JSON.to_string(),
-        ),
+        (PathBuf::from("classmap.json"), PROJECT_CLASSMAP_JSON.to_string()),
         (PathBuf::from("vault.json"), PROJECT_VAULT_JSON.to_string()),
         (PathBuf::from(".gitignore"), PROJECT_GITIGNORE.to_string()),
-        (
-            PathBuf::from(".editorconfig"),
-            PROJECT_EDITORCONFIG.to_string(),
-        ),
-        (
-            PathBuf::from("scripts/build-dev.ps1"),
-            PROJECT_BUILD_DEV_PS1.to_string(),
-        ),
-        (
-            PathBuf::from("scripts/watch-dev.ps1"),
-            PROJECT_WATCH_DEV_PS1.to_string(),
-        ),
-        (
-            PathBuf::from("scripts/enable-dev.ps1"),
-            PROJECT_ENABLE_DEV_PS1.to_string(),
-        ),
-        (
-            PathBuf::from("scripts/build-dev.sh"),
-            PROJECT_BUILD_DEV_SH.to_string(),
-        ),
-        (
-            PathBuf::from("scripts/watch-dev.sh"),
-            PROJECT_WATCH_DEV_SH.to_string(),
-        ),
-        (
-            PathBuf::from("scripts/enable-dev.sh"),
-            PROJECT_ENABLE_DEV_SH.to_string(),
-        ),
-        (
-            PathBuf::from("scripts/build-local.ts"),
-            PROJECT_BUILD_LOCAL_TS.to_string(),
-        ),
-        (
-            PathBuf::from("scripts/build-shared.ts"),
-            PROJECT_BUILD_SHARED_TS.to_string(),
-        ),
+        (PathBuf::from(".editorconfig"), PROJECT_EDITORCONFIG.to_string()),
+        (PathBuf::from("scripts/build-dev.ps1"), PROJECT_BUILD_DEV_PS1.to_string()),
+        (PathBuf::from("scripts/watch-dev.ps1"), PROJECT_WATCH_DEV_PS1.to_string()),
+        (PathBuf::from("scripts/enable-dev.ps1"), PROJECT_ENABLE_DEV_PS1.to_string()),
+        (PathBuf::from("scripts/build-dev.sh"), PROJECT_BUILD_DEV_SH.to_string()),
+        (PathBuf::from("scripts/watch-dev.sh"), PROJECT_WATCH_DEV_SH.to_string()),
+        (PathBuf::from("scripts/enable-dev.sh"), PROJECT_ENABLE_DEV_SH.to_string()),
+        (PathBuf::from("scripts/build-local.ts"), PROJECT_BUILD_LOCAL_TS.to_string()),
+        (PathBuf::from("scripts/build-shared.ts"), PROJECT_BUILD_SHARED_TS.to_string()),
         (PathBuf::from("scripts/cron.ts"), PROJECT_CRON_TS.to_string()),
-    ]
+    ];
+
+    if opts.biome {
+        files.push((PathBuf::from("biome.json"), PROJECT_BIOME_JSON.to_string()));
+    }
+
+    files
 }
 
 fn module_files_custom_app() -> Vec<(PathBuf, &'static str)> {
@@ -325,79 +320,6 @@ fn module_files_extension() -> Vec<(PathBuf, &'static str)> {
         (PathBuf::from("mixin.ts"), MODULE_EXTENSION_MIXIN_TS),
         (PathBuf::from("index.css"), MODULE_EXTENSION_CSS),
     ]
-}
-
-fn apply_tokens(input: &str, tokens: &[(&str, &str)]) -> String {
-    let mut output = input.to_string();
-    for (name, value) in tokens {
-        output = output.replace(&format!("{{{{{name}}}}}"), value);
-    }
-    output
-}
-
-fn prompt_template() -> Result<ModuleTemplate> {
-    loop {
-        print!("Template [custom-app/extension] [custom-app]: ");
-        io::stdout().flush().context("Failed to flush stdout")?;
-        let mut input = String::new();
-        io::stdin()
-            .read_line(&mut input)
-            .context("Failed to read interactive input")?;
-        let trimmed = input.trim().to_lowercase();
-        if trimmed.is_empty() || trimmed == "custom-app" || trimmed == "app" {
-            return Ok(ModuleTemplate::CustomApp);
-        }
-        if trimmed == "extension" || trimmed == "ext" {
-            return Ok(ModuleTemplate::Extension);
-        }
-        println!("Please enter custom-app or extension.");
-    }
-}
-
-fn prompt_required(label: &str) -> Result<String> {
-    loop {
-        print!("{}: ", label);
-        io::stdout().flush().context("Failed to flush stdout")?;
-        let mut input = String::new();
-        io::stdin()
-            .read_line(&mut input)
-            .context("Failed to read interactive input")?;
-        let trimmed = input.trim();
-        if !trimmed.is_empty() {
-            return Ok(trimmed.to_string());
-        }
-        println!("Value is required.");
-    }
-}
-
-fn prompt_default(label: &str, default: &str) -> Result<String> {
-    print!("{} [{}]: ", label, default);
-    io::stdout().flush().context("Failed to flush stdout")?;
-    let mut input = String::new();
-    io::stdin()
-        .read_line(&mut input)
-        .context("Failed to read interactive input")?;
-    let trimmed = input.trim();
-    if trimmed.is_empty() {
-        Ok(default.to_string())
-    } else {
-        Ok(trimmed.to_string())
-    }
-}
-
-fn prompt_yes_no(label: &str, default: bool) -> Result<bool> {
-    let hint = if default { "Y/n" } else { "y/N" };
-    print!("{} [{}]: ", label, hint);
-    io::stdout().flush().context("Failed to flush stdout")?;
-    let mut input = String::new();
-    io::stdin()
-        .read_line(&mut input)
-        .context("Failed to read interactive input")?;
-    let trimmed = input.trim().to_lowercase();
-    if trimmed.is_empty() {
-        return Ok(default);
-    }
-    Ok(matches!(trimmed.as_str(), "y" | "yes"))
 }
 
 const MODULE_CUSTOM_APP_METADATA: &str = include_str!("../templates/modules/app/metadata.json");
@@ -427,3 +349,4 @@ const PROJECT_ENABLE_DEV_SH: &str = include_str!("../templates/scripts/enable-de
 const PROJECT_BUILD_LOCAL_TS: &str = include_str!("../templates/scripts/build-local.ts");
 const PROJECT_BUILD_SHARED_TS: &str = include_str!("../templates/scripts/build-shared.ts");
 const PROJECT_CRON_TS: &str = include_str!("../templates/scripts/cron.ts");
+const PROJECT_BIOME_JSON: &str = include_str!("../templates/biome.json");

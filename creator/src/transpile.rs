@@ -28,7 +28,6 @@ pub struct Transpiler {
 
 impl Transpiler {
     pub fn new(classmap: Mapping, dev: bool) -> Self {
-        // Preserve legacy plugin behavior where mappings are rooted under `MAP`.
         let mut js_root = HashMap::new();
         js_root.insert("MAP".to_string(), classmap.clone());
 

@@ -6,6 +6,7 @@ use std::{
 };
 
 use anyhow::{Context, Result};
+use rayon::prelude::*;
 use serde::Deserialize;
 use serde_json::Value;
 use walkdir::WalkDir;
@@ -134,28 +135,35 @@ impl Builder {
         scripts_input.sort();
         unknown_files.sort();
 
-        let mut did_work = false;
+        let js_should_run = opts.js && self.scripts_input.is_some();
+        let css_should_run = opts.css && self.scss_input.is_some();
+        let copy_should_run = opts.unknown && !unknown_files.is_empty();
+        let did_build_js = js_should_run;
+        let did_work = js_should_run || css_should_run || copy_should_run;
 
-        let mut did_build_js = false;
+        let (js_result, css_result) = rayon::join(
+            || {
+                if js_should_run {
+                    self.js(&scripts_input, now)
+                } else {
+                    Ok(())
+                }
+            },
+            || {
+                if css_should_run {
+                    self.css(self.scss_input.as_ref().unwrap())
+                } else {
+                    Ok(())
+                }
+            },
+        );
+        js_result?;
+        css_result?;
 
-        if opts.js && self.scripts_input.is_some() {
-            did_work = true;
-            did_build_js = true;
-            self.js(&scripts_input, now)?;
-        }
-
-        if opts.css {
-            if let Some(input) = &self.scss_input {
-                did_work = true;
-                self.css(input)?;
-            }
-        }
-
-        if opts.unknown {
-            for rel in &unknown_files {
-                did_work = true;
-                self.copy_file(rel)?;
-            }
+        if copy_should_run {
+            unknown_files.par_iter().try_for_each(|rel| {
+                self.copy_file(rel)
+            })?;
         }
 
         if did_work {
@@ -196,7 +204,7 @@ impl Builder {
     }
 
     pub fn js(&self, inputs: &[PathBuf], timestamp: u64) -> Result<()> {
-        for input in inputs {
+        inputs.par_iter().try_for_each(|input| {
             let rel = self.get_relative_path(input);
             let mut rel_js = rel.clone();
             rel_js.set_extension("js");
@@ -204,9 +212,8 @@ impl Builder {
             let rel_js_str = normalize_slashes(&rel_js);
             let filepath = format!("/modules/{}/{}", self.identifier, rel_js_str);
             self.transpiler
-                .js(input, &output, &self.input_dir, &filepath, timestamp)?;
-        }
-        Ok(())
+                .js(input, &output, &self.input_dir, &filepath, timestamp)
+        })
     }
 
     pub fn css(&self, input: &Path) -> Result<()> {
@@ -342,16 +349,16 @@ impl Builder {
             .as_millis() as u64;
 
         let inputs = collect_js_inputs(&module_dir);
-        for input in inputs {
-            let rel = input.strip_prefix(&module_dir).unwrap_or(&input).to_path_buf();
+        inputs.par_iter().try_for_each(|input| {
+            let rel = input.strip_prefix(&module_dir).unwrap_or(input).to_path_buf();
             let mut rel_js = rel.clone();
             rel_js.set_extension("js");
             let output = module_dir.join(&rel_js);
             let rel_js_str = normalize_slashes(&rel_js);
             let filepath = format!("/modules/{}/{}", module_id, rel_js_str);
             self.transpiler
-                .js(&input, &output, &module_dir, &filepath, timestamp)?;
-        }
+                .js(input, &output, &module_dir, &filepath, timestamp)
+        })?;
 
         let timestamp_file = module_dir.join("timestamp");
         ensure_parent(&timestamp_file)?;
