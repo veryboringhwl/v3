@@ -6,7 +6,7 @@ import { join } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
-const VERSION = "0.0.2";
+const VERSION = "0.0.3";
 const REPO = "veryboringhwl/v3";
 
 const PLATFORM_MAP: Readonly<Record<string, string>> = {
