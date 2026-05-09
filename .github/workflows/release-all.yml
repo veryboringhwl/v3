@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       cli_version:
-        description: CLI version (e.g. 3.0.0)
+        description: CLI version (e.g. 1.0.0)
         required: true
         type: string
       hooks_version:
@@ -52,7 +52,7 @@ jobs:
       attestations: write
     strategy:
       matrix:
-        arch: [386, amd64, arm64]
+        arch: [amd64, arm64]
     with:
       tag: ${{ inputs.cli_version }}
       arch: ${{ matrix.arch }}
@@ -168,7 +168,7 @@ jobs:
       - name: Attest
         uses: actions/attest@v4
         with:
-          subjects: "dist/*"
+          subject-path: "dist/*"
 
       - name: Release
         uses: softprops/action-gh-release@v3

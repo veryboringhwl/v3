@@ -77,7 +77,7 @@
 
 
 		<CustomAction Id="CreateSpotifyShortcut" Directory="INSTALLDIR" Execute="deferred"
-			Impersonate="yes" Return="check"
+			Impersonate="no" Return="check"
 			ExeCommand='cmd /c mklink "[INSTALLDIR]bin\spotify.exe" "[#SpicetifyExe]"' />
 
 		<CustomAction Id="InitSpicetify" Directory="INSTALLDIR" Execute="deferred"

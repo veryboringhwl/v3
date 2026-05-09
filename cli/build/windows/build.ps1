@@ -29,4 +29,5 @@ Copy-Item $exe "dist\spicetify-$version-windows-$platform.exe"
 Copy-Item $exe "bin\spicetify.exe"
 
 $arch = $platform -replace 'amd64', 'x64' -replace '386', 'x86'
-wix build -acceptEula wix7 -arch $arch -d ProductVersion=$version -d Platform=$arch -ext WixToolset.Util.wixext -ext WixToolset.UI.wixext .\installer.wxs -o "dist\installer-$version-windows-$platform.msi"
+wix eula accept wix7
+wix build -arch $arch -d ProductVersion=$version -d Platform=$arch -ext WixToolset.Util.wixext -ext WixToolset.UI.wixext .\installer.wxs -o "dist\installer-$version-windows-$platform.msi"

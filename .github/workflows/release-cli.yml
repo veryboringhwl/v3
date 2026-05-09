@@ -48,7 +48,7 @@ jobs:
     needs: setup
     strategy:
       matrix:
-        arch: [386, amd64, arm64]
+        arch: [amd64, arm64]
     with:
       tag: ${{ needs.setup.outputs.tag }}
       arch: ${{ matrix.arch }}
@@ -70,7 +70,7 @@ jobs:
       - name: Attest
         uses: actions/attest@v4
         with:
-          subjects: "dist/*"
+          subject-path: "dist/*"
 
       - name: Release
         uses: softprops/action-gh-release@v3

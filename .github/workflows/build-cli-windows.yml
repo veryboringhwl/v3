@@ -22,13 +22,14 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ inputs.arch == 'amd64' && 'x86_64-pc-windows-msvc' || inputs.arch == 'arm64' && 'aarch64-pc-windows-msvc' || 'i686-pc-windows-msvc' }}
+          targets: ${{ inputs.arch == 'amd64' && 'x86_64-pc-windows-msvc' || 'aarch64-pc-windows-msvc' }}
 
       - name: Setup WiX
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           dotnet tool install -g wix
+          wix eula accept wix7
           wix extension add -g WixToolset.Util.wixext
           wix extension add -g WixToolset.UI.wixext
 
@@ -42,7 +43,7 @@ jobs:
       - name: Attest
         uses: actions/attest@v4
         with:
-          subjects: cli/build/windows/dist/*
+          subject-path: cli/build/windows/dist/*
 
       - name: Upload
         uses: actions/upload-artifact@v7
