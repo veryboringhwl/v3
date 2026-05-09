@@ -1,0 +1,21 @@
+[submodule "modules"]
+	path = modules
+	url = https://github.com/veryboringhwl/modules
+[submodule "hooks"]
+	path = hooks
+	url = https://github.com/veryboringhwl/hooks
+[submodule "classmaps"]
+	path = classmaps
+	url = https://github.com/veryboringhwl/classmaps
+[submodule "cli"]
+	path = cli
+	url = https://github.com/veryboringhwl/cli
+[submodule "creator"]
+	path = creator
+	url = https://github.com/veryboringhwl/creator
+[submodule "devtools"]
+	path = devtools
+	url = https://github.com/veryboringhwl/devtools
+[submodule "pkgs"]
+	path = pkgs
+	url = https://github.com/veryboringhwl/pkgs
