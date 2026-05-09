@@ -61,18 +61,8 @@ spicetify init
 
 ### 4. Prepare the hooks
 
-Create the hooks directory under:
-
-```text
-%LOCALAPPDATA%\Spicetify\hooks
-```
-
-Then copy the contents of this repository’s `hooks` folder into that location.
-
-After that, compile the hooks from the `hooks` folder:
-
 ```sh
-bunx tsgo
+spicetify sync
 ```
 
 ### 5. Build the modules
@@ -110,6 +100,5 @@ This will give you the dom but with mapped elements and the classmap entry it is
 > [!IMPORTANT]
 > run `deno run -A npm:@biomejs/biome check --write --unsafe --diagnostic-level=info` to format the entire codebase.
 > If updating hooks run `bunx tsgo` and then reload spotify and it will update
-> Do not run `spicetify sync`. This currently doesnt have a github release yet and will remove your hooks
 > If building modules run `deno task pw:build` after every change and reload or use `deno task pw:watch` and it will hot-reload for you.
 > `deno task cm:fetch` replaces your classmap with the one from `https://github.com/veryboringhwl/v3/tree/main/classmaps`

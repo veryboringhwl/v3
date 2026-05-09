@@ -6,7 +6,7 @@
     ".": "./mod.ts"
   },
   "publish": {
-    "include": ["mod.ts"],
+    "include": ["mod.ts", "deno.json"],
     "exclude": []
   }
 }

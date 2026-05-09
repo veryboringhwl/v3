@@ -4,6 +4,15 @@ set -e
 version=$1
 arch=$2
 
-GOARCH="$arch" go build -C ../../ -o "./build/linux/dist/cli-$version-linux-$arch" -ldflags "-X main.version=$version"
+case $arch in
+	amd64) target="x86_64-unknown-linux-gnu" ;;
+	arm64) target="aarch64-unknown-linux-gnu" ;;
+	*)     echo "unsupported arch: $arch" && exit 1 ;;
+esac
+
+cargo build --release --target "$target" --manifest-path ../../Cargo.toml
+
+mkdir -p dist
+cp "../../target/$target/release/spicetify" "dist/spicetify-$version-linux-$arch"
 
 #TODO: make AppImage

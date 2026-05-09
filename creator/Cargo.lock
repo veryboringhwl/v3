@@ -491,7 +491,7 @@ dependencies = [
 
 [[package]]
 name = "creator"
-version = "0.0.3"
+version = "0.0.0"
 dependencies = [
  "anyhow",
  "clap",

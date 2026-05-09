@@ -2,37 +2,38 @@
 
 [CmdletBinding()]
 param (
-	[Parameter(ValueFromRemainingArguments = $true)]
-	[string[]]$Dirs
+  [Parameter(ValueFromRemainingArguments = $true)]
+  [string[]]$Dirs
 )
 
 $ModuleRoot = Split-Path -Parent $PSScriptRoot
 Push-Location $ModuleRoot
-try {
+try
+{
 
-if ($Dirs.Count -eq 0) {
-	$Dirs = Get-ChildItem -Directory modules
-}
+  if ($Dirs.Count -eq 0)
+  {
+    $Dirs = Get-ChildItem -Directory modules
+  }
 
-$jobs = @()
+  $jobs = @()
 
-$env:SPICETIFY_CONFIG_DIR = "$env:LOCALAPPDATA\spicetify\"
+  $env:SPICETIFY_CONFIG_DIR = "$env:LOCALAPPDATA\spicetify\"
 
-. "$PSScriptRoot\VARS.ps1"
-. "$PSScriptRoot\Resolve-BuildTool.ps1"
+  . "$PSScriptRoot\VARS.ps1"
 
-$BuildTool = Get-BuildToolPath
+  foreach ($Dir in $Dirs)
+  {
+    $Module = Split-Path -Leaf $Dir
+    $Id = Get-Id $Module
+    Write-Host "Watching $Id"
+    $jobs += Start-Process -FilePath "deno" -ArgumentList @("run", "-A", "jsr:@veryboringhwl/creator", "build", "--module", "$Id", "-i", "$Dir", "-o", "$Dir", "-c", "classmap.json", "-w", "--debounce", "1000", "--dev") -NoNewWindow -PassThru
+  }
 
-foreach ($Dir in $Dirs) {
-	$Module = Split-Path -Leaf $Dir
-	$Id = Get-Id $Module
-	Write-Host "Watching $Id"
-	$jobs += Start-Process -FilePath $BuildTool -ArgumentList @("build", "--module", "$Id", "-i", "$Dir", "-o", "$Dir", "-c", "classmap.json", "-w", "--debounce", "1000", "--dev") -NoNewWindow -PassThru
-}
+  $jobs | Wait-Process
 
-$jobs | Wait-Process
-
-Write-Host "Done"
-} finally {
-	Pop-Location
+  Write-Host "Done"
+} finally
+{
+  Pop-Location
 }

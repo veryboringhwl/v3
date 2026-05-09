@@ -6,7 +6,9 @@ import { join } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
-const VERSION = "0.0.3";
+import config from "./deno.json" with { type: "json" };
+
+const VERSION = config.version;
 const REPO = "veryboringhwl/v3";
 
 const PLATFORM_MAP: Readonly<Record<string, string>> = {

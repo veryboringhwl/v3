@@ -12,11 +12,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-24.04
+          - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             asset: creator-linux-x86_64
 
-          - os: macos-13
+          - os: macos-latest
             target: x86_64-apple-darwin
             asset: creator-macos-x86_64
 
@@ -31,7 +31,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6
 
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -50,7 +50,7 @@ jobs:
           $src = "target/${{ matrix.target }}/release/$binary"
           Copy-Item -Path $src -Destination "${{ matrix.asset }}"
 
-      - uses: softprops/action-gh-release@v3.0.0
+      - uses: softprops/action-gh-release@v3
         with:
           files: creator/${{ matrix.asset }}
 
@@ -58,9 +58,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6
 
-      - uses: denoland/setup-deno@v2.0.4
+      - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
 

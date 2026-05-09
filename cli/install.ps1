@@ -45,7 +45,7 @@ param (
 	[switch]$installHooks = $false,
 
 	[Parameter(
-		HelpMessage = 'Build the latest cli & hooks from source. (requires Go and Node.js)'
+		HelpMessage = 'Build the latest cli & hooks from source. (requires Rust and Bun)'
 	)]
 	[switch]$build = $false
 )
@@ -54,8 +54,8 @@ $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 #region Variables
-$cliOwnerRepo = "Delusoire/bespoke-cli"
-$hooksOwnerRepo = "spicetify/hooks"
+$cliOwnerRepo = "veryboringhwl/v3"
+$hooksOwnerRepo = "veryboringhwl/v3"
 
 $spicetifyPortableBinaryPath = "$spicetifyFolderPath\bin"
 $spicetifyPortableConfigPath = "$spicetifyFolderPath\config"
@@ -237,13 +237,15 @@ function Install-Binary {
 			Write-Ok
 
 			Write-Host -Object "Building Spicetify commit $lastCommitSha..."
-			$env:GOBIN = $spicetifyBinaryPath
+			Invoke-Command -Command cargo -Arguments 'install', '--git', "https://github.com/$cliOwnerRepo", '--bin', 'spicetify', '--root', $spicetifyFolderPath
 
-			Invoke-Command -Command go -Arguments 'install', "github.com/$cliOwnerRepo/v3@$lastCommitSha"
-
-			$goExecutableName = $cliOwnerRepo.Split('/')[1]
-			$goExecutablePath = "$env:GOBIN\$goExecutableName.exe"
-			Move-Item -Path $goExecutablePath -Destination $spicetifyExecutablePath -Force
+			$builtExe = "$spicetifyFolderPath\bin\spicetify.exe"
+			if ($builtExe -ne $spicetifyExecutablePath) {
+				New-Item -ItemType Directory -Path (Split-Path $spicetifyExecutablePath -Parent) -Force | Out-Null
+				Move-Item -Path $builtExe -Destination $spicetifyExecutablePath -Force
+			}
+			Remove-Item -LiteralPath "$spicetifyFolderPath\.crates.toml" -Force -ErrorAction SilentlyContinue
+			Remove-Item -LiteralPath "$spicetifyFolderPath\.crates2.json" -Force -ErrorAction SilentlyContinue
 		}
 		else {
 			$architectureMap = @{
@@ -261,7 +263,7 @@ function Install-Binary {
 				Write-Ok
 			}
 			Write-Host -Object "Downloading Spicetify $targetVersion..." -NoNewline
-			Invoke-WebRequest -Uri "https://github.com/$cliOwnerRepo/releases/download/$targetVersion/bespoke-cli-$v-windows-$architecture.exe" -UseBasicParsing -OutFile $spicetifyExecutablePath
+			Invoke-WebRequest -Uri "https://github.com/$cliOwnerRepo/releases/download/$targetVersion/spicetify-$v-windows-$architecture.exe" -UseBasicParsing -OutFile $spicetifyExecutablePath
 			Write-Ok
 		}
 		New-Item -ItemType SymbolicLink -Path "$spicetifyBinaryPath\spotify.exe" -Target $spicetifyExecutablePath
@@ -367,11 +369,12 @@ function Install-Hooks {
 			$spicetifyHooksZip = [System.IO.Path]::GetTempFileName()
 			Invoke-WebRequest -Uri "https://github.com/$hooksOwnerRepo/archive/refs/heads/main.zip" -OutFile $spicetifyHooksZip
 			Expand-Archive -Path $spicetifyHooksZip -DestinationPath $spicetifyConfigPath -Force
-			Move-Item -Path "$spicetifyConfigPath\hooks-main" -Destination $spicetifyHooksPath -Force
+			Move-Item -Path "$spicetifyConfigPath\v3-main\hooks" -Destination $spicetifyHooksPath -Force
+			Remove-Item -LiteralPath "$spicetifyConfigPath\v3-main" -Recurse -Force
 			Write-Ok
 
 			Write-Host -Object 'Building Spicetify hooks...'
-			Invoke-Command -Command 'npx' -Arguments '--package=typescript', 'tsc', '--project', "$spicetifyHooksPath\tsconfig.json"
+			Invoke-Command -Command 'bunx' -Arguments 'tsgo', '--project', "$spicetifyHooksPath\tsconfig.json"
 		}
 		else {
 			Invoke-Command -Command $spicetifyExecutablePath -Arguments 'sync'

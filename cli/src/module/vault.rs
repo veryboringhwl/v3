@@ -1,6 +1,6 @@
-use std::collections::BTreeMap;
-use std::fs;
-use std::path::{Path, PathBuf};
+use std::{
+    collections::BTreeMap, fs, path::{Path, PathBuf}
+};
 
 use anyhow::{Result, anyhow};
 use regex::Regex;
@@ -23,6 +23,45 @@ pub struct Module {
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Vault {
     pub modules: BTreeMap<String, Module>,
+}
+
+impl Vault {
+    pub fn get_module_mut(&mut self, identifier: &str) -> &mut Module {
+        self.modules.entry(identifier.to_string()).or_default()
+    }
+
+    #[allow(dead_code)]
+    pub fn set_module(&mut self, identifier: String, module: Module) {
+        self.modules.insert(identifier, module);
+    }
+
+    #[allow(dead_code)]
+    pub fn get_store(&self, id: &StoreIdentifier) -> Option<&Store> {
+        self.modules.get(&id.module_identifier)?.v.get(&id.version)
+    }
+
+    pub fn get_store_mut(&mut self, id: &StoreIdentifier) -> Option<&mut Store> {
+        self.modules
+            .get_mut(&id.module_identifier)?
+            .v
+            .get_mut(&id.version)
+    }
+
+    pub fn set_store(&mut self, id: &StoreIdentifier, store: Store) -> bool {
+        if id.version.is_empty() {
+            return false;
+        }
+        self.get_module_mut(&id.module_identifier)
+            .v
+            .insert(id.version.clone(), store);
+        true
+    }
+
+    #[allow(dead_code)]
+    pub fn get_enabled_store(&self, identifier: &str) -> Option<&Store> {
+        let module = self.modules.get(identifier)?;
+        module.v.get(&module.enabled)
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -80,4 +119,12 @@ pub fn save(path: &Path, vault: &Vault) -> Result<()> {
     let raw = serde_json::to_string(vault)?;
     fs::write(path, raw)?;
     Ok(())
+}
+
+pub fn mutate(path: &Path, f: impl FnOnce(&mut Vault) -> bool) -> Result<()> {
+    let mut vault = load(path)?;
+    if !f(&mut vault) {
+        anyhow::bail!("failed to mutate vault")
+    }
+    save(path, &vault)
 }

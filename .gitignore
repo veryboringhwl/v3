@@ -1,9 +1,0 @@
-cli/target/
-hooks/node_modules/
-hooks/dist/
-creator/bin/
-creator/target/
-modules/bin/
-modules/dist/
-devtools/dist/
-devtools/node_modules/
