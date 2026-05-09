@@ -18,168 +18,19 @@ on:
 
 permissions:
   contents: write
-  id-token: write
-  attestations: write
 
 jobs:
-  build-cli-linux:
-    uses: ./.github/workflows/build-cli-linux.yml
-    permissions:
-      contents: write
-      id-token: write
-      attestations: write
-    strategy:
-      matrix:
-        arch: [amd64, arm64]
-    with:
-      tag: ${{ inputs.cli_version }}
-      arch: ${{ matrix.arch }}
-
-  build-cli-macos:
-    uses: ./.github/workflows/build-cli-macos.yml
-    permissions:
-      contents: write
-      id-token: write
-      attestations: write
-    with:
-      tag: ${{ inputs.cli_version }}
-
-  build-cli-windows:
-    uses: ./.github/workflows/build-cli-windows.yml
-    permissions:
-      contents: write
-      id-token: write
-      attestations: write
-    strategy:
-      matrix:
-        arch: [amd64, arm64]
-    with:
-      tag: ${{ inputs.cli_version }}
-      arch: ${{ matrix.arch }}
-
-  build-hooks:
+  tag:
+    name: Tag & Push
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
 
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install dependencies
-        working-directory: hooks
-        run: bun install
-
-      - name: Compile TypeScript (tsgo)
-        working-directory: hooks
-        run: bunx tsgo --outDir dist
-
-      - name: Package hooks into tar.gz
-        run: tar -czf hooks.tar.gz -C hooks/dist .
-
-      - name: Upload hooks artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: hooks
-          path: hooks.tar.gz
-
-  build-creator:
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
-            asset: creator-linux-x86_64
-
-          - os: macos-latest
-            target: x86_64-apple-darwin
-            asset: creator-macos-x86_64
-
-          - os: macos-latest
-            target: aarch64-apple-darwin
-            asset: creator-macos-arm64
-
-          - os: windows-latest
-            target: x86_64-pc-windows-msvc
-            asset: creator-windows-x86_64.exe
-
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ matrix.target }}
-
-      - name: Build
-        working-directory: creator
-        run: cargo build --release --target ${{ matrix.target }}
-
-      - name: Stage binary
-        shell: pwsh
-        working-directory: creator
+      - name: Create and push tags
         run: |
-          $targetDir = "${{ matrix.target }}".Replace('-', '_')
-          $binary = if ("${{ runner.os }}".StartsWith("Windows")) { "creator.exe" } else { "creator" }
-          $src = "target/${{ matrix.target }}/release/$binary"
-          Copy-Item -Path $src -Destination "${{ matrix.asset }}"
-
-      - name: Upload creator artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: creator-${{ matrix.os }}
-          path: creator/${{ matrix.asset }}
-
-  publish-jsr:
-    needs: build-creator
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: v2.x
-
-      - name: Publish to JSR
-        working-directory: creator/jsr
-        run: deno publish
-
-  release:
-    runs-on: ubuntu-latest
-    needs:
-      [
-        build-cli-linux,
-        build-cli-macos,
-        build-cli-windows,
-        build-hooks,
-        build-creator,
-        publish-jsr,
-      ]
-    steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: dist
-          merge-multiple: true
-
-      - name: Attest
-        uses: actions/attest@v4
-        with:
-          subject-path: "dist/*"
-
-      - name: Release
-        uses: softprops/action-gh-release@v3
-        with:
-          tag_name: "v${{ inputs.cli_version }}"
-          name: "v${{ inputs.cli_version }}"
-          body: |
-            ## v${{ inputs.cli_version }}
-
-            ### Components
-            - CLI: v${{ inputs.cli_version }}
-            - Hooks: v${{ inputs.hooks_version }}
-            - Creator: v${{ inputs.creator_version }}
-          files: "dist/*"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag "v${{ inputs.cli_version }}"
+          git tag "hooks-v${{ inputs.hooks_version }}"
+          git tag "creator-v${{ inputs.creator_version }}"
+          git push origin "v${{ inputs.cli_version }}" "hooks-v${{ inputs.hooks_version }}" "creator-v${{ inputs.creator_version }}"
