@@ -38,9 +38,9 @@ jobs:
           ./build.sh "${{ inputs.tag }}" "${{ inputs.arch }}"
 
       - name: Attest
-        uses: actions/attest-build-provenance@v4
+        uses: actions/attest@v4
         with:
-          subject-path: cli/build/linux/dist/*
+          subjects: cli/build/linux/dist/*
 
       - name: Upload
         uses: actions/upload-artifact@v7

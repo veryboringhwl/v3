@@ -40,9 +40,9 @@ jobs:
           .\build.ps1 -version "${{ inputs.tag }}" -platform "${{ inputs.arch }}"
 
       - name: Attest
-        uses: actions/attest-build-provenance@v4
+        uses: actions/attest@v4
         with:
-          subject-path: cli/build/windows/dist/*
+          subjects: cli/build/windows/dist/*
 
       - name: Upload
         uses: actions/upload-artifact@v7
